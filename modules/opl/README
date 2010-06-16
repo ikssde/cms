@@ -1,0 +1,4 @@
+Open Power Libraries module for Kohana 3.0
+Installation is very simple, just copy this directory into modules directory in your application and enable it in application/bootstrap.php (add into Kohana::modules, as: 'opl' => MODPATH.'opl').
+
+This module contains few components: form:input, form:select, form:password, form:textarea, use them as it's explained in opt's documentation(attributtes for opt:display are attributes for field), name of field should be set as "name" attribute of component, list of options in form:select should be set by datasource attribute of component(In the same format as in kohana helper Form::select). Errors should be set as template variable $errors, as array(key - field name, value - error message, you can use'em in standard way, onError event is fired when error occurs).
