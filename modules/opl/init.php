@@ -4,13 +4,13 @@
 	 */
 
 	$currentPath = dirname(__FILE__);
-	require_once 'D:/xampp/htdocs/invenzzia/Open-Power-Libs/lib/Opl/Base.php';
+	require_once 'C:/projects/Open-Power-Libs/lib/Opl/Base.php';
 	// Opl_Loader::setHandleUnknownLibraries(false);
 	$loader = new Opl_Loader('_');
-	$loader -> addLibrary('Opl', 'D:/xampp/htdocs/invenzzia/Open-Power-Libs/lib/');
-	$loader -> addLibrary('Opt', 'D:/xampp/htdocs/invenzzia/Open-Power-Template/lib/');
-	$loader -> addLibrary('Opc', 'D:/xampp/htdocs/invenzzia/Open-Power-Classes/lib/');
-	$loader -> addLibrary('Opf', 'D:/xampp/htdocs/invenzzia/Open-Power-Forms/lib/');
+	$loader -> addLibrary('Opl', 'C:/projects/Open-Power-Libs/lib/');
+	$loader -> addLibrary('Opt', 'C:/projects/Open-Power-Template/lib/');
+	$loader -> addLibrary('Opc', 'C:/projects/Open-Power-Classes/lib/');
+	$loader -> addLibrary('Opf', 'C:/projects/Open-Power-Forms/lib/');
 	// Opl_Loader::addLibrary('Opm', array('basePath' => $currentPath.'/classes/'));
 	// Opl_Loader::addLibrary('Opf', array('basePath' => $currentPath.'/classes/'));
 	$loader -> register();

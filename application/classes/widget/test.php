@@ -7,7 +7,7 @@
 	{
 		public function getView()
 		{
-			$wju = new View('widget/test');
+			$wju = new View('frontend/widget/test');
 			$wju->dyn = 'dupa';
 			return $wju;
 		}

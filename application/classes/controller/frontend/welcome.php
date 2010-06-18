@@ -2,7 +2,7 @@
 
 	defined('SYSPATH') or die('No direct script access.');
 
-	class Controller_Welcome extends Controller
+	class Controller_Frontend_Welcome extends Controller_Frontend_Bootstrap
 	{
 		public function action_index()
 		{

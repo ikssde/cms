@@ -36,7 +36,7 @@
 		{
 			parent::__construct($request);
 
-			$this->_layout = new View('common/layout');
+			$this->_layout = new View('frontend/common/layout');
 			$this->_content = new View(($request->directory == '' ? '' : $request->directory.'/') . $request->controller.'/'.$request->action);
 		}// end __construct();
 
