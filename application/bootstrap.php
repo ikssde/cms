@@ -83,7 +83,7 @@ Kohana::modules(array(
 	'error'		=> MODPATH.'error',		 // Error system
 	));
 
-Route::set('news_page', '(news(/<page>))', array('page' => '\\d*'))
+Route::set('news_page', 'news/<page>', array('page' => '\\d*'))
 	-> defaults
 	(
 		array
