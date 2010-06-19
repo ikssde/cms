@@ -1,0 +1,8 @@
+Title: bufferSize()
+ShortTitle: Opt_Xml_Buffer::bufferSize()
+Reference: int bufferSize(int $buffer)
+Status: public
+
+---
+
+Returns the number of code snippets assigned to the buffer `$buffer`.

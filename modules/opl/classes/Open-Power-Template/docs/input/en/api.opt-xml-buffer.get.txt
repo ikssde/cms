@@ -1,0 +1,8 @@
+Title: get()
+ShortTitle: Opt_Xml_Buffer::get()
+Reference: mixed get(string $name)
+Status: public
+
+---
+
+Returns the value of the state variable `$name`. If the variable does not exist, it returns **NULL**.

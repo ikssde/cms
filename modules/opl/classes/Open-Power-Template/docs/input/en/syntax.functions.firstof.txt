@@ -1,0 +1,18 @@
+Title: firstof()
+Reference: mixed firstof(...)
+
+----
+
+Returns the first argument that is not empty:
+
+~~~~
+[xml]
+{firstof($foo, $bar, $joe)}
+~~~~
+
+This may be used to set default values for the variables, if they are not defined by the script:
+
+~~~~
+[xml]
+<p parse:class="firstof($class, 'defaultClass')">...</p>
+~~~~

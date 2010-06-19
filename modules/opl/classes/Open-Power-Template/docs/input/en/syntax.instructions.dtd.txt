@@ -1,0 +1,63 @@
+Title: opt:dtd
+SeeAlso:
+ - syntax.compiler-modes
+
+----
+
+Although OPT neither parses nor checks the DTD of the document, it is not said that such feature will not appear in the future. This is why we should use `opt:dtd` to generate the output DTD for our templates. It also supports some predefined DTD templates for the most popular XML applications:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ template       | Identifier          | No        | The name of the DTD template
+
+The accepted values of `template` are:
+
+* `xhtml10strict` - DTD for XHTML 1.0-Strict
+* `xhtml10transitional` - DTD for XHTML 1.0-Transitional
+* `xhtml10frameset` - DTD for XHTML 1.0-Frameset
+* `xhtml11` - DTD for XHTML 1.1
+* `html4` (or `html40`) - DTD for HTML 4.01
+* `html5` - DTD for HTML 5
+
+If the `template` attribute is not specified, `opt:dtd` expects its content to contain the custom DTD that will be sent to the browser. It should be enclosed in the CDATA section in order to fulfill the XML semantics (CDATA tags will be ignored, like in `opt:literal`).
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:prolog />
+<opt:dtd template="xhtml10transitional" />
+	
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>Page title</title>
+</head>
+<body>
+	....
+</body>
+</html>
+~~~~
+
+Alternative use:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:prolog />
+<opt:dtd><![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+]]></opt:dtd>
+	
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>Page title</title>
+</head>
+<body>
+	....
+</body>
+</html>
+~~~~
+
+There is no requirement to place `opt:dtd` at the beginning of the template. Even if it is deeply nested in other XML tags, the document type definition will always appear before the document content.
+
+> [error]
+> There cannot be two document type definitions in the template. The last `opt:dtd` call overwrites the previous DTD-s set by this and/or other instructions.

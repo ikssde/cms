@@ -1,0 +1,24 @@
+Title: opt:prolog
+SeeAlso:
+ - syntax.compiler-modes
+ - syntax.prolog
+
+----
+
+`opt:prolog` generates the output XML prolog, if the configuration option `prologRequired` is enabled. In this case the standard XML prologs put in the template are not sent to the browser and this instruction is the only solution then. It may take up to three attributes:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ version        | Expression          | No        | The XML version. Default value is "1.0"
+ encoding       | Expression          | No        | The encoding, taken by default from the OPT configuration.
+ standalone     | Expression          | No        | The "standalone" attribute in the prolog. The default value is "no".
+
+The instruction has one advantage over a typical prolog - we may read the values from the variables.
+
+~~~~
+[xml]
+<?xml version="1.0" encoding="UTF-8" ?>   <!-- with "prologRequired" enabled, this line won't appear in the browser. -->
+<opt:prolog standalone="yes"/>    <!-- the prolog for the browser will be generated here. -->
+~~~~
+
+There is no requirement to place `opt:prolog` at the beginning of the template. Even if it is deeply nested in other XML tags, the prolog will always appear before the document content.

@@ -1,0 +1,10 @@
+Title: setConversion()
+ShortTitle: Opt_Compiler_Class::setConversion()
+Reference: bool setConversion(string $original, string $replacement)
+SeeAlso:
+ - api.opt-compiler-class.convert
+ - api.opt-compiler-class.unset-conversion
+
+---
+
+Defines the new conversion rule from the `$original` string into the `$replacement`. If the conversion for `$original` is already defined, it returns **false**.

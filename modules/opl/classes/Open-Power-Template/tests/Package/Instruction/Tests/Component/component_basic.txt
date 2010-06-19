@@ -1,0 +1,25 @@
+This test checks the basic component functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:component from="$component">
+<opt:set name="foo" value="str:bar" />
+{$system.component.foo}
+</opt:component>
+
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+PARAM foo PASSED
+PARAM foo RETURNED
+bar

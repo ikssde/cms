@@ -1,0 +1,104 @@
+Title: opt:include
+
+----
+
+`opt:include` executes an external view and displays it in the specified place of the current template. It has three different cases of use.
+
+Including the statically constructed view
+=========================================
+
+In this case, the currently executed template constructs a new OPT view, using the specified attributes:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ file           | string              | Yes       | The template to be included
+ default        | string              | No        | The default template, if the template defined in `file` does not exist.
+ branch         | string              | No        | The inheritance branch used for the included template.
+ import         | option              | No        | If set to *yes*, the new view imports all the template variables from the current view.
+ *              | expression          | No        | The view arguments that will be visible as variables there.
+ 
+This case is useful, if we need to include the specified file:
+
+~~~~
+[xml]
+<div>
+    <opt:include file="left_menu.tpl" import="yes"/>
+</div>
+~~~~
+
+As the most important attributes are normal strings, we may change their namespace to `parse` in order to load their values from a variable:
+
+~~~~
+[xml]
+<div>
+    <opt:include parse:file="$leftMenuTemplate" import="yes" />
+</div>
+~~~~
+
+Including a script-defined view
+===============================
+
+Here, the view is already created by the script and all we want to do is to execute it:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ view           | expression          | Yes       | The view to be displayed
+ default        | string              | No        | The default template, if the view template does not exist.
+ branch         | string              | No        | The inheritance branch used for the included template.
+ import         | option              | No        | If set to *yes*, the new view imports all the template variables from the current view.
+ *              | expression          | No        | The view arguments that will be visible as variables there.
+ 
+~~~~
+[xml]
+<div>
+    <opt:include view="$leftMenuView" />
+</div>
+~~~~
+
+Here, we do not have to worry about the data for the `$leftMenuView`. As this view is created by the script, we may assume that the script has already provided the necessary data for it. 
+
+Integrating with sections
+=========================
+
+`opt:include` can also integrate with the sections. In this case, the following set of attributes is used:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ from           | hard string         | Yes       | The existing and currently active section name
+ default        | string              | No        | The default template, if the view template does not exist.
+ branch         | string              | No        | The inheritance branch used for the included template.
+ import         | option              | No        | If set to *yes*, the new view imports all the template variables from the current view.
+ *              | expression          | No        | The view arguments that will be visible as variables there.
+
+An example:
+
+~~~~
+[xml]
+<opt:section name="modules">
+	<div class="module">
+		<h1>{$modules.name}</h1>
+		<opt:include from="modules" />
+	</div>
+</opt:section>
+~~~~
+
+This template allows to load the views from the section and execute them automatically. We assume that the view object is stored under `$modules.view` variable. The optional attributes give us the possibility to do extra configuration of the loaded views.
+
+The default content
+===================
+
+If the template we try to execute does not exist, we might deal with it in two ways. The first one is to select an alternative template with `default` attribute:
+
+~~~~
+[xml]
+<opt:include parse:file="$template" default="default_template.tpl"/>
+~~~~
+
+Alternatively, we may define the default content directly in `opt:include`:
+
+~~~~
+[xml]
+<opt:include parse:file="$template">
+	<p>We are sorry, but the template {$template} does not exist.</p>
+</opt:include>
+~~~~

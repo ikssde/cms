@@ -1,0 +1,21 @@
+Title: Authors and license
+Appendix: Yes
+
+----
+
+Open Power Template 2 was designed and created by the **Invenzzia programming group** which is also the holder of the copyrights. The people that worked on this:
+
++ Tomasz "Zyx" Jędrzejewski - the idea, project, programming, documentation, tests.
++ Jacek "eXtreme" Jędrzejewski - tests, support, ideas, documentation.
++ Amadeusz "megawebmaster" Starzykiewicz - additional programming
+
+We would like to thank all the users of both OPT 1 and OPT 2. We create them for you.
+
+Copyright &copy; Invenzzia Group 2008-2009 - [www.invenzzia.org](http://www.invenzzia.org/)
+
+License
+=======
+
+Open Power Template 2.0 is available under the terms of new BSD license. It is included in the library archives.
+
+This documentation is available under the terms of GNU Free Documentation License 1.2. Its content is included in the library archives and the source files are available to download on the Invenzzia website.

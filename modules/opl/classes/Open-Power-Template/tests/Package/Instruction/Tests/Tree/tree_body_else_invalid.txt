@@ -1,0 +1,26 @@
+Placing opt:else in opt:body should not be permitted.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:tree name="tree">
+FOE
+<opt:body>
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+<opt:else>NO DATA</opt:else>
+</opt:body>
+EOF
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+Opt_Instruction_Exception

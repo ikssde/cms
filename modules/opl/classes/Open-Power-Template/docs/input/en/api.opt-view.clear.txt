@@ -1,0 +1,10 @@
+Title: clear()
+ShortTitle: Opt_View::clear()
+Construct: method
+Reference: void clear()
+VersionSince: 2.0.0
+Visibility: public
+
+----
+
+The `Opt_View` class contains some private static buffers, for example for the global template variables or the captured content. This method can be used to clear those buffers, if it is necessary.

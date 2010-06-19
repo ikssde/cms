@@ -1,0 +1,10 @@
+Title: _getVar()
+ShortTitle: Opt_Compiler_Format::_getVar()
+Reference: mixed _getVar($name)
+Status: final protected
+SeeAlso:
+ - api.opt-compiler-format.assign
+
+---
+
+Returns the variable `$name` assigned to the format. The method is intended to be used by the code hook generators in order to read required hook parameters.

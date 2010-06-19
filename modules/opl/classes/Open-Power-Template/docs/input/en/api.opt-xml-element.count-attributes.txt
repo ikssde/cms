@@ -1,0 +1,10 @@
+Title: countAttributes()
+ShortTitle: Opt_Xml_Element::countAttributes()
+Reference: int countAttributes()
+Status: public
+SeeAlso:
+ - api.opt-xml-element.has-attributes
+
+---
+
+Returns the total number of XML attributes.

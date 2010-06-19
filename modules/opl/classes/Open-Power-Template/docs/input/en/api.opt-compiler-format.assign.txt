@@ -1,0 +1,8 @@
+Title: assign()
+ShortTitle: Opt_Compiler_Format::assign()
+Reference: void assign(string $name, mixed $value)
+Status: final
+
+---
+
+Assigns a variable to the format object. The format objects use the variables mostly to customize the returned code hooks.

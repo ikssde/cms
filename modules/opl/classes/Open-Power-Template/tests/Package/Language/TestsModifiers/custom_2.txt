@@ -1,0 +1,19 @@
+Check the custom modifiers and global escaping enabled.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root escaping="yes">
+<foo bar="parse:r:$variable1"></foo>
+{r:$variable2}
+</opt:root>
+
+>>>>data.php
+$view->variable1 = 'joe';
+$view->variable2 = '<foo />';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="HI!joe"></foo>
+HI!<foo />

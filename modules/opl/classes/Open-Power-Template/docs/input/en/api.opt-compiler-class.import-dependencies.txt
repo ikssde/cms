@@ -1,0 +1,9 @@
+Title: importDependencies()
+ShortTitle: Opt_Compiler_Class::importDependencies()
+Reference: void importDependencies(Opt_Compiler_Class $compiler)
+SeeAlso:
+ - api.opt-compiler-class.add-dependant-template
+
+----
+
+Imports the template dependency list from another compiler object.

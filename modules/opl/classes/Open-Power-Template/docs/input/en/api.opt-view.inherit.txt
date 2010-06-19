@@ -1,0 +1,50 @@
+Title: inherit()
+ShortTitle: Opt_View::inherit()
+Construct: method
+Reference: void inherit( string $sourceFile [, string $destinationFile ] )
+Visibility: public
+
+----
+
+Performs a dynamic inheritance on the templates associated to the current view. The method may be called in two ways:
+
+~~~~
+[php]
+$view->inherit('inherited_by.tpl');
+~~~~
+
+In this case, the template associated to the view is inherited by `inherited_by.tpl`. Alternatively, we may do the following:
+
+~~~~
+[php]
+$view->inherit('inheriting_template.tpl', 'inherited_by.tpl');
+~~~~
+
+Now we inherit the `inheriting_template.tpl` with `inherited_by.tpl`. This allows to create compound inheritance chains:
+
+~~~~
+[php]
+$view = new Opt_View('template1.tpl');
+$view->inherit('template2.tpl');
+$view->inherit('template2.tpl', 'template3.tpl');
+$view->inherit('template3.tpl', 'template4.tpl');
+~~~~
+
+In order to make the dynamic inheritance possible, the templates must allow it:
+
+~~~~
+[xml]
+<opt:extend file="default_file.tpl" dynamic="yes">
+
+    <!-- some code snippets -->
+
+</opt:extend>
+~~~~
+
+> [information]
+> Another way to create the dynamic inheritance is to use branches. See [the chapter about inheritance][syntax.topics.modularization.inheritance] to get to know more.
+
+Extending snippets
+==================
+
+In OPT, the templates are not limited to extend whole templates. It is possible to extend one of existing snippets created with [opt:snippet][syntax.instructions.snippet] instruction. In order to get to know more about extending snippets, see a chapter about [template inheritance][syntax.topics.modularization.inheritance].

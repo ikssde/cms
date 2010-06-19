@@ -1,0 +1,16 @@
+Title: isUrl()
+Reference: boolean isUrl(string $text)
+
+----
+
+Returns **true**, if the `$text` is a valid URL. The code below shows, how to use this function to make the user name an URL to his website in case he defined its address in the profile.
+
+~~~~
+[xml]
+<a parse:href="$user.www" opt:on="isUrl($user.www)">{$user.nickname}</p>
+~~~~
+
+> [information]
+> The function **does not accept** malformed URL-s or URL parts, for example with removed protocol
+> that are usually accepted by the current browsers. In other words, the string `www.example.com`
+> is not accepted as a valid URL, but `http://www.example.com` - is.

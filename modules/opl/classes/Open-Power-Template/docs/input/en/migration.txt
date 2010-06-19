@@ -1,0 +1,5 @@
+Title: Migration
+
+----
+
+This chapter is intended to help the users of other template engines to get started with OPT 2.x.

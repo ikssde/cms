@@ -1,0 +1,10 @@
+Title: Resources
+Appendix: Yes
+
+----
+
+Perhaps you wonder, where to find more tutorials, tips and tricks for Open Power Template.
+
+1. [Invenzzia Wiki](http://wiki.invenzzia.org/) - this is community-driven repository of tutorials, tips and other useful stuff about OPT and other Invenzzia project.
+2. [Invenzzia Resource Pages](http://www.invenzzia.org/en/resources) - official tutorials and devblog entries.
+3. [Artykuly.zyxist.com](http://artykuly.zyxist.com) - the website of one of OPT main developers also contains some stuff about OPT (however, you must know Polish to understand it).

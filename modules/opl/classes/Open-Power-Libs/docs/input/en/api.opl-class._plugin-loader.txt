@@ -1,0 +1,23 @@
+Title: _pluginLoader()
+ShortTitle: Opl_Class::_pluginLoader()
+Construct: method
+Reference: void Opl_Class::_pluginLoader( string $directory, string $file )
+Visibility: protected
+Arguments:
+ - Name: $directory | EType: string | Desc: The directory, where the plugin is stored.
+ - Name: $file | EType: string | Desc: The file, where the plugin is stored.
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-class.load-plugins
+
+----
+
+The method is used, when the temporary plugin file is being rebuilt. It takes the directory and the filename and it must generate a PHP code that loads it. This is a sample implementation:
+
+~~~~
+[php]
+protected function _pluginLoader($dir, $file)
+{
+    return 'require(\''.$dir.$file.'\'); ';
+} // end _pluginLoader();
+~~~~

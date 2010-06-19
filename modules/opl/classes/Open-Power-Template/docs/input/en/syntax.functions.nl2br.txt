@@ -1,0 +1,9 @@
+Title: nl2br()
+Reference: string nl2br(string $text)
+
+----
+
+Replaces the newline characters in `$text` into `<br />` tags.
+
+> [information]
+> This function can operate also on a container of strings, capitalizing them all and returning the modified container.

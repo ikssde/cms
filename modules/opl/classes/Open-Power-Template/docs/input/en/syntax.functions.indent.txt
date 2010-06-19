@@ -1,0 +1,29 @@
+Title: indent()
+Reference: string indent(string $text, integer $num [, string $with ])
+
+----
+
+Indents every new line in `$text` with `$num` characters `$with` (if this argument is not set, spaces are used by default).
+
+~~~~
+[xml]
+<pre>
+{strip('
+This is a text
+that needs proper
+indentation', 4)}
+</pre>
+~~~~
+
+The result:
+
+~~~~
+<pre>
+    This is a text
+    that needs proper
+	indentation
+</pre>
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, making indents to them all and returning the modified container.

@@ -1,0 +1,11 @@
+Title: replaceData()
+ShortTitle: Opt_Xml_Cdata::replaceData()
+Reference: void replaceData(int $offset, int $count, string $text)
+Status: public
+SeeAlso:
+ - api.opt-xml-cdata.append-data
+ - api.opt-xml-cdata.insert-data
+
+---
+
+Replaces the `$count` characters in the node, starting from `$offset`, with the beginning of `$text`.

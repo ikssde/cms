@@ -1,0 +1,57 @@
+Title: opt:section
+FeatureInformation: sections
+SeeAlso:
+ - syntax.instructions.tree
+ - syntax.instructions.grid
+ - syntax.instructions.selector
+ - syntax.instructions.show
+ - syntax.instructions.separator
+ - syntax.attributes.section
+
+----
+
+`opt:section` is the basic section instruction used to display flat, linear lists and supports all the section basic features. Inside the `opt:section` we define the layout of a single list element:
+
+~~~~
+[xml]
+<ul>
+	<opt:section name="categories">
+	<li>{$categories.name}, {$categories.productCount}</li>
+	</opt:section>
+</ul>
+~~~~
+
+Empty lists
+===========
+
+We may define the optional content to be displayed if the list is empty with the `opt:sectionelse` tag:
+
+~~~~
+[xml]
+<ul>
+	<opt:section name="categories">
+		<li>{$categories.namae}, {$categories.productCount}</li>
+		<opt:sectionelse>
+		<li>We are sorry, there are no categories in the system.</li>
+		</opt:sectionelse>
+	</opt:section>
+</ul>
+~~~~
+
+`opt:sectionelse` must be located directly within `opt:section`, but it is up to you, whether you put it before or after the content.
+
+`opt:sectionelse` is disabled, if the section is used together with `opt:show`. In this case, the alternative message can be declared with `opt:showelse`:
+
+~~~~
+[xml]
+<opt:show name="categories">
+<ul>
+	<opt:section>
+		<li>{$categories.name}, {$categories.productCount}</li>
+	</opt:section>
+</ul>
+<opt:showelse>
+	<p>We are sorry, there are no categories in the system.</p>
+</opt:showelse>
+</opt:show>
+~~~~

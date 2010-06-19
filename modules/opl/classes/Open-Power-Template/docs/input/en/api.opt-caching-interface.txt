@@ -1,0 +1,13 @@
+Title: Opt_Caching_Interface
+Construct: interface
+SeeAlso:
+ - guide.cache
+ - api.opt-class.set-cache
+ - api.opt-class.get-cache
+ - api.opt-view.set-cache
+ - api.opt-view.get-cache
+ - syntax.instructions.dynamic
+
+----
+
+Open Power Template does not provide its own caching solutions. Instead, it simply leaves an interface that allows you to integrate any external caching system with the library. The interface consists of two methods and is managed automatically by OPT to check, whether the requested template is cached and optionally capture the template output.

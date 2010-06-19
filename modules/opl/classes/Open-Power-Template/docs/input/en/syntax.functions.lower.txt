@@ -1,0 +1,15 @@
+Title: lower()
+Reference: string lower(string $text)
+
+----
+
+Makes all characters lowercase in `$text`:
+
+~~~~
+[xml]
+<!-- result: "foo" -->
+{lower('Foo')}
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, operating on them all and returning the modified container.

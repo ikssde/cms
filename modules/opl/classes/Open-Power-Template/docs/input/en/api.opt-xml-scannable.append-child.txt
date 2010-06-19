@@ -1,0 +1,8 @@
+Title: appendChild()
+ShortTitle: Opt_Xml_Scannable::appendChild()
+Reference: void appendChild(Opt_Xml_Node $node)
+Status: public
+
+---
+
+Appends the `$node` to the end of the child list in the current node.

@@ -1,0 +1,22 @@
+This test checks the basic block functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+FOO
+<opt:block from="$block" />
+FOO
+</opt:root>
+
+>>>>data.php
+
+$view->block = new Extra_Mock_Block;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON SINGLE: 0
+FOO

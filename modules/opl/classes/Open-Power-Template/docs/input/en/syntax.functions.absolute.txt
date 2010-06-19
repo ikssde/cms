@@ -1,0 +1,9 @@
+Title: absolute()
+Reference: number absolute(number $number)
+
+----
+
+Returns the absolute value of the specified `$number`.
+
+> [information]
+> This function can operate also on a container of numbers, producing a new container with their absolute values.

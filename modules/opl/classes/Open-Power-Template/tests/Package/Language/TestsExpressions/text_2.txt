@@ -1,0 +1,17 @@
+Modifiers should have a priority over expression engines to keep the compatibility
+with OPT 2.0
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+{e:$foo}
+</opt:root>
+
+>>>>data.php
+$view->foo = 'bar';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+bar

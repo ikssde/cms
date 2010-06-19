@@ -1,0 +1,8 @@
+Title: __construct()
+ShortTitle: Opt_Compiler_Processor::__construct()
+Reference: __construct(Opt_Compiler_Class $compiler)
+Status: constructor
+
+---
+
+Initializes the processor, setting the protected fields `$_tpl` and `$_compiler`.

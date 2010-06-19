@@ -1,0 +1,22 @@
+Title: spacify()
+Reference: string spacify(string $text [, string $delimiter])
+
+----
+
+Puts `$delimiter` every two characters in the `$text`. By default, `$delimiter` is set to one space:
+
+~~~~
+[xml]
+{spacify('This is a text')}
+{spacify('This is a text', '-')}
+~~~~
+
+The result:
+
+~~~~
+T h i s   i s   a   t e x t
+T-h-i-s- -i-s- -a- -t-e-x-t
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, spacifying them all and returning the modified container.

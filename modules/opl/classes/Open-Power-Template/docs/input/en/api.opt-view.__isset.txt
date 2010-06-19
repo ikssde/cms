@@ -1,0 +1,23 @@
+Title: __isset()
+ShortTitle: Opt_View::__isset()
+Construct: magic method
+Reference: boolean __isset(string $name)
+VersionSince: 2.0-beta2
+Visibility: public
+SeeAlso:
+ - api.opt-view.defined
+
+----
+
+This magic method provides an alternative way to check if a template local variable `$name` exists:
+
+~~~~
+[php]
+if(isset($view->variable))
+{
+	// some code...
+}
+~~~~
+
+> [help]
+> It is recommended to use the magic method instead of [Opt_View::defined()][api.opt-view.defined] unless we are not going to specify a dynamic variable name.

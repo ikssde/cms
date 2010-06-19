@@ -1,0 +1,27 @@
+Title: entity()
+Reference: string entity(string)
+SeeAlso:
+ - syntax.entities
+
+----
+
+Allows to display an entity in the output document.
+
+Because OPT contains an XML parser, all the entities are parsed on the server-side. Unsually, this is not a bad thing, because the entities have been introduced mostly for the user convenience and the web browser is able to handle both the entities and the original characters. However, in certain situations it may be necessary to send the entity in the browser. We cannot prevent the parser from processing it, so we may use this function to encode it:
+
+~~~~
+[xml]
+<p>An example of &amp;Acute; entity: {u:entity('Acute')}</p>
+~~~~
+
+The result would be:
+
+~~~~
+[xml]
+<p>An example of &amp;Acute; entity: &Acute;</p>
+~~~~
+
+> [error]
+> In order to work, this function **must not** be escaped. The best way to achieve this is to prepend the expression with `u:` modifier.
+
+The function recognizes any valid XML entity name (excluding Unicode symbols), for example `Acute`, `#184` and `#xB8`. If the function is not able to parse the entity name, it generates an exception which is captured by the script.

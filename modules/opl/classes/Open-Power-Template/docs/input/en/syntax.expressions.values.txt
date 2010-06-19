@@ -1,0 +1,45 @@
+Title: Values
+
+----
+
+In the expressions we are allowed to use constant values, too. Open Power Template supports the following types:
+
+* Decimal numbers, for example `15`, `-3`.
+* Hexadecimal numbers: `0x3abc5`, `-0x3ABC5`. Digits from A to F may be both lower and upper case.
+* Floating point numbers: `3.141`
+* Strings: `'this is a text'`, `word`
+
+Let's take a deeper look at the strings. They are enclosed in single quotes only, because double quotes are a part of XML syntax. In order to put a quote into a string, we follow it with a backslash: `\`. To display a backslash, we put two backslashes into the string.
+
+~~~~
+'this is a text'
+'this is a text: \' - with a quote'
+'this is a text: \\ - with a backslash'
+~~~~
+
+In some cases, it is allowed to write a string without quotes. However, it must fulfill two conditions. Firstly, it has to be a single word, and more precisely - an identifier. It must begin with an underscore or a letter, later we can also use numbers. Secondly, it must appear at the position, where strings are allowed in the expression:
+
+~~~~
+word
+word1 neq word2
+eq eq eq
+~~~~
+
+In all of these examples the condition 1 is fulfilled. Let's check the second one. In the first example, we have a single word at the beginning of the expression. No string operators are allowed here, and moreover, there is no operator called `word`, so it must be a string. In the second case, `word1` and `word2` are also treated as strings, because they are connected with the operator `neq`, and it must not have another operator as a neighbor. The most interesting is the last example. `eq` is an operator, but at the position 1 and 3, operators are not allowed. Here, this word will be a string. The second position is different. The two values must be connected with an operator, so the second `eq` will be processed in this way. If we replaced it with `word`, the template would not compile, because there would be no such operator.
+
+> [warning]
+> The only keyword that breaks the rule described above is `is`. Currently, it cannot be used in the string context due to the parsing issues.
+
+In OPT, you must not put the data directly in the strings, like in PHP: `"foo $variable bar"`. Instead, you have to use the string concatenation operator `~`
+
+~~~~
+'foo '~$variable~' bar'
+~~~~
+
+OPT supports also three special values (written in lower case):
+
+* **true** - logical true
+* **false** - logical false
+* **null** - no value
+
+It should be noted that they are treated as numbers by the parser.

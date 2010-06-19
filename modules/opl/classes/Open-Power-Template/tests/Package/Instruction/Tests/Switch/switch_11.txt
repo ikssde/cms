@@ -1,0 +1,25 @@
+Testing the opt:switch instruction: opt:default should not allow nesting opt:equals.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<!-- first switch -->
+<opt:switch test="$value1">
+<opt:equals value="foo">Foo</opt:equals>
+<opt:equals value="bar">Bar</opt:equals>
+<opt:equals value="joe">Joe</opt:equals>
+<opt:equals value="goo">Goo</opt:equals>
+<opt:default>
+Default
+<opt:equals value="foo">...</opt:equals>
+
+</opt:default>
+</opt:switch>
+
+</opt:root>
+
+>>>>data.php
+$view->value1 = 'foo';
+
+>>>>expected.txt
+Opt_InvalidParent_Exception

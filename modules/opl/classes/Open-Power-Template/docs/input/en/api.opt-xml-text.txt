@@ -1,0 +1,8 @@
+Title: Opt_Xml_Text class
+ShortTitle: Opt_Xml_Text
+Construct: class
+Extends: api.opt-xml-scannable
+
+----
+
+`Opt_Xml_Text` is a container for [Opt_Xml_Cdata][api.opt-xml-cdata] and [Opt_Xml_Expression][api.opt-xml-expression] nodes. It is a node that allows easier text block manipulation by grouping character data and OPT expressions associated to them.

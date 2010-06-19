@@ -1,0 +1,13 @@
+Title: loadConfig()
+ShortTitle: Opl_Class::loadConfig()
+Construct: method
+Reference: bool Opl_Class::loadConfig( mixed $config )
+Visibility: public
+Arguments:
+ - Name: $config | EType: mixed | Desc: The array with the configuration or the path to the INI file.
+Returns: True on success.
+VersionSince: 2.0.0-dev7
+
+----
+
+Loads the library configuration from an array or INI file. Returns **false** if the file could not be loaded or `$config` is not array.

@@ -1,0 +1,15 @@
+Title: setCache()
+ShortTitle: Opt_Class::setCache()
+Construct: method
+Reference: void setCache([Opt_Caching_Interface $cache = null])
+Visibility: public
+Arguments:
+ - Name: $cache | Type: api.opt-caching-interface | Desc: The new caching interface object to be used with the views.
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opt-class.get-cache
+ - guide.cache
+ 
+----
+
+Registers a new global caching interface. The interface will be automatically added to all the newly created views, however, may be later replaced manually in the certain views. The method called without arguments removes the existing global caching interface.

@@ -1,0 +1,8 @@
+Title: bringToEnd()
+ShortTitle: Opt_Xml_Scannable::bringToEnd()
+Reference: void bringToEnd(mixed $node)
+Status: public
+
+---
+
+Moves the specified node `$node` to the end of the child list. The `$node` may be either a node number or the object.

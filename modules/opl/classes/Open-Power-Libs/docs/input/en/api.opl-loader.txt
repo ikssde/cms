@@ -1,0 +1,11 @@
+Title: Opl_Loader class
+ShortTitle: Opl_Loader
+Construct: class
+
+----
+
+This class provides the necessary autoload utilities for the OPL core. The autoloader supports the following features:
+
+1. Automatic loading based on the class/interface name.
+2. Core files with more than one class and interface that are always used by the library and therefore must be always available.
+3. Manual mapping. You can provide the path to the file with the class manually.

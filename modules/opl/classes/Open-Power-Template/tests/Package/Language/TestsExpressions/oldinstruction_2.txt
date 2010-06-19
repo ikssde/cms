@@ -1,0 +1,21 @@
+Check the legacy expression syntax in the instructions is disabled, if the
+backward compatibility is turned off.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="$name" value="$value" />
+</foo>
+<foo>
+<opt:attribute str:name="bar" parse:value="$value" />
+</foo>
+</opt:root>
+
+>>>>data.php
+$this->tpl->backwardCompatibility = false;
+$view->name = 'bar';
+$view->value = 'joe';
+
+>>>>expected.txt
+Opt_AttributeNotDefined_Exception

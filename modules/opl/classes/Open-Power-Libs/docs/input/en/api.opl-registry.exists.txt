@@ -1,0 +1,15 @@
+Title: exists()
+ShortTitle: Opl_Registry::exists()
+Construct: static method
+Reference: bool Opl_Registry::exists( string $name )
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The object name.
+Returns: True, if the specified object exists.
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-registry.register
+
+----
+
+Returns **true**, if the specified object `$name` is registered.

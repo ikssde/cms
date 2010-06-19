@@ -1,0 +1,15 @@
+Title: defined()
+ShortTitle: Opt_Component_Interface::defined()
+Construct: abstract method
+Visibility: public
+Reference: boolean defined(string $name)
+Arguments:
+ - Name: $name | EType: string | Desc: The component parameter name
+Returns: A boolean value specifying, if the parameter is defined in the component
+SeeAlso:
+ - api.opt-component-interface.set
+ - api.opt-component-interface.get
+
+----
+
+Returns **true**, if the component parameter `$name` is set in this component. 

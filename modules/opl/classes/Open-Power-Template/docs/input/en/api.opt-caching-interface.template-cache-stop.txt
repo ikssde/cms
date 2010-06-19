@@ -1,0 +1,11 @@
+Title: templateCacheStop()
+ShortTitle: Opt_Caching_Interface::templateCacheStop()
+Construct: abstract method
+Reference: void templateCacheStop(Opt_View $view)
+Visibility: public
+Arguments:
+ - Name: $view | Type: api.opt-view | Desc: The cached view object.
+
+----
+
+Finalizes capturing the template output. The method is executed only if `Opt_Caching_Interface::templateCacheStart()` returned **false**.

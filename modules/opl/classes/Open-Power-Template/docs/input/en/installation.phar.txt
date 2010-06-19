@@ -1,0 +1,57 @@
+Title: PHAR installation
+FeatureInformation: experimental
+SeeAlso:
+ - installation.standard
+
+----
+
+This chapter describes installing OPT as PHAR. It is recommended to read the previous chapter, too, because here we will only explain the differences.
+
+PHARs
+=====
+
+PHARs (PHP Archives) are special files similar to JAR in Java. In other words, they group several files as one bigger archive. PHP supports PHAR since PHP 5.2.0 after installing the necessary module, and since PHP 5.3.0, PHAR extension is enabled by default.
+
+OPL as PHAR
+=================
+
+Because PHARs can do the initial configuration on their own, the startup code is a bit simpler here. All we have to do is to put somewhere the downloaded archives and to include them:
+
+~~~~
+[php]
+<?php
+require('./opl.phar');
+require('./opt.phar');
+
+try
+{
+	$tpl = new Opt_Class;
+	$tpl->sourceDir = './templates/';
+	$tpl->compileDir = './templates_c/';
+	$tpl->contentType = Opt_Output_Http::XHTML;
+	$tpl->charset = 'utf-8';
+	$tpl->setup();
+
+	$view = new Opt_View('template.tpl');
+	$view->hello = 'Hello, world!';
+	
+	$out = new Opt_Output_Http;
+	$out->setContentType();
+	$out->render($view);
+}
+catch(Opt_Exception $exception)
+{
+	Opl_Error_Handler($exception);
+}
+~~~~
+
+> [information]
+> Even with PHARs, there may be a need to keep additional directory structure for OPL. For example, if an add-on is not available as PHAR, you must put it in the filesystem and inform OPL, where it can find it.
+> 
+>     [php]
+>     <?php
+>     require('./opl.phar');
+>     require('./opt.phar');
+>     Opl_Loader::setDirectory('./libs/');
+>
+> The details can be found in OPL documentation.

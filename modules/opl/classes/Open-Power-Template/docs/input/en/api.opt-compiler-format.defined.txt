@@ -1,0 +1,8 @@
+Title: defined()
+ShortTitle: Opt_Compiler_Format::defined()
+Reference: boolean defined(string $name)
+Status: final
+
+---
+
+Returns **true**, if the variable `$name` is already defined in the format object.

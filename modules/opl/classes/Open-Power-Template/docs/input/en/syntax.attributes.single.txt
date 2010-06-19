@@ -1,0 +1,38 @@
+Title: opt:single
+SeeAlso:
+ - syntax.instructions.tag
+
+----
+
+The attribute creates a single tag, causing its content to be lost. Its purpose is to close properly the HTML tags that are naturally single, like `<img>` in case we had to use some OPT instructions to perform some operations on them. Below, you can find an example:
+
+~~~~
+[xml]
+<img src="image.png">
+	<opt:attribute name="$imgExtraAttrName" value="$imgExtraValue" />
+</img>
+~~~~
+
+OPT will produce the following output for it:
+
+~~~~
+[xml]
+<img src="image.png" someAttribute="someValue">
+</img>
+~~~~
+
+With `opt:single` we may force to create a single tag here and omit the content.
+
+~~~~
+[xml]
+<img src="image.png" opt:single="yes">
+	<opt:attribute name="$imgExtraAttrName" value="$imgExtraValue" />
+</img>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<img src="image.png" someAttribute="someValue" />
+~~~~

@@ -1,0 +1,13 @@
+Title: getCompiler()
+ShortTitle: Opt_Class::getCompiler()
+Construct: method
+Reference: Opt_Compiler_Class getCompiler()
+Visibility: public
+Returns: The current compiler object.
+
+----
+
+Returns the compiler object and optionally loads the necessary classes. Unless you develop instructions or reimplement various core features you do not have to use this method.
+
+> [warning]
+> Note that this method may cause the compiler to be loaded and initialize which may slow down the library.

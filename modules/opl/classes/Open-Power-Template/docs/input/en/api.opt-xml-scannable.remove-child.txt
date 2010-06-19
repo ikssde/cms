@@ -1,0 +1,8 @@
+Title: removeChild()
+ShortTitle: Opt_Xml_Scannable::removeChild()
+Reference: bool removeChild(mixed $node)
+Status: public
+
+---
+
+Removes the `$node` from the child list of the current node. `$node` may be specified either by the order number or by the object. It returns **true**, if the node is successfully removed.

@@ -1,0 +1,9 @@
+Title: sum()
+Reference: number sum(container $container)
+SeeAlso:
+ - syntax.functions.average
+ - syntax.functions.stddev
+
+----
+
+The function assumes that all the values in the container are numbers and returns their total sum.

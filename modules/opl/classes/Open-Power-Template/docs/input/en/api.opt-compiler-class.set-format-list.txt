@@ -1,0 +1,9 @@
+Title: setFormatList()
+ShortTitle: Opt_Compiler_Class::setFormatList()
+Reference: void setFormatList(array $variables)
+SeeAlso:
+ - api.opt-compiler-class.create-format
+
+----
+
+Exports the list of variables and the formats associated with them to the compiler. The `$variables` is an associative array of pairs `variable => format description`.

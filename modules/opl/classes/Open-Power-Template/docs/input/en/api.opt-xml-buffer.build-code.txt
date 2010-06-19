@@ -1,0 +1,8 @@
+Title: buildCode()
+ShortTitle: Opt_Xml_Buffer::buildCode()
+Reference: string buildCode(...)
+Status: public
+
+---
+
+This method is used only by the code linker. It concatenates the code snippets in the specified buffers and returns the complete PHP code.

@@ -1,0 +1,9 @@
+Title: decorate()
+ShortTitle: Opt_Compiler_Format::decorate()
+Reference: void decorate(Opt_Compiler_Format $decoratedFormat)
+SeeAlso:
+ - api.opt-compiler-format.is-decorating
+
+---
+
+Decorate the `$decoratedFormat` with the current format object. The decorating and decorated formats share the variable list.

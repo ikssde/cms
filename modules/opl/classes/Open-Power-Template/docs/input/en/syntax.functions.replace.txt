@@ -1,0 +1,13 @@
+Title: replace()
+Reference: string replace(string $text, string $replacedText, string $replacement)
+
+----
+
+Replaces all the occurrences of `$replacedText` in `$text` with `$replacement`:
+
+~~~~
+[xml]
+{@text is 'Hello, world!'}
+<!-- Display: "Hello, universe!" -->
+<p>{replace(@text, 'world', 'universe')}
+~~~~

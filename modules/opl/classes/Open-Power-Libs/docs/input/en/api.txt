@@ -1,0 +1,10 @@
+Title: API reference
+
+----
+
+This chapter provides the core API reference. Note that OPL allows to rewrite the core in order to integrate the libraries with your framework and therefore the API divides in two parts:
+
+1. OPL public API - for library users
+2. OPL library API - for library programmers
+
+If you are going to rewrite the OPL core, only the second part needs to be implemented. There are available the code templates on the [OPL website](http://www.invenzzia.org/) with the autoloader and optional PHAR generators.

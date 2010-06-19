@@ -1,0 +1,14 @@
+Title: assign()
+ShortTitle: Opl_Translation_Interface::assign()
+Construct: abstract method
+Reference: mixed Opl_Translation_Interface::assign( $group, $id, ... )
+Visibility: public
+Arguments:
+ - Name: $group | EType: string | Desc: The language group name
+ - Name: $id | EType: string | Desc: The message ID
+ - Name: ... | EType: mixed | Desc: The values to assign to the message.
+VersionSince: 2.0.0-dev7
+
+----
+
+Assigns the values provided as the extra arguments to the specified text `$id` in group `$group`. The method **should** also return the generated string.

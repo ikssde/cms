@@ -1,0 +1,10 @@
+Title: removeAttribute()
+ShortTitle: Opt_Xml_Element::removeAttribute()
+Reference: bool removeAttribute(mixed $attribute)
+Status: public
+SeeAlso:
+ - api.opt-xml-element.add-attribute
+
+---
+
+Removes the specified attribute. The `$attribute` may be either the attribute name written in the XML notation: *namespace:name* or the object of [Opt_Xml_Attribute][api.opt-xml-attribute].

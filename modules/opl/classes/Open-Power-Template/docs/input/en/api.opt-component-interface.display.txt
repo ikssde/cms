@@ -1,0 +1,26 @@
+Title: display()
+ShortTitle: Opt_Component_Interface::display()
+Construct: abstract method
+Visibility: public
+Reference: void display([array $attributes = array()])
+Arguments:
+ - Name: $attributes | EType: array | Desc: The list of attribute values set to the opt:display tag in the template.
+----
+
+`display()` should display the component. It is launched by the view in the place of `opt:display` tag. OPT passes the associative array of `opt:display` tag attributes as the `$attributes` argument. To render the HTML code, simply use `echo` statements, for example:
+
+~~~~
+[php]
+public function display($attributes = array())
+{
+	echo '<input type="text"';
+	foreach($attributes as $name=>$value)
+	{
+		echo ' '.$name.'="'.$value.'"';
+	}
+	echo '/>';
+} // end display();
+~~~~
+
+> [information]
+> Remember that the main purpose you should write components is the automation. Your components should be able to generate all the necessary attributes and tags without the help of the component users. Use the component parameters or even call your script API functions to get the necessary data.

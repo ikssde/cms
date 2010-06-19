@@ -1,0 +1,18 @@
+Title: onSingle()
+ShortTitle: Opt_Block_Interface::onSingle()
+Construct: abstract method
+Reference: void onSingle(Array $attributes)
+Visibility: public
+Arguments:
+ - Name: $attributes | EType: array | Desc: The associative array of block tag attributes.
+SeeAlso:
+ - api.opt-block-interface.on-open
+
+----
+
+Represents the action that must be performed for a block port single tag:
+
+~~~~
+[xml]
+<opt:block from="$var" /> <!-- here -->
+~~~~

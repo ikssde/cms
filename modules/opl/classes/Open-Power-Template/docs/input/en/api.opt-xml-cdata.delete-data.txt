@@ -1,0 +1,10 @@
+Title: deleteData()
+ShortTitle: Opt_Xml_Cdata::deleteData()
+Reference: void deleteData(int $offset, int $count)
+Status: public
+SeeAlso:
+ - api.opt-xml-text.append-data
+
+---
+
+Deletes the `$count` characters from the node, starting from `$offset`.

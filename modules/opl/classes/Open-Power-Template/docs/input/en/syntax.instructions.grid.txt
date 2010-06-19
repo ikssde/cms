@@ -1,0 +1,88 @@
+Title: opt:grid
+FeatureInformation: sections
+SeeAlso:
+ - syntax.topics.sections
+ - syntax.instructions.section
+ - syntax.instructions.tree
+ - syntax.instructions.selector
+ - syntax.instructions.show
+ - syntax.instructions.separator
+
+----
+
+`opt:grid` is one of section instructions used to display the lists in tables of the specified column number. If the list size is not a multiplication of the column number, the last row is automatically filled with empty items. The instruction breaks the lists, when this is necessary. Despite standard attributes, it requires one extra attribute:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ cols           | Expression          | Yes       | Column number
+ 
+A sample use:
+ 
+~~~~
+[xml]
+<table>
+<opt:grid name="gallery" cols="3">
+	<tr>
+		<opt:item>
+			<td><img parse:src="$gallery.picture"/></td>
+		</opt:item>
+		<opt:emptyItem>
+			<td>&nbsp;</td>
+		</opt:emptyItem> 
+	</tr>
+</opt:grid>
+</table>
+~~~~
+
+Directly in `opt:grid` we define a layout of a single row. In the place for cells, we place two tags:
+
+1. `opt:item` - defines a cell layout of the list element.
+2. `opt:emptyItem` - defines a layout of empty cells that are used to fill the last row, if the list does not contain enough elements.
+
+Empty list support
+==================
+
+We may define the optional content to be displayed if the list is empty with the `opt:gridelse` tag:
+
+~~~~
+[xml]
+<table>
+<opt:grid name="gallery" cols="3">
+	<tr>
+		<opt:item>
+			<td><img parse:src="$gallery.picture"/></td>
+		</opt:item>
+		<opt:emptyItem>
+			<td>&nbsp;</td>
+		</opt:emptyItem> 
+	</tr>
+	<opt:gridelse>
+		<tr><td>We are sorry, but the gallery is empty.</td></tr>
+	</opt:gridelse>
+</opt:grid>
+</table>
+~~~~
+
+Note that you must not use `opt:gridelse`, if our selector works together with `opt:show`. In this case, `opt:showelse` is available:
+
+~~~~
+[xml]
+<opt:show name="gallery" cols="3">
+<p>My pictures:</p> 
+<table>
+<opt:grid>
+	<tr>
+		<opt:item>
+			<td><img parse:src="$gallery.picture"/></td>
+		</opt:item>
+		<opt:emptyItem>
+			<td>&nbsp;</td>
+		</opt:emptyItem> 
+	</tr>
+</opt:grid>
+</table>
+<opt:showelse>
+	<p>We are sorry, but the gallery is empty.</p>
+</opt:showelse>
+</opt:show>
+~~~~

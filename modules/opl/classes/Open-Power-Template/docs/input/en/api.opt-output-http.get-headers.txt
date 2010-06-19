@@ -1,0 +1,20 @@
+Title: getHeaders()
+ShortTitle: Opt_Output_Http::getHeaders()
+Construct: method
+Reference: boolean getHeaders()
+Visibility: public
+Returns: Assotiative array of currently set headers
+VersionSince: 2.0.2
+
+----
+
+Returns an assotiative array of the headers that have been set so far. The header name serves as the array index, and the value contains the header value.
+
+~~~~
+[php]
+$headers = $output->getHeaders();
+if($headers['Content-type'] == 'text/html;charset=utf-8')
+{
+	echo 'This is text/html';
+}
+~~~~

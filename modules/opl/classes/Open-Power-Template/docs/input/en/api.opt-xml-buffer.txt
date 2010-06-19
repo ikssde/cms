@@ -1,0 +1,80 @@
+Title: Opt_Xml_Buffer class
+ShortTitle: Opt_Xml_Buffer
+Construct: abstract class
+ExtendedBy:
+ - api.opt-xml-attribute
+ - api.opt-xml-node
+
+----
+
+`Opt_Xml_Buffer` provides the basis for all the XML tree classes. It implements the most important tools that allow to generate the PHP code from the template:
+
+1. Code buffers
+2. State variables
+
+Code buffers
+============
+
+The XML nodes are not replaced with the PHP code line by line. The instruction processor may add the new code snippet to every node, even if it has already been parsed by other processor. The nodes contain a special data structure to keep the PHP snippets assigned to them. The snippets are grouped into buffers that indicate where the code is located in the final file (i.e. before the opening tag). The compilation is nothing more but generating the PHP code for the node buffers.
+
+Although there are many available buffers, the nodes may use only a part of them. They are identified by the `Opt_Xml_Buffer` constants:
+
+1. `TAG_BEFORE`
+2. `TAG_AFTER`
+3. `TAG_OPENING_BEFORE`
+4. `TAG_OPENING_AFTER`
+5. `TAG_CONTENT_BEFORE`
+6. `TAG_CONTENT`
+7. `TAG_CONTENT_AFTER`
+8. `TAG_CLOSING_BEFORE`
+9. `TAG_CLOSING_AFTER`
+10. `TAG_SINGLE_BEFORE`
+11. `TAG_SINGLE_AFTER`
+12. `TAG_NAME`
+13. `TAG_ATTRIBUTES_BEFORE`
+14. `TAG_ATTRIBUTES_AFTER`
+15. `TAG_BEGINNING_ATTRIBUTES`
+16. `TAG_ENDING_ATTRIBUTES`
+17. `ATTRIBUTE_NAME`
+18. `ATTRIBUTE_VALUE`
+19. `ATTRIBUTE_BEGIN`
+20. `ATTRIBUTE_END`
+
+The pictures below show, how they surround the XML tag. 
+
+![Location of the code buffers around the XML tag](media/code_buffers_1.png "Location of the code buffers around the XML tag")
+
+We see that `TAG_BEFORE` and `TAG_AFTER` enclose the whole content, including the opening and closing tags. They are used the most often, because here we can locate the loop or condition that affects the entire tag. Next, `TAG_OPENING_BEFORE` and `TAG_OPENING_AFTER` allow to put some code around the opening tag, and there are similar buffers for the closures. Moreover, we have some buffers that influence the content only. `TAG_CONTENT_BEFORE` and `TAG_CONTENT_AFTER` are used **if** the tag contains at least one child node. Otherwise, the code in `TAG_CONTENT` may be used to generate it during the runtime.
+
+The situation changes a bit, if we have a single tag:
+
+![Location of the code buffers around the single XML tag](media/code_buffers_2.png "Location of the code buffers around the single XML tag")
+
+There is no content and there are `TAG_SINGLE_BEFORE` and `TAG_SINGLE_AFTER`. Note that in this way we have two types of code buffer that surround the tag. This is not a mistake as there is important difference. The linker always adds the `TAG_BEFORE` snippets, whereas `TAG_SINGLE_BEFORE` only if the tag is single.
+
+> [information]
+> Note that the text and OPT expression nodes are surrounded only with `TAG_BEFORE` and `TAG_AFTER`. 
+
+We can find the code buffers around the XML attributes, too:
+
+![Location of the code buffers around XML attributes](media/code_buffers_3.png "Location of the code buffers around XML attributes")
+
+State variables
+===============
+
+For each node, we can assign state variables that bind some extra information to it. They are used for some purposes:
+
+1. Setting messages for the compiler.
+2. Temporary information store - if the processor parses the same node more than once, we can save some data in order not to generate them again.
+3. Setting messages for other instruction processors.
+
+The template compiler recognizes the following state variables in the nodes:
+
+dynamic
+:	(`boolean`) If set to **true**, the content of this node must keep dynamic even if the cache system is used.
+
+hidden
+:	(`boolean`) If set to **true**, the linker ignores this tag and its children - they will not appear in the output code. By default, all the nodes in the XML tree have `hidden` set to **true**. The compiler automatically changes its state, if it is going to process it.
+
+postprocess
+:	(`boolean`) By default, the compiler allows the instruction processor to parse the tags before going to their children. If the processor wants to do something also after the children are processed, it must set this variable to **true**. The compiler returns to the node then by calling [Opt_Compiler_Processor::postprocessNode()][api.opt-compiler-processor.postprocess-node] or [Opt_Compiler_Processor::postprocessAttribute()][api.opt-compiler-processor.postprocess-attribute] after the children parsing is completed.

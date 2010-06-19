@@ -1,0 +1,8 @@
+Title: getValue()
+ShortTitle: Opt_Xml_Attribute::getValue()
+Reference: string getValue()
+Status: public
+
+---
+
+Returns the XML attribute value.

@@ -1,0 +1,118 @@
+Title: Blocks
+SeeAlso:
+ - syntax.instructions.block
+
+----
+
+Writing the ordinary instructions is a bit complicated task in OPT, especially if you have to implement a simple task. Here, the blocks come into action. They consist of two parts:
+
+1. PHP objects that implement `Opt_Block_Interface` - here the programmer may simply define all the logic he needs.
+2. A template port (`opt:block` instruction) which uses the specified interface to render the block.
+
+To show, how they work, let's create a simple block class in PHP:
+
+~~~~
+[php]
+<?php
+class columnBlock implements Opt_Block_Interface
+{
+    private $_view;
+    private $_order;
+    private $_active;
+    
+    public function __construct($colId = null, $order = null, $active = null)
+    {
+        $this->_colId = $colId;
+        $this->_order = $order;
+        $this->_active = $active;
+    } // end __construct();
+
+    public function setView(Opt_View $view)
+    {
+        $this->_view = $view;
+    } // end setOptInstance();
+    
+    public function onOpen(Array $attributes)
+    {
+        $colId = (isset($attributes['column']) ? $attributes['column'] : $this->_colId;
+        $order = (isset($attributes['order']) ? $attributes['order'] : $this->_order;
+        $active = (isset($attributes['active']) ? $attributes['active'] : $this->_active;
+        
+        echo '<a href="?column='.$colId.'&order='.$order.'"'.($active ? ' class="active"' : '').'>';
+    } // end onOpen();
+
+    public function onClose()
+    {
+        echo '</a>';
+    } // end onClose();
+
+    public function onSingle(Array $attributes)
+    {
+        /* null */
+    } // end onSingle();
+} // end columnBlock;
+~~~~
+
+Such block class can be used to create clickable column headers in a table to choose the sort order etc.:
+
+~~~~
+[php]
+$view->columns = array(0 =>
+	array('title' => 'Column 1', 'click' => new columnBlock(1, 0, true)),
+	array('title' => 'Column 2', 'click' => new columnBlock(2, 0, false)),
+	array('title' => 'Column 3', 'click' => new columnBlock(3, 0, false)),
+);
+~~~~
+
+Now we can create a dynamic table header which also very clean:
+
+~~~~
+[xml]
+<table>
+    <thead>
+        <opt:section name="columns">
+        <th><opt:block from="$columns.block">{$columns.title}</opt:block></th>
+        </opt:section> 
+    </thead>
+    <tbody>
+        ....
+    </tbody>
+</table>
+~~~~
+
+With the instruction `opt:block`, we have created a port where we can deploy any block object. Of course the example above is very simplified. In real world applications, it would be good to add more complicated logic to determine the columns automatically or to integrate with other script interfaces.
+
+Statically deployed blocks
+==========================
+
+In the previous example, we were using both PHP and templates to create a fully functionable block. However, you do not have to create every block object manually in the script. OPT allows you to register block classes as XML tags:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_BLOCK, 'opt:column', 'columnBlock');
+~~~~
+
+Now we can use them much like instructions:
+
+~~~~
+[xml]
+<table>
+    <thead>
+        <th><opt:column column="1">Column 1</opt:column></th>
+        <th><opt:column column="2">Column 2</opt:column></th>
+        <th><opt:column column="3">Column 3</opt:column></th>
+    </thead>
+    <tbody>
+        ...
+    </tbody>
+</table>
+~~~~
+
+In this case, OPT creates a block object automatically and destroys it after the job is finished.
+
+Block functionality
+===================
+
+The advantage over the instructions is that the blocks are processed at runtime, so your script may dynamically choose the blocks that need to be displayed. However, they have many limitations. The blocks are not able to manipulate the XML tree, they cannot be also used to create loops. However, they may display their content conditionally. The `onOpen()` method must return **true** or **false** then.
+
+OPT provides also more compound objects: **components**. The basic idea behind them is the same, but they offer much more options that are useful when working with HTML forms.

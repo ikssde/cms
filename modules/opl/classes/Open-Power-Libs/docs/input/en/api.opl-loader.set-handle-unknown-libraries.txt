@@ -1,0 +1,21 @@
+Title: setHandleUnknownLibraries()
+ShortTitle: Opl_Loader::setHandleUnknownLibraries()
+Construct: static method
+Visibility: public
+Reference: void Opl_Loader::setHandleUnknownLibraries( boolean $status )
+Arguments:
+ - Name: $status | EType: boolean | Desc: The new status.
+VersionSince: 2.0-RC1
+
+----
+
+With this method, you can control, whether OPL autoloader should handle the libraries that have not been registered with [addLibrary()][api.opl-loader.add-library] or not. By default, such handling is enabled, however in the following example it conflicts with another autoloader and we must turn it off:
+
+~~~~
+[php]
+Opl_Loader::addLibrary('Opl', array('directory' => './path/to/Opl/'));
+Opl_Loader::addLibrary('ExtraLibrary', array('directory' => './path/to/ExtraLibrary/'));
+Opl_Loader::setHandleUnknownLibraries(false);
+
+$class = new SomeExtraLibraryStuff;	// do not handle it with OPL
+~~~~

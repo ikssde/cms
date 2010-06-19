@@ -1,0 +1,8 @@
+Title: display()
+ShortTitle: Opl_Debug_Console::display()
+Reference: void Opl_Debug_Console::display()
+Status: static public
+
+----
+
+If the global configuration option `opl_custom_console` is not set, displays the debug console in the output. 

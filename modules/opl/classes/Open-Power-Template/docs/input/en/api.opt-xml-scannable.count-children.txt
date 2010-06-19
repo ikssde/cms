@@ -1,0 +1,8 @@
+Title: countChildren()
+ShortTitle: Opt_Xml_Scannable::countChildren()
+Reference: int countChildren()
+Status: public
+
+---
+
+Returns the total number of the current node children.

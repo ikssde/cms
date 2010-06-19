@@ -1,0 +1,8 @@
+Title: setName()
+ShortTitle: Opt_Xml_Attribute::setName()
+Reference: void setName(string $name)
+Status: public
+
+---
+
+Sets the new XML attribute name. The name may optionally contain the namespace with the notation *namespace:name*.

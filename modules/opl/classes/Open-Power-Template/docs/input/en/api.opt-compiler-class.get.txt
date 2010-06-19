@@ -1,0 +1,7 @@
+Title: get()
+ShortTitle: Opt_Compiler_Class::get()
+Reference: mixed get(string $name)
+
+---
+
+Returns the compiler state variable with the specified `$name` or **NULL**, if the variable is not defined.

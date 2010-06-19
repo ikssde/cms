@@ -1,0 +1,100 @@
+Title: opt:tree
+FeatureInformation: sections
+SeeAlso:
+ - syntax.topics.sections
+ - syntax.instructions.section
+ - syntax.instructions.grid
+ - syntax.instructions.selector
+ - syntax.instructions.show
+ - syntax.instructions.separator
+
+----
+
+`opt:tree` is one of the section instructions designed to display hierarchical data (trees) with any level of nesting. The instruction does not support one of section attributes, `order` - because of the used algorithm the result displayed in the descending order would be strange.
+
+Inside the `opt:tree` tag we place two new ones: `opt:list` and `opt:node`. The first tag tells, how to open and close the new nesting level, whereas `opt:node` defines the layout of a single element within a tree. In both of them, we need to put also another tag: `opt:content` to mark, where to display the nested content:
+
+~~~~
+[xml]
+<opt:tree name="tree">
+	<opt:list><ul><opt:content/></ul></opt:list>
+	<opt:node><li>{$tree.name} <opt:content /></li></opt:node>  
+</opt:tree>
+~~~~
+
+Sample result:
+
+~~~~
+[xml]
+<ul>
+	<li>Element 1</li>
+	<li>Element 2 <ul>
+		<li>Element 2.1 <ul>
+			<li>Element 2.1.1</li>
+		</ul></li>
+		<li>Element 2.2</li>
+	</ul></li>
+	<li>Element 3</li>
+</ul>
+~~~~
+
+In `opt:list`, the `opt:content` tag specifies, where to show the elements of the currently opened level, and in `opt:node`, where the nested list could appear. Note that we do not have to enclose `opt:tree` itself within `<ul>` tags, because they are automatically added, when the instruction starts to generate the initial nesting level.
+
+> [error]
+> The `opt:content` tag must not be located within any other tag that generates PHP code during the compilation. Especially, it must not be placed within other instruction tags.
+
+A sample of invalid `opt:content` location:
+
+~~~~
+[xml]
+<opt:tree name="tree">
+	<opt:list><ul><opt:content/></ul></opt:list>
+	<opt:node><li>{$tree.name} <opt:repeat times="3"><opt:content /></opt:repeat></li></opt:node>  
+</opt:tree>
+~~~~
+
+Empty list support
+==================
+
+You may define the alternative content to be displayed, if the list is empty, using the tag `opt:treeelse`:
+
+~~~~
+[xml]
+<opt:tree name="tree">
+	<opt:list><ul><opt:content/></ul></opt:list>
+	<opt:node><li>{$tree.name} <opt:content /></li></opt:node>
+	<opt:treeelse><p>We are sorry, but there is nothing to show.</p></opt:treeelse>
+</opt:tree>
+~~~~
+
+With `opt:show` instruction, `opt:treeelse` must not be used:
+
+~~~~
+[xml]
+<opt:show name="tree">
+	<p>Tree:</p>
+
+	<opt:tree>
+		<opt:list><ul><opt:content/></ul></opt:list>
+		<opt:node><li>{$tree.name} <opt:content /></li></opt:node>
+	</opt:tree>
+
+	<opt:showelse>
+		<p>We are sorry, but there is nothing to show.</p>
+	</opt:showelse>
+</opt:show>
+~~~~
+
+For programmers
+===============
+
+`opt:tree` requires each element to have a variable `$sectionName.depth` that defines the depth of the element. Its value can be easily counted recursively, if the tree is stored in a traditional format. If the tree is stored in the database and we are using the nested sets algorithm (also known as modified preorder tree traversal), such value is automatically counted during the retrieving the tree from the database. A sample list from the first example would look like this:
+
+~~~~
+name=Element 1, depth=1
+name=Element 2, depth=1
+name=Element 2.1, depth=2
+name=Element 2.1.1, depth=3
+name=Element 2.2, depth=2
+name=Element 3, depth=1
+~~~~

@@ -1,0 +1,8 @@
+Title: removeChildren()
+ShortTitle: Opt_Xml_Scannable::removeChildren()
+Reference: void removeChildren()
+Status: public
+
+---
+
+Removes all the children of the current node.

@@ -1,0 +1,8 @@
+Title: getExpression()
+ShortTitle: Opt_Xml_Expression::getExpression()
+Reference: string getExpression()
+Status: public
+
+---
+
+Returns the OPT expression associated with this node.

@@ -1,0 +1,71 @@
+Title: opt:section
+SeeAlso:
+ - syntax.instructions.section
+ - syntax.attributes.selector
+ - syntax.topics.sections
+
+----
+
+> [help]
+> This chapter describes one of section instructions. We recommend to read [Sections][syntax.topics.sections] first to get to know more about them.
+
+This attribute applied to any tag changes it into a section with the specified name. It allows to reduce the following code:
+
+~~~~
+[xml]
+<ol>
+    <li opt:section="list">{$list.variable}</li>
+</ol>
+~~~~
+
+Instead:
+
+~~~~
+[xml]
+<ol>
+    <opt:section name="list">
+    <li>{$list.variable}</li>
+    </opt:section>
+</ol>
+~~~~
+
+The tag with `opt:section` attribute is also a member of section content and the element variables can be used in its attributes:
+
+~~~~
+[xml]
+<ol>
+    <li parse:class="$list.css" opt:section="list">{$list.variable}</li>
+</ol>
+~~~~
+
+The disadvantage of `opt:section` attribute is that we cannot set additional section options, except separators:
+
+~~~~
+[xml]
+<p><opt:put value="$section.name" opt:section="section" str:separator=" / "/></p>
+~~~~
+
+Sample result:
+
+~~~~
+<p>Value 1 / Value 2 / Value 3 / Value 4</p>
+~~~~
+
+opt:show integration
+====================
+
+The `opt:section` attribute can be used together with `opt:show`. Because the attribute must have any value, it is assumed that in this case, it must contain the same section name, as it is defined in `opt:show`. With `opt:show` we are also allowed to define extra section attributes:
+
+~~~~
+[xml]
+<opt:show name="list" order="desc">
+<ol>
+    <li opt:section="list">{$list.variable}</li>
+</ol>
+</opt:show>
+~~~~
+
+Empty lists
+===========
+
+Within the tag with `opt:section`, you must not use the `opt:sectionelse` attribute. The only solution for empty lists is `opt:show` and `opt:showelse`.

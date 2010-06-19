@@ -1,0 +1,8 @@
+Title: hasChildren()
+ShortTitle: Opt_Xml_Scannable::hasChildren()
+Reference: bool hasChildren()
+Status: public
+
+---
+
+Returns **true**, if the current node contains any children.

@@ -1,0 +1,13 @@
+Title: getLibraryPath()
+ShortTitle: Opl_Loader::getLibraryPath()
+Construct: static method
+Reference: string Opl_Loader::getLibraryPath( string $library )
+Visibility: public
+Arguments:
+ - Name: $library | EType: string | Desc: The library name
+Returns: The path to the library files
+VersionSince: 2.0-RC1
+
+----
+
+Returns the path to the specified library files.

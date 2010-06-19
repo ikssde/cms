@@ -1,0 +1,14 @@
+Title: scalar()
+VersionSince: 2.0-RC2
+Reference: boolean scalar(mixed $value)
+
+----
+
+Returns **true**, if the specified value is a scalar, that is:
+
++ A string
++ An integer
++ A floating point number
++ A boolean value
+
+**False** is returned for containers and PHP resources.

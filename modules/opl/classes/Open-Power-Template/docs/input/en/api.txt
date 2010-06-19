@@ -1,0 +1,103 @@
+Title: API Reference
+
+----
+
+In this chapter we would like to present the Open Power Template API reference. The methods available for the end-user can be found in the `Opt_Class`, `Opt_View`, `Opt_Output_Http` and `Opt_Output_Return` classes. The rest describes the compiler interface that allows to extend OPT with the new features. 
+
+How to use the code?
+====================
+
+Open Power Template is a part of Open Power Libs and it requires the core OPL package in order to work. It is provided together with the library. Once you copied the library to the project directory structure, you will find OPT in `/path/to/libs/Opt` and OPL in `/path/to/libs/Opl`. Firstly, you have to load the `/Opl/Base.php` file manually and to initialize the autoloader. Then, you create the object of `Opt_Class` and configure it.
+
+~~~~
+[php]
+<?php
+// Load the basic code
+require('./lib/Opl/Base.php');
+
+// Set the OPL files path
+Opl_Base::setDirectory('./lib/');
+
+// Initialize the autoloader
+spl_autoload_register(array('Opl_Loader', 'autoload'));
+
+// Create the main OPT object
+$tpl = new Opt_Class;
+
+?>
+~~~~
+
+Alternatively, you may use the PHAR archives that do some of the basic configuration on their own:
+
+~~~~
+[php]
+<?php
+require('./libs/opl.phar');
+require('./libs/opt.phar');
+
+$tpl = new Opt_Class;
+?>
+~~~~
+
+The detailed information can be found in the OPL core manual.
+
+Conventions
+===========
+
+In Open Power Template, there are some conventions concerning the code and naming style:
+
+1. All the protected and private class elements have names that begin with an underscore: `_name()`.
+2. The methods that should return a particular data, return **NULL**, if it has not been found or the task has not been completed. Note that this is a bit different, contrary to the PHP standard library where **false** values are preferred. However, note that sometimes **false** is a *valid* value, and in our case, it is always interpreted correctly.
+3. The exceptions are used to report errors.
+
+Code reference issues
+=====================
+
+In the manual, we make use of several status and type names. Below, you can find their descriptions.
+
+Status
+------
+
+abstract
+:	An abstract method, you have to extend it in the child class.
+
+final
+:	The method cannot be extended.
+
+extendable
+:	The method *should* be extended, but it is not necessary.
+
+public
+:	Public element
+
+protected
+:	Protected element
+
+private
+:	Private element
+
+static
+:	Static element
+
+Types
+-----
+
+string
+:	Any valid string
+
+int
+:	An integer
+
+array
+:	A PHP array
+
+bool
+:	A logical value (**true** or **false**)
+
+mixed
+:	More than one valid type. The documentation specified the available types in the description.
+
+void
+:	This pseudo-type informs that the method does not return a value.
+
+Moreover, the class/interface names are also used as types.

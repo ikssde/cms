@@ -1,0 +1,28 @@
+Title: opt:on
+SeeAlso:
+ - syntax.instructions.if
+
+----
+
+The attribute allows to display a tag conditionally, but with keeping the content. 
+
+~~~~
+[xml]
+<p><a parse:href="$user.www" opt:on="isAddress($user.www)">{$user.nick}</a></p>
+~~~~
+
+If the `$user.www` is a valid URL, we will see:
+
+~~~~
+[xml]
+<p><a href="http://www.example.com/">Nickname</a></p>
+~~~~
+
+And if not:
+
+~~~~
+[xml]
+<p>Nickname</p>
+~~~~
+
+Note that such code has no effect when using with instruction tags.

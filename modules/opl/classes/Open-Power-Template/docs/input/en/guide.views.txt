@@ -1,0 +1,240 @@
+Title: Working with views
+
+----
+
+In Open Power Template, the script works on *views*. A view can be seen as a template with some script data and settings associated to it. Your website may create several views during the HTTP request processing. For example, you will create a separate view for a template that defines the overall website layout, and another view for the currently loaded content.
+
+Creating views
+==============
+
+To create a view, you simply create a new object of `Opt_View` class:
+
+~~~~
+[php]
+$view = new Opt_View('some_template.tpl');
+~~~~
+
+In the constructor, you can provide the template name. OPT will look for this template in the directory specified by the `sourceDir` directive. If you do not want or do not know the template name, you can always set it later with `setTemplate()` method:
+
+~~~~
+[php]
+$view = new Opt_View;
+$view->setTemplate('some_template.tpl');
+~~~~
+
+Template paths
+==============
+
+In the `Opt_View` constructor we specify the template file name which is stored in the directory pointed by the `sourceDir` option. The template name may contain some subdirectories, if they are present in the `sourceDir` directory:
+
+~~~~
+[php]
+$tpl->sourceDir = './templates/';
+
+// Gives './templates/template.tpl'
+$view = new Opt_View('template.tpl');
+
+// Gives './templates/subdirectory/template.tpl'
+$view = new Opt_View('subdirectory/template.tpl');
+~~~~
+
+Note that you must not follow the template name with a slash, because it is automatically added to the `sourceDir` paths.
+
+OPT supports PHP streams, allowing to register multiple template paths within a `sourceDir` option. Each path must be given an unique name and the default one should be called `file`. We select the requested path in the view constructor by following the template name with the path name and a colon:
+
+~~~~
+[php]
+$tpl->sourceDir = array(
+	'file' => './templates/',
+	'database' => 'db://database/'	// a sample database stream handler
+);
+
+// File from the disk
+$view = new Opt_View('file.tpl');
+
+// Another file from the disk
+$view = new Opt_View('file:file.tpl');
+
+// File from the database
+$view = new Opt_View('database:template.tpl');
+~~~~
+
+The detailed requirements for template names depend on the selected PHP stream. For more information about streams, please visit the corresponding chapter in the [PHP manual](http://docs.php.net/streams).
+
+> [information]
+> In Open Power Template 2.1 template path handling will be programmable via inflectors. They will allow to handle more complex path resolving rules that are very common in a modular software (i.e. CMS-es).
+
+Assigning the data
+==================
+
+In order to show the results of the script with a template engine, we need to assign them to at least one view. They automatically become template variables. Consider the following example. We have a template:
+
+~~~~
+[xml]
+<h1>{$page.title}</h1>
+
+{$page.content}
+~~~~
+
+Assigning the data to the template variables is very easy:
+
+~~~~
+[php]
+$view = new Opt_View('my_template.tpl');
+$view->page = array(
+    'title' => 'Some title',
+    'content' => 'Some content'
+);
+~~~~
+
+The `Opt_View` class provides several different methods to assign the data to a view. They allow for example to assign a variable by reference or to extract an associative array as a list of variables:
+
+~~~~
+[php]
+$bigText = 'This is a very long and big text.';
+
+$view->assignRef('content', $bigText);
+$view->assignGroup(array(
+	'foo' => 'abc',
+	'bar' => 'def',
+	'joe' => 'ghi'
+));
+~~~~
+
+By default, the template variables are local. This means that our view does not see the variables of other views and vice versa. Moreover, different views can use the same variable name to represent different data:
+
+~~~~
+[php]
+$view1 = new Opt_View('template1.tpl');
+$view2 = new Opt_View('template2.tpl');
+
+$view1->variable = 'Foo';
+$view2->variable = 'Bar';
+~~~~
+
+However, sometimes this is not exactly what we want. Perhaps you would like to create a container of global settings that must be accessible in all the view templates. Fortunately, the global variables are supported, too:
+
+~~~~
+[xml]
+<p>Local variable: {$variable}</p>
+<p>Global variable: {$global.variable}</p>
+~~~~
+
+On the script-side, we can create global template variables, using the static methods from `Opt_View`:
+
+~~~~
+[php]
+$view = new Opt_View('template.tpl');
+$view->variable = 'Foo';
+Opt_View::assignGlobal('variable', 'Bar');
+~~~~
+
+Basically speaking, the names of the methods that affect global variables are ended with the word *Global* and all the local variable methods have their equivalents for global variables. 
+
+Managing the view data
+======================
+
+The `Opt_View` class provides also some methods to manage the data that have been already assigned to the view. We can always check, whether the variable was defined:
+
+~~~~
+[php]
+if($view->defined('variable'))
+{
+	echo 'The variable has been defined!';
+}
+if(isset($view->variable))
+{
+	echo 'The variable has been defined!';
+}
+~~~~
+
+It is also possible to remove an existing variable with `remove()` method or read its current value with `read()`.
+
+Creating views for the website
+==============================
+
+Now it's time for the practice. As we previously said, your website will be probably composed of more than one view. It is very important to organize the views in a clear way in order not to get lost. Below, we provide the description of the recommended template structure for a website:
+
+1. In the file `layout.tpl` we will keep the structure of our HTML code, with HEAD section, page header, footer, menus and a place for the content.
+2. Different modules of the website will have one or more templates that fill the place for the content with the code they want to show. For example, the news module will display the list of news, and the contact page - a contact form.
+3. The module views will be assigned as the template variables to the layout views and included with [opt:include][syntax.instructions.include] instruction.
+
+This is the `layout.tpl` file:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root>
+<opt:prolog />
+<opt:dtd template="xhtml10transitional" />
+<html>
+<head>
+    <title>{$title}</title>
+    <!-- some meta tags, CSS styles etc. -->
+</head>
+<body>
+<div id="header">
+    <h1>{$global.website.name}</h1>
+</div>
+<div id="content">
+    <opt:include view="$module">
+        <p>We are sorry, but we are unable to load the template.</p>
+    </opt:include>
+</div>
+<div id="footer">
+    <p>&copy; You {range('2009')}</p>
+</div>
+</body>
+</html>
+</opt:root>
+~~~~
+
+And this is one of our modules (`news.tpl`):
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root>
+	<h1>News</h1>
+	
+	<opt:section name="news">
+	<div class="news" parse:id="'e '~$news.id">
+		<h2>{$news.title}</h2>
+		
+		<p>{$news.body}</p>
+	</div>
+	</opt:section>
+</opt:root>
+~~~~
+
+> [important]
+> OPT template syntax and XML standard compliance is very flexible. In this example, we assume that you are working with the default, and the most restrictive set of rules. They force you to keep only one root tag in the template and to add an XML prolog to them. Please note that OPT does not send those prologs to the browser. Instead, it uses [opt:prolog][syntax.instructions.prolog] instruction to generate it.
+
+The following piece of code creates the suitable views and initializes them with the data:
+
+~~~~
+[php]
+<?php
+// Initialize OPT here
+
+$moduleView = new Opt_View('news.tpl');
+// Let's assume that the news are loaded from the ORM.
+$moduleView->news = ORM::selectNews();
+
+$layoutView = new Opt_View('layout.tpl');
+$layoutView->title = 'Index';
+
+// Assign the module view to the layout
+$layoutView->module = $moduleView;
+
+// Add some global data for the templates.
+Opt_View::assignGlobal('website', array(
+	'title' => 'My Website',
+	'address' => 'http://www.example.com/'
+));
+~~~~
+
+Conclusion
+==========
+
+This chapter showed, how OPT represents the templates on the script-side and how to manage the views. The careful users have probably noticed that simple creation of a view object does not mean that the template associated with it will be executed and sent to the user browser. In order to perform this task, we need another type of objects, called *output systems*. Their idea is explained in the next chapter.

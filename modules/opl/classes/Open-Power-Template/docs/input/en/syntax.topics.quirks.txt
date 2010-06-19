@@ -1,0 +1,57 @@
+Title: Quirks mode
+
+----
+
+Quirks mode is a special template parsing mode for the documents that do not have the XML document structure. It resembles the *XML compatibility mode* from Open Power Template 1.x. In this mode, everything that is not an OPT instruction or expression is treated as a plain text.
+
+Activation
+==========
+
+The quirks mode can be enabled globally by setting the `mode` configuration option:
+
+~~~~
+[php]
+$tpl->mode = Opt_Class::QUIRKS_MODE;
+~~~~
+
+It can be also enabled for a single view:
+
+~~~~
+[php]
+$view = new Opt_View('template.tpl');
+$view->setMode(Opt_Class::QUIRKS_MODE);
+~~~~
+
+Usage
+=====
+
+In quirks mode, only the OPT instructions and expressions are parsed and the compiler does not check anything else except entities. Below you can see a sample template:
+
+~~~~
+[xml]
+<html>
+<title>Foo</title>
+<p {$class}>This is a text
+<ol>
+<opt:section name="foo">
+<li>{$foo.item}
+</opt:section>
+</ol>
+</HTML>
+~~~~
+
+The ordinary HTML tags are not validated, so you do not have to close them properly. On the other hand, the OPT tags still must be enclosed in the valid order. Moreover, the expressions in curly brackets may be used as attribute sources for the tags. Moreover, the output systems allow to concatenate the output document from the smaller pieces.
+
+Limitations
+===========
+
+The quirks mode brings some limitations:
+
+1. No XML/HTML error control.
+2. OPT attributes cannot be used with HTML tags.
+3. You cannot use any features that are supposed to co-operate with the ordinary (non-OPT) tags in the document.
+
+When to use the quirks mode?
+============================
+
+The quirks mode has been designed for processing the non-XML documents without the need to use a separate template engine for them. This includes for example SQL, CSV or plain text files. It is not recommended to use it with HTML and (especially) XHTML, as it may lead to serious problems in the future.

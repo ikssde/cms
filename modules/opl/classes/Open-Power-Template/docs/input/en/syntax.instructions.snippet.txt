@@ -1,0 +1,92 @@
+Title: opt:snippet
+SeeAlso:
+ - syntax.instructions.extend
+ - syntax.instructions.insert
+
+----
+
+`opt:snippet` saves its content under the specified name. It can be inserted in many other places with `opt:insert` instruction or `opt:use` attribute. Contrary to `opt:capture`, the saved code remains dynamic. If we change the value of an variable used in the snippet between two insertions, it will be visible in the output. The instruction is a part of template inheritance system, however it may be also used for many other purposes.
+
+attributes:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ name           | ID                  | Yes       | The snippet unique name.
+
+Below, you can see a template that illustrates the snippet properties:
+
+~~~~
+[xml]
+<opt:snippet name="snippet">
+	
+	<p>The value of <em>foo</em>: {@foo}</p>
+	
+</opt:snippet>
+	
+<!-- Shows "The value of foo: 5" -->
+{@foo is 5}
+<opt:insert snippet="snippet" />
+	
+<!-- Shows "The value of foo: 6" -->
+{@foo is 6}
+<opt:insert snippet="snippet" />
+~~~~
+
+`opt:snippet` is processed during the compilation and neither declared nor included snippet names may be loaded from variables. The template may use the snippets defined in other template, however - we must assure that it will be loaded by the compiler, either using template inheritance or `opt:root` `include` attribute. Note that `opt:include` instruction does not guarantee that the snippets from the included template will be loaded.
+
+Although the snippet name must be unique, it is possible to create several snippets named identically:
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+	SNIPPET 1 
+</opt:snippet>
+	
+<opt:snippet name="foo">
+	SNIPPET 2
+</opt:snippet>
+	
+<opt:snippet name="foo">
+	SNIPPET 3
+</opt:snippet>
+	
+<opt:insert snippet="foo" /> <!-- what will be the result? -->
+~~~~
+
+The first look at the code suggests that the new snippets overwrite the old ones and we will see "SNIPPET 3". Unfortunately, they don't because of the way the template inheritance is processed in the compiler. The output will be "SNIPPET 1", the first snippet that uses the name `foo`. However, the later definitions are not lost. Snippet 2 becomes a parent of snippet 1, and snippet 3 - of snippet 2. Each snippet may display the content of its parent using the `opt:parent` tag. (Do you see here some similarities to the method overloading in the object oriented programming?)
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+    The beginning of snippet 1
+    <opt:parent />
+    The end of snippet 1
+</opt:snippet>
+	
+<opt:snippet name="foo">
+    The beginning of snippet 2
+    <opt:parent />
+    The end of snippet 2
+</opt:snippet>
+	
+<opt:snippet name="foo">
+    The beginning of snippet 3
+    <opt:parent />
+    The end of snippet 3
+</opt:snippet>
+	
+<opt:insert snippet="foo" />
+~~~~
+
+Such code produces the following result:
+
+~~~~
+    The beginning of snippet 1
+        The beginning of snippet 2
+            The beginning of snippet 3
+            The end of snippet 3
+        The end of snippet 2
+    The end of snippet 1
+~~~~
+
+As we see, `opt:parent` is ignored, if the snippet does not have any parent. However, note that `opt:insert` instruction used to paste snippets in the new place, may have an alternative content in case the snippet is not defined. By default, that content is also treated as a parent of the pasted snippet! However, this can be disabled with `opt:insert` `ingoredefault` attribute.

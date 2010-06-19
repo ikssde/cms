@@ -1,0 +1,22 @@
+Title: render()
+ShortTitle: Opt_Output_Interface::render()
+Construct: abstract method
+Reference: mixed render(Opt_View $view)
+Visibility: public
+Arguments:
+ - Name: $view | Type: api.opt-view | Desc: The view to render.
+Returns: The returned value may depend on the output needs.
+
+----
+
+Executes the `Opt_View::_parse()` method in [Opt_View][api.opt-view] class in order to execute the template. The most trivial implementation:
+
+~~~~
+[php]
+public function render(Opt_View $view)
+{
+	$view->_parse($this, true);
+} // end render();
+~~~~
+
+The second argument in `_parse()` indicates that the method should throw an exception, if the requested template does not exist. The library does not require the method to return any particular value, however the output system may return such a value in `render()`.

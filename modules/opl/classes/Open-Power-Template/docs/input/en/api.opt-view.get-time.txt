@@ -1,0 +1,13 @@
+Title: getTime()
+ShortTitle: Opt_View::getTime()
+Construct: method
+Reference: float getTime()
+Returns: The template processing time
+Visibility: public
+
+----
+
+Returns the view processing time in seconds.
+
+> [error]
+> This method should be used only once the view has already been rendered with some output.

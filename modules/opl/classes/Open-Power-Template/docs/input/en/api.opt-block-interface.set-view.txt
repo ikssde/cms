@@ -1,0 +1,11 @@
+Title: setView()
+ShortTitle: Opt_Block_Interface::setView()
+Construct: abstract method
+Reference: void setView(Opt_View $view)
+Visibility: public
+Arguments:
+ - Name: $view | Type: api.opt-view | Desc: The view the block is deployed in.
+
+----
+
+This method is called by the executed template, when the block is going to be deployed in the port. OPT passes the view object that processes the template as an argument.

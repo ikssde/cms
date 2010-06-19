@@ -1,0 +1,29 @@
+Title: defined()
+ShortTitle: Opt_View::defined()
+Construct: method
+Reference: boolean defined( string $name )
+Visibility: public
+SeeAlso:
+ - api.opt-view.defined-global
+
+----
+
+Returns **true**, if there already exists a local template variable `$name` assigned to the current view.
+
+~~~~
+[php]
+if(!$view->defined('foo'))
+{
+    $view->foo = $someValue;
+}
+~~~~
+
+Alternatively, you may use the following syntax:
+
+~~~~
+[php]
+if(!isset($view->foo))
+{
+    $view->foo = $someValue;
+}
+~~~~

@@ -1,0 +1,105 @@
+Title: New caching systems
+SeeAlso:
+ - guide.cache
+
+----
+
+OPT does not come bundled with any native caching system, although one is being developed as a part of *Open Power Classes* project. This article shows, how to connect the template engine to an external caching system, provided (for example) by your framework. All you need is to implement the `Opt_Caching_Interface` in one of your classes. The interface consists of two methods:
+
+~~~~
+[php]
+public function templateCacheStart(Opt_View $view);
+public function templateCacheStop(Opt_View $view);
+~~~~
+
+The first method must perform the following operations:
+
+1. Check, if the cached content needs to be refreshed.
+2. If the cache must be refreshed, the method is expected to start capturing the content and return **false**.
+3. Otherwise, it must read and display the content with **echo** and return **true**.
+
+The second method is executed at the end of cache rebuilding. Its purpose is to finalize the capturing and save the new content.
+
+A sample implementation could look like this:
+
+~~~~
+[php]
+class myCache implements Opt_Caching_Interface
+{
+	private $_refresh = false;
+
+	public function refresh()
+	{
+		$this->_refresh = true;
+	} // end refresh();
+
+	public function templateCacheStart(Opt_View $view)
+	{
+		if(!file_exists('./'.$view->getTemplate().'.txt') || $this->_refresh)
+		{
+			$tpl = Opl_Registry::get('opt');
+			$tpl->setBufferState('cache',true);
+			
+			ob_start();
+			return false;
+		}
+		echo file_get_contents('./cache.txt');
+		return true;
+	} // end templateCacheStart();
+
+	public function templateCacheStop(Opt_View $view)
+	{
+		file_put_contents('./'.$view->getTemplate().'.txt', ob_get_clean());
+
+		$tpl = Opl_Registry::get('opt');
+		$tpl->setBufferState('cache',false);
+	} // end templateCacheStop();
+} // end myCache;
+~~~~
+
+Such caching object can be registered now in the `Opt_View` object to enable caching features.
+
+> [help]
+> If you are working with Zend Framework, please take a look at the [OPL for Zend Framework port](http://www.invenzzia.org/en/projects/ports/opl4zf) which contains a plugin that allows to use the `Zend_Cache` component with OPT.
+
+If you are wondering, why our caching system needs the main OPT object and why we are calling `setBufferState()`, please read the chapter below.
+
+Capturing `<opt:dynamic>`
+=========================
+
+The [opt:dynamic][syntax.instructions.dynamic] instruction informs that the specified part of template must remain dynamic even after caching. In order to use this feature, the caching system must support it. Here, we are going to describe, how to capture the dynamic content of the template.
+
+When using `opt:dynamic`, the caching system must combine the cache file from the static parts of the template and the PHP code snippets that must remain dynamic. This means that the output cache file must be a PHP script, instead of a file with static text. The static content is collected by `Opt_View` object that processes the template, and PHP snippets can be found in the compilation directory. Once we use `opt:dynamic`, the template compiler produces two output files - the new one, with `.dyn` extension, contains the serialized array of the PHP code for our caching system.
+
+The concatenation must be done in `templateCacheStop()` and below, you can find a sample implementation:
+
+~~~~
+[php]
+public function templateCacheStop(Opt_View $view)
+{
+	if($view->hasDynamicContent())
+	{
+		$staticParts = $view->getOutputBuffers();
+		$dynamicParts = unserialize(file_get_contents($view->_convert($view->getTemplate())));
+		
+		$output = '';
+		$cnt = sizeof($staticParts);
+		for($i = 0; $i < $cnt; $i++)
+		{
+			$output .= $staticParts[$i];
+			$output .= '<'.'?php '.$dynamicParts[$i].' ?'.'>';
+		}
+		$output .= ob_get_flush();
+		// save the file...
+	}
+	else
+	{
+		// static cache here...
+	}
+} // end templateCacheStop();
+~~~~
+
+> [warning]
+> In the source code, we can see that we need to close the last output buffer manually with `ob_get_flush()`. The output buffer must be flushed, too. Otherwise, it won't appear on the script when the cache is regenerated.
+
+`opt:dynamic` requires us to use the advisory output buffer management provided by the `Opt_Class` to detect, whether the caching output buffering has actually been used. This means that `templateCacheStart()` must call: `$tpl->setBufferState('cache',true);` and `templateCacheStop()` - `$tpl->setBufferState('cache',false)`.

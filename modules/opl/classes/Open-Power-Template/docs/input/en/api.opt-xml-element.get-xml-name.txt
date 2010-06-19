@@ -1,0 +1,10 @@
+Title: getXmlName()
+ShortTitle: Opt_Xml_Element::getXmlName()
+Reference: string getXmlName()
+Status: public
+SeeAlso:
+ - api.opt-xml-element.get-name
+
+---
+
+Returns the full XML name of the tag with the namespace separated with a colon.

@@ -1,0 +1,20 @@
+Title: addTableItem()
+ShortTitle: Opl_Debug_Console::addTableItem()
+Reference: void Opl_Debug_Console::addTableItem( String $id, Array $columnValues)
+Status: static public
+
+----
+
+Adds a new item to the table `$id`. The `$columnValues` array must contain a list of values to be shown in the table columns:
+
+~~~~
+[php]
+Opl_Debug_Console::addTable('table', 'My debugging table', array(
+	'30:#',
+	'*:Column 1',
+	'25%:Column 2'
+));
+Opl_Debug_Console::addTableItem('table', array(
+	5, 'Text 1', 'Text 2'
+));
+~~~~

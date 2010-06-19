@@ -1,0 +1,90 @@
+Title: Template syntax
+
+----
+
+In this chapter, we are going to describe the syntax used in OPT templates. It is based on XML language, and if you are familiar with it, you should have no problems to understand. Otherwise, you should consider reading something about XML.
+
+The execution of the template takes some time, so OPT tries to optimize the process. When you run a template for the first time, OPT *compiles* it into pure PHP code, which can be executed much faster. Moreover, the result is saved on the hard disk and later, OPT simply loads the precompiled version. This implicates some issues that you must know about. First of all, OPT is not a Document Object Model. The script cannot modify every tag it likes and whenever it likes unless it was programmed in the template itself. However, a huge majority of programmers do not need such functionality, so this is not a real limitation for them. Otherwise, you should think over whether the template engines are the right choice.
+
+OPT philosophy
+==============
+
+Before we start, let us tell abot the syntax philosophy.
+
+Configurable compatibility
+:	The XML parser used by OPT is very flexible and allows to set a wide variety of compatibility levels with XML standard.
+
+KISS
+:	The simple things should be simple to achieve.
+
+DRY
+:	There is no need to reinvent the wheel every time we write a new template.
+
+Declarative style
+:	Declarative style means that we only specify, *what* we want to see, not *how* to do this. Unlike many other template engines, OPT contains built-in declarative instructions. Such style is very convenient for people who know little about programming, but not only. Also the programmers should enjoy the simplicity and clearness of OPT templates.
+
+No programming in templates
+:	The templates full of loops, conditions and logical operations are very hard to maintain and understand. You should avoid it, if possible.
+
+How much PHP is in OPT syntax?
+==============================
+
+Like many other template engines, OPT compiles the templates into the native PHP code. This means that usually the syntax is based on that language and includes some sort of support for the default PHP types, etc. The programmers can even put PHP code snippets in the templates. It has some disadvantages, like:
+
+1. Poor code reusability - sometimes the code sample cannot be reused again in another place even inside the same PHP application!
+2. Problems with refactoring - as the applications grow, we may need to change some solutions. The templates must be rewritten as well.
+3. Problems with portability - what about backends? They often share the same layout. Do we need to write the templates every time we start something new?
+
+In OPT we decided to divide the syntax into two parts:
+
+1. Abstract, platform- and type-independent part.
+2. PHP-based part.
+
+In the first case, OPT automatically converts the code to the valid PHP parts according to the information provided by the script and the context. If you change the format, you simply modify your script and recompile templates. In the second case, OPT compiles everything as it is. It is you who must make sure that everything is correct, and who eventually will pay for it.
+
+The access to the PHP syntax part can be controlled in the compiler configuration. You can disable some minor issues, or simply turn it off to ensure that nobody tries to manipulate the internals of the objects passed to the templates. The security issues are discussed later.
+
+Who is this chapter for?
+========================
+
+We recommend the PHP programmers to read this chapter, too, because they can find here a lot of practical notices and advices. OPT syntax contains several programming instructions and ports to PHP language elements, and this document may be read by people who are not familiar with programming. Because of this, we marked the chapters:
+
+1. For everyone - recommended to read.
+2. Simple programming construct that is recommended.
+3. Programming construct that probably will not be necessary. You 
+
+The second type is marked with:
+
+> [warning]
+> This chapter contains *useful programming information* that are simple to understand. In case of questions, contact your programmer.
+
+The third type is marked with:
+
+> [warning]
+> This chapter contains information about *programming constructs* that are not recommended to use. If you are only a template author, probably you will not have to use them. In case of questions, contact your programmer.
+
+Moreover, we are going to use additional information frames:
+
+> [information]
+> Some information for programmers
+
+<!-- ... -->
+
+> [important]
+> Important information
+
+<!-- ... -->
+
+> [error]
+> This frame informs about common errors and mistakes.
+
+We will also use the following terms:
+
+Template
+:	A file with the source template code that tells where to put the data and how to display them.
+
+Compiled template
+:	The template compiled into the PHP code.
+
+Template result, output
+:	The code that is produced by putting the data into a template and is ready to be sent to the browser.

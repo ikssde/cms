@@ -1,0 +1,8 @@
+Title: Opt_Generator_Interface
+Construct: interface
+SeeAlso:
+ - guide.data-formats.available
+
+----
+
+The interface is used by `StaticGenerator` and `RuntimeGenerator` section data formats. It allows to lazy-load the section data with those generators. The generator object must be provided in place of the ordinary section data.

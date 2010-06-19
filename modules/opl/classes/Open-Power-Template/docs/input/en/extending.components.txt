@@ -1,0 +1,5 @@
+Title: New components
+
+----
+
+See: [Syntax / Topics / Components][syntax.topics.components] and [Guide / Components][guide.components]

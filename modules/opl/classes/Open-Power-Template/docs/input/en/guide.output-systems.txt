@@ -1,0 +1,85 @@
+Title: Working with output systems
+
+----
+
+The OPT views introduced in the previous chapter are not able to execute themselves automatically. Our application must be able to determine, when to execute them and what to do with the results. In many template engines, this is a part of the main class and the destination place is chosen with different methods or their arguments and it has nothing to do with object-oriented programming. On the other hand, Open Power Template operates a term *output system*.
+
+> [information]
+> *Output system* is a class that is able to execute the views and decides, where to send the generated HTML code.
+
+The OPT package provides two default output systems: *HTTP* and *Return*.
+
+Rendering the views
+===================
+
+Let's back to the example from the previous chapter. We have created two view objects: `$layoutView` and `$moduleView` assigned to the first one. In order to render them and show something to the user, we have to create an output system object:
+
+~~~~
+[php]
+$output = new Opt_Output_Http;
+$output->render($layoutView);
+~~~~
+
+With this simple code, we have executed all the templates and the results have been sent to the browser. Now other people can visit our website. Note that we do not render `$moduleView`. This is not a mistake. The module view is automatically executed by the [opt:include][syntax.instructions.include] instruction used in `layout.tpl` file and processed with exactly the same output system. It does not mean that `$moduleView` suddenly starts to see the local variables of `$layoutView` unless explicitly specified in `opt:include` instruction.
+
+> [important]
+> You must render the top-level view only.
+
+Working with standard output systems
+====================================
+
+Now we are going to show the features of the standard output systems provided by PHP.
+
+`Opt_Output_Http`
+-----------------
+
+This output sends the generated result to the user browser. It provides several extra features:
+
+1. Additional XML validity control
+2. HTTP Header management
+3. Content-negotiation
+
+Let's take a look at the first point. Every bigger website is composed of more than one XML templates. They have to be nested one in another, because you cannot open an XML tag in one template and close it in another file, as it would break the XML rules. This leads us to the conclusion that our script *has to have* only one root template that defines the basic output HTML code structure. The *HTTP* output system must assure that we do not try to execute more than one top-level view, because this would automatically mean that we try to create an invalid XML output from valid templates. Check out the following code: you will notice that it will generate an exception:
+
+~~~~
+[php]
+$output->render($view);
+$output->render($view);
+~~~~
+
+> [warning]
+> The conclusion is simple. The `Opt_Output_Http::render()` method can be called only once, for only one view object.
+
+`Opt_Output_Http` class helps us also with managing HTTP headers. In most cases, you will need to set the `Content-type` header together with the encoding information:
+
+~~~~
+[php]
+$output = new Opt_Output_Http;
+$output->setContentType(Opt_Output_Http::XHTML, 'utf-8');
+$output->render($view);
+~~~~
+
+OPT provides a few predefined constants that define the most popular content-types, but you can also specify any other content type manually: `setContentType('text/plain')`. The predefined content types are:
+
+1. `Opt_Output_Http::XHTML` - `application/xhtml+xml` or `text/html`, depending on the user browser.
+2. `Opt_Output_Http::HTML` - `text/html`.
+3. `Opt_Output_Http::FORCED_XHTML` - force `application/xhtml+xml` always, if the browser supports it.
+4. `Opt_Output_Http::WML` - `text/vnd.wap.wml`
+5. `Opt_Output_Http::XML` - `application/xml`
+6. `Opt_Output_Http::TXT` - `text/plain`
+
+By default, OPT checks the XHTML document content type accessibility only. The full content negotiation is available, when Open Power Template cooperates with Open Power Classes package. Unfortunately, it is at the early development stage and you need to wait for a while before it will be accessible.
+
+`Opt_Output_Return`
+-------------------
+
+This output system returns the generated code as a result of `render()` method. You can save it to a variable and use somehow in your script:
+
+~~~~
+[php]
+$output = new Opt_Output_Return;
+
+$content = $output->render($view);
+~~~~
+
+This output system does not have any limitations on the number of `render()` calls. The same output system instance can execute many OPT view objects.

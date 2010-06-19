@@ -1,0 +1,112 @@
+Title: get()
+ShortTitle: Opt_Compiler_Format::get()
+Reference: string get(string $name)
+Status: final
+
+---
+
+Returns the PHP code hook with the specified name `$name` in both the specified format and the formats decorated by it. If the code hook cannot be found, it throws `Opt_APIHookNotDefined_Exception`.
+
+> [error]
+> This method is affected by PHP bug #40479 related to the Zend Engine memory management. It causes the segmentation fault of the interpreter when it attempts to throw an exception. In order not to crash the script, OPT displays the exception using simple `die()` command rather than throwing it.
+
+Available code hooks
+====================
+
+The code hooks below are used by OPT and are grouped into three feature sets (see [Opt_Compiler_Format::supports()][api.opt-compiler-format.supports]).
+
+`variable` feature set
+======================
+
+`variable:main`
+:	The PHP code for the template variable call, for example `$templateVariable`. The variable name can be read from the format variable `item`.
+
+`variable:assign`
+:	The PHP code that assigns a new value to the variable. The value marker is provided in the format variable `value`.
+:	Required, if the `item:assign` property is set to **true**.
+
+`item` feature set
+==================
+
+`item:main`
+:	The PHP code for the container call, for example `$container.item.subitem`. The code hook is called for each of the container elements separately, because they may be processed by different data formats. The item name can be read from the format variable `item`.
+
+`item:assign`
+:	The PHP code that assigns a new value to the item. The value marker is provided in the format variable `value`.
+:	Required, if the `item:assign` property is set to **true**.
+
+`section` feature set
+=====================
+
+All the hooks in this feature set have the access to the format variable `section` that contains all the information on the current section.
+
+`section:init`
+:	The section initialization code hook. It should obtain the list data from the `datasource` attribute, the parent section, one of the template variables or some other place. The section data **should** be saved into the variable `$_sectSECTIONNAME_vals`.
+
+`section:isNotEmpty`
+:	The condition that checks whether the element list is not empty and whether it contains the valid data.
+
+`section:started`
+:	The PHP code hook executed after checking the condition.
+
+`section:finished`
+:	The PHP code hook executed before finishing the conditional block.
+
+`section:done`
+:	The PHP code hook executed after exiting the condition block.
+
+`section:loopBefore`
+:	The PHP code hook executed before entering the section loop.
+
+`section:startAscLoop`
+:	The section loop that iterates through the elements in the ascending order.
+
+`section:startDescLoop`
+:	The section loop that iterates through the elements in the descending order.
+
+`section:endLoop`
+:	The end of the section loop.
+
+`section:variable`
+:	The PHP code that retrieves the section item variable, for example `$sectionName.variable`. If the data format decorates another format, you should order that format to return the code hook `item:item` for the `.variable`.
+
+`section:variableAssign`
+:	The PHP code that assigns a new value to the section variable. The value marker is provided in the format variable `value`.
+:	Required, if the `section:variableAssign` property is set to **true**.
+
+`section:item`
+:	The PHP code that returns the whole current section item.
+
+`section:itemAssign`
+:	The PHP code that assigns a new value to the item. The value marker is provided in the format variable `value`.
+:	Required, if the `section:itemAssign` property is set to **true**.
+
+`section:reset`
+:	Resets the section back to the first item.
+
+`section:next`
+:	Moves to the next section item.
+
+`section:valid`
+:	Checks if the section item we have moved to, is valid (if it exists etc.)
+
+`section:populate`
+:	The code hook that moves the section item data from `$_sectSECTIONNAME[$_sectNESTING_i]` to `$_sectSECTIONNAME_v`.
+
+`section:count`
+:	The expression that returns the number of items in the section.
+
+`section:size`
+:	The expression that returns the number of the variables in the current section item.
+
+`section:iterator`
+:	The expression that returns the section iterator. The iterator **should** be a variable constructed with this pattern: `$_sectNESTING_i`. The section nesting level can be read from the `section` format variable.
+
+`section:isFirst`
+:	The expression that checks, if the current section item is the first on the list, according to the section order.
+
+`section:isLast`
+:	The expression that checks, if the current section item is the first on the list, according to the section order.
+
+`section:isExtreme`
+:	The expression that checks, if the current section item is the first or the last on the list.

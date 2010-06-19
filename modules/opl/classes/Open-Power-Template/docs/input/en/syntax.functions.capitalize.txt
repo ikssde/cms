@@ -1,0 +1,15 @@
+Title: capitalize()
+Reference: string capitalize(string $text)
+
+----
+
+Capitalizes the first letter in the `$text`.
+
+~~~~
+[xml]
+<!-- result: "Hello world" -->
+{capitalize('hello world')}
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, capitalizing them all and returning the modified container.

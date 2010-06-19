@@ -1,0 +1,10 @@
+Title: getName()
+ShortTitle: Opt_Xml_Attribute::getName()
+Reference: string getName()
+Status: public
+SeeAlso:
+ - api.opt-xml-attribute.get-xml-name
+
+---
+
+Returns the XML attribute name (without the namespace).

@@ -1,0 +1,9 @@
+Title: createFormat()
+ShortTitle: Opt_Compiler_Class::createFormat()
+Reference: Opt_Compiler_Format createFormat(string $variable, string $formatDesc)
+
+---
+
+Creates the new format object from the specified format description `$formatDesc`. The `$variable` contains the variable name for debug purposes.
+
+The `$formatDesc` must be a list of format names separated with slash `/` marking the decoration. For example, for `Foo/Bar` the method creates the `Bar` format object decorated with the `Foo` format object.

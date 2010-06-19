@@ -1,0 +1,10 @@
+Title: getName()
+ShortTitle: Opt_Xml_Element::getName()
+Reference: string getName()
+Status: public
+SeeAlso:
+ - api.opt-xml-element.get-xml-name
+
+---
+
+Returns the tag name (without the namespace).

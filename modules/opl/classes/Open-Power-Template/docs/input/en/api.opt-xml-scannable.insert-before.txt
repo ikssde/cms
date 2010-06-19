@@ -1,0 +1,8 @@
+Title: insertBefore()
+ShortTitle: Opt_Xml_Scannable::insertBefore()
+Reference: void insertBefore(Opt_Xml_Node $newNode [, mixed $refNode = null [, $appendOnError = true]])
+Status: public
+
+---
+
+Inserts the specified `$newNode` before the child `$refNode`. `$refNode` may be specified either by the order number or by the object. By default, if `$refNode` cannot be found, the new node is added to the end of the children list, like in [Opt_Xml_Scannable::appendChild()][api.opt-xml-scannable.append-child]. However, if we set `$appendOnError` to **false**, it throws `Opt_NodeNotFound_Exception` in this case.

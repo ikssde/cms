@@ -1,0 +1,16 @@
+Title: action()
+ShortTitle: Opt_Compiler_Format::action()
+Reference: void action(string $name)
+Status: extendable public
+
+---
+
+The format may overwrite the method in order to perform some extra actions identified by the `$name`.
+
+Available actions of the default formats
+========================================
+
+In the `section` feature set, there is defined one action:
+
+`section:forceItemVariables`
+:	The section variable call like `$section.foo` may be converted to the PHP code in two ways. In the first one, the generated PHP code contains the iterator: `$_sectsection_vals[$_sectNESTING_i]['foo']`, typical for the ordinary `for` loop or `$_sectsection_v['foo']`, if the section is converted into foreach. In the data formats that generate the first version, the action allows to switch to the second one. The data format should save the used version in some private property and check it while processing the code hooks.

@@ -1,0 +1,16 @@
+Title: setTranslationInterface()
+ShortTitle: Opt_Class::setTranslationInterface()
+Construct: method
+Reference: boolean setTranslationInterface(Opl_Translation_Interface $tf)
+Visibility: public
+Arguments:
+ - Name: $tf | EType: Opl_Translation_Interface | Desc: The new translation interface to be used to OPT.
+Returns: True, if the new translation interface has been installed.
+VersionSince: 2.0-beta2
+SeeAlso:
+ - api.opt-class.get-translation-interface
+ - guide.i18n
+ 
+----
+
+Registers the OPL translation interface object to be used for `$group@identifier` template variable syntax. The argument can be also **null**, in this case the translation interface is disabled and the method returns **false**.

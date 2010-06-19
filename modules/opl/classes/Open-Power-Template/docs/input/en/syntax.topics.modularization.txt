@@ -1,0 +1,318 @@
+Title: Template modularization
+SeeAlso:
+ - syntax.topics.modularization.inclusion
+ - syntax.topics.modularization.inheritance
+
+----
+
+Every bigger website consists of dozens or even hundreds template files. It is obvious that they have to be managed somehow and the common elements must not be duplicated. Open Power Template provides several tools to make your templates more modular. In this chapter we are going to introduce and explain them.
+
+Problem
+=======
+
+Let's take a look a simple website with some news, articles and contact data. Each module has its own template, because the news look different than articles, whereas contact data are usually accompanied by a form that allows to send us an e-mail directly from the website. However, no matter what module we are looking at, they are always displayed within the same layout, with a header, menu, place for the main content and the footer. Moreover, as our database grows, we should think of a pagination mechanism - the page list should also look the same on whole website. The same issue concerns the forms - we need a generic form component design used every time we need to construct the form so that all the fors share the same layout and logics. If we need to make a change, it would be nice to make it only in one place and recompile the templates to propagate it rather than modifying about 50 files one by one.
+
+To sum up, we need the following things:
+
+ - Different templates for each module, depending on its needs.
+ - A template with the layout structure.
+ - Extra template with the form component and pagination styles.
+ - Error templates, messages, questions etc.
+ 
+Solution 1 - template concatenation
+===================================
+
+Many template engines, as well as PHP, allow you to build the output document from smaller pieces of HTML code using the following algorithm:
+
+1. Display the page header and the beginning of the menus.
+2. Display all the menus.
+3. Display the end of the menus and the beginning of the content.
+4. Display the content.
+5. etc...
+
+This leads us to the following templates:
+
+##### overall_header.tpl:
+
+~~~~
+[xml]
+<html>
+<head>
+    ...
+</head>
+<body>
+<div id="header">
+    ...
+</div>
+<div id="menu">
+~~~~
+
+##### menu.tpl:
+
+~~~~
+[xml]
+    <ul>
+        <li><a href="#">Index</a></li>
+        ....
+    </ul>
+~~~~
+
+##### content_begin.tpl:
+
+~~~~
+[xml]
+</div>
+<div id="content">
+~~~~
+
+##### index.tpl:
+
+~~~~
+[xml]
+    Some index content here.
+~~~~
+
+##### overall_footer.tpl:
+
+~~~~
+[xml]
+</div>
+<div id="footer">
+    ...
+</div>
+</body>
+</html>
+~~~~
+
+Of course, it is possible to build a valid HTML output from them, but note that they are hard to maintain. You have to define in the PHP code that `content_begin.tpl` must be executed after the menus are rendered and the menus are before the content. What if the webmaster is going to create a layout with a different structure? What if you are going to add new elements to the layout? Are you going to modify both the script and the templates, producing more and more files? This solution is not only ineffective, but does not provide any visible logic. In other words - it is very bad.
+
+Solution 2 - template inclusion
+===============================
+
+This time, we are going to locate the main layout structure in one file. It will contain some places, where the script could plug-in module-dependent content, menus etc.
+
+~~~~
+[xml]
+<html>
+<head>
+    ....
+</head>
+<body>
+<div id="header">
+    ...
+</div>
+<div id="menu">
+    [ LAUNCH ASSIGNED MENU TEMPLATES HERE ]
+</div>
+<div id="content">
+    [ LAUNCH ASSIGNED CONTENT TEMPLATES HERE ]
+</div>
+<div id="footer">
+    ...
+</div>
+</body>
+</html>
+~~~~
+
+Now the HTML structure is kept in only one place. If you are going to add some extra common elements to it, you have to modify only one file - the template, whereas the script has nothing to do here. Its task is only to define, what templates must be launched in the first and the second placeholder and the template engine must provide some mechanisms to execute them.
+
+Solution 3 - template inheritance
+=================================
+
+Template inheritance works much like inheritance in the object-oriented programming, but it applies to templates instead of classes. Here, the script does not even know about the common layout file - it only executes the module template which *extends* the layout template it wants and fills the empty placeholders with some HTML code. Take a look at sample templates:
+
+##### layout.tpl:
+
+~~~~
+[xml]
+<html>
+<head>
+    ....
+</head>
+<body>
+<div id="header">
+    ...
+</div>
+<div id="menu">
+    ...
+</div>
+<div id="content">
+    [ CONTENT PLACEHOLDER ]
+</div>
+<div id="footer">
+    ...
+</div>
+</body>
+</html>
+~~~~
+
+##### module.tpl:
+
+~~~~
+[xml]
+[ EXTEND layout.tpl ]
+
+[ CONTENT SNIPPET ]
+Some content here
+[ END OF CONTENT SNIPPET ]
+~~~~
+
+The template engine notices that our module template wants to extend `layout.tpl`, so it takes the content defined by `module.tpl` and puts it in the specified place in the layout template, producing a valid output.
+
+Open Power Template-related issues
+==================================
+
+So far, we have described the basic modularization techniques on the examples written in pseudocode that do not apply to any real template engine. It is time to explain, how they work in OPT and how to use them in this particular library.
+
+If you are going to make use of all the XML features offered by OPT, you have to forget about the solution 1 (*template concatenation*). In the XML mode, the standard HTTP output prevents you from rendering more than one template directly. For example, the following PHP code will cause an exception:
+
+~~~~
+[php]
+$output = new Opt_Output_Http;
+$output->render('template1.tpl');
+$output->render('template2.tpl'); // exception! This output has already rendered a template!
+~~~~
+
+The reason is very simple. In this mode, the templates must be valid XML files with the tags enclosed in the correct order. In other words, you must not open `<body>` in `template1.tpl` and close it in `template2.tpl`. Moreover, the output should also be a valid document, and valid XML documents have only one root tag. This leads us to simple conclusion. If the opened tags must be closed within the same template and the produced output must have exactly one root tag, there might be only one main template.
+
+> [error]
+> It is not possible to execute more than one main template in the XML mode using the HTTP output.
+
+OPT provides a complex and built-in support for template inclusion and inheritance. To include one template within another, you use `opt:include` instruction. The inheritance is done with a set of the following instructions: `opt:extend`, `opt:root`, `opt:snippet` and `opt:insert`. Both of them can be used within the same project and it is a recommended way to work with OPT. Note that `opt:include` works during the execution time, so by connection it with sections, you might create a loop that is able to load any number of templates in the same place, depending on the script needs. On the other hand, the inheritance is processed during the compilation time. Although dynamic inheritance is still allowed (the script may choose the template to be extended), it is harder to display two module templates at the same time in the same placeholder.
+
+> [help]
+> `opt:include` works during the template execution, whereas the template inheritance is processed during the compilation.
+
+The details on the implementation of those two elements can be found in chapters about [the inheritance][syntax.topics.modularization.inheritance] and [the inclusion][syntax.topics.modularization.inclusion].
+
+Mixing the template inheritance and inclusion
+=============================================
+
+As we mentioned before, OPT allows you to use both inheritance and inclusion at the same time. This is the recommended way to work with this library. `opt:include` instruction should be used to create the main layout template:
+
+~~~~
+[xml]
+<html>
+<head>
+    ....
+</head>
+<body>
+<div id="header">
+    ...
+</div>
+<div id="menu">
+    <!-- display all the menu views here -->
+    <opt:section name="menuViews">
+        <opt:include from="menuViews" />
+    </opt:section>
+</div>
+<div id="content">
+    <!-- display all the content views here -->
+    <opt:section name="contentViews">
+        <opt:include from="contentViews" />
+    </opt:section>
+</div>
+<div id="footer">
+    ...
+</div>
+</body>
+</html>
+~~~~
+
+The inheritance can be used in at the module template level. It is especially useful when working with HTML forms. It is a common situation that the same form is used all around the website, but sometimes you need to add one or two extra components. Assuming this, we would like to use the same form component style for all our forms with the possibility to change it if needed.
+
+Let's get to work. First, we start with two sample templates that define the component layout:
+
+##### standardComponentLayout.tpl:
+
+~~~~
+[xml]
+<opt:root>
+    <opt:snippet name="componentLayout">
+        <div class="form element">
+            <opt:display /> <!-- a component element -->
+            <p>{$opt.component.title}</p>
+        </div>
+    </opt:snippet>
+</opt:root>
+~~~~
+
+##### otherComponentLayout.tpl:
+
+~~~~
+[xml]
+<opt:root>
+    <opt:snippet name="componentLayout">
+        <div class="other classes">
+            <span>{$opt.component.title}</span>
+            <opt:display /> <!-- a component element -->
+        </div>
+    </opt:snippet>
+</opt:root>
+~~~~
+
+Now, we need the basic form template:
+
+##### some_form.tpl:
+
+~~~~
+[xml]
+<opt:root include="standardComponentLayout.tpl" dynamic="yes">
+    <form method="post" parse:action="$form.action">
+    <div class="form">
+        <opt:insert snippet="initialExtraComponents" />
+        
+        <opt:inputField template="componentLayout">
+            <opt:set name="name" str:value="field1" />
+            <opt:set name="title" str:value="Some field" />
+        </opt:inputField>
+
+        <opt:inputField template="componentLayout">
+            <opt:set name="name" str:value="field2" />
+            <opt:set name="title" str:value="Some other field" />
+        </opt:inputField>
+        
+        <opt:insert snippet="finalExtraComponents" />
+        
+        <opt:insert snippet="actionButtons">
+        <div class="buttons">
+            <input type="submit" value="Send" />
+        </div>
+        </opt:insert>
+    </div>
+    </form>
+</opt:root>
+~~~~
+
+Here we assume that the script contains the implementations of the *inputField* components that we are using. Note that this form defines three placeholders for snippets: `initialExtraComponents`, `finalExtraComponents` and `actionButtons`. If the module displays only the basic form, these placeholders will remain empty, and in case of the last one - the default content will be used. The result is that the user sees only the basic form.
+
+If we need to reuse the same form in other place, but with extra components, we just extend the basic template:
+
+##### some_form_modified.tpl:
+
+~~~~
+[xml]
+<opt:extend file="some_form.tpl">
+    <opt:snippet name="finalExtraComponents">
+
+        <opt:inputField template="componentLayout">
+            <opt:set name="name" str:value="field3" />
+            <opt:set name="title" str:value="Yet another field" />
+        </opt:inputField>
+  
+    </opt:snippet>
+</opt:extend>
+~~~~
+
+If the module decides to use this particular template, the user will see a form with three components:
+
+1. Some field
+2. Some other field
+3. Yet another field (added by the `some_form_modified.tpl` template)
+
+Note that using the [Opt_View::inherit()][api.opt-view.inherit] API method, the script may also set the different form component layout.
+
+Conclusion
+==========
+
+The template modularization is a very important issue and OPT provides several advanced tools that should satisfy all your needs. The details concerning their features, possibilities and limitations can be found in the next pages of this documentation. 

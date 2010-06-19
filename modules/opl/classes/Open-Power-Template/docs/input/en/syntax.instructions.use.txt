@@ -1,0 +1,195 @@
+Title: opt:use
+SeeAlso:
+ - syntax.instructions.snippet
+ - syntax.instructions.procedure
+ - syntax.instructions.capture
+ - syntax.instructions.extend
+ - syntax.attributes.use
+
+----
+
+`opt:use` allows to execute the dynamic template parts in the specified place. The dynamic parts may be either snippets or procedures.
+
+opt:use and snippets
+====================
+
+`opt:use` places the specified snippet content in the specified template location. It is an essential part of the template inheritance implementation. 
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ snippet        | hard string         | Yes       | The name of the snippet
+ ignore-default | option              | No        | If set to *yes*, the default value of `opt:insert` is not treated as the snippet parent.
+
+An example:
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+	<p>I am your snippet.</p>
+</opt:snippet>
+
+<div>
+	<opt:use snippet="foo" />
+</div>
+~~~~
+
+Contrary to `opt:capture`, the inserted code remains fully functional. In the following example we change the value of the variable displayed in the snippet. We see that the value also changes in the output, between two inserts of the same code.
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+	<p>Value: {@hoo}</p>
+</opt:snippet>
+
+<div>
+	{@hoo is 1}
+	<opt:use snippet="foo" />
+
+	{@hoo is 2}
+	<opt:use snippet="foo" />
+</div>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<div>
+	<p>Value: 1</p>
+	<p>Value: 2</p>
+</div>
+~~~~
+
+opt:use and procedures
+======================
+
+`opt:use` may also call template procedures. The procedure name is provided by the `procedure` attribute.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ procedure      | Expression          | Yes       | The procedure name
+
+The example use:
+
+~~~~
+[xml]
+<opt:procedure name="foo">
+	<p>I am your procedure.</p>
+</opt:procedure>
+
+<div>
+	<opt:use procedure="foo" />
+</div>
+~~~~
+
+Contrary to snippets, procedures can be selected dynamically:
+
+~~~~
+[xml]
+<opt:procedure name="foo">
+	<p>I am your procedure.</p>
+</opt:procedure>
+
+<div>
+	{@procedureName is 'foo'}
+	<opt:use procedure="@procedureName" />
+</div>
+~~~~
+
+
+opt:use and the captured content
+================================
+
+`opt:use` may also display the content captured by `opt:capture`. Contrary to the `$system` variable, the captured part can be chosen dynamically. The instruction takes only one attribute then:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ captured       | Expression          | Yes       | The name of the captured part
+ 
+If the tag contains some content, it is treated as a default content and displayed, if the specified captured part does not exist:
+
+~~~~
+[xml]
+<opt:capture as="foo">
+Some content here...
+</opt:capture>
+
+{@captured is 'foo'}
+<opt:use captured="@captured">
+The default content.
+</opt:use>
+~~~~
+
+The default content
+===================
+
+`opt:use` allows to define the default content in case the snippet or procedure does not exist:
+
+~~~~
+[xml]
+<div>
+	<opt:use snippet="foo">
+		<p>Oops, one of the snippets is missing.</p>
+	</opt:use>
+</div>
+~~~~
+
+By default, if the snippet contains the `opt:parent` tag and does not overload any other snippet, the default content of `opt:use` will be treated as the parent:
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+	<p>This is a snippet code.</p>
+	<opt:parent />
+</opt:snippet>
+
+<div>
+	<opt:use snippet="foo">
+		<p>This is a default code.</p>
+	</opt:use>
+</div>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<div>
+	<p>This is a snippet code.</p>
+	<p>This is a default code.</p>
+</div>
+~~~~
+
+We can turn this off by setting the attribute `ignore-default` to *yes* in `opt:use`:
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+	<p>This is a snippet code.</p>
+	<opt:parent />
+</opt:snippet>
+
+<div>
+	<opt:use snippet="foo" ignore-default="yes">
+		<p>This is a default code.</p>
+	</opt:use>
+</div>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<div>
+	<p>This is a snippet code.</p>
+</div>
+~~~~
+
+Now, the default content will never appear, if there is any snippet named *foo*.
+
+In case of procedures, OPT simply overwrites them if they appear in the template multiple times, so the default content is displayed only if there is no procedure with the specified name registered.
+
+Snippet and procedure arguments
+===============================
+
+

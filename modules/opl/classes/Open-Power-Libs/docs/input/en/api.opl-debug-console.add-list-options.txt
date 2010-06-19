@@ -1,0 +1,8 @@
+Title: addListOptions()
+ShortTitle: Opl_Debug_Console::addListOptions()
+Reference: void Opl_Debug_Console::addListOptions( String $id, Array $options )
+Status: static public
+
+----
+
+Adds the "key => value" pairs from the associative array `$options` to the list `$id`.

@@ -1,0 +1,8 @@
+Title: resetVars()
+ShortTitle: Opt_Compiler_Format::resetVars()
+Reference: void resetVars()
+Status: final
+
+---
+
+Resets the list of variables assigned to the format object.

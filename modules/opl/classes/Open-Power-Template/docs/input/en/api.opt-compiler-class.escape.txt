@@ -1,0 +1,11 @@
+Title: escape()
+ShortTitle: Opt_Compiler_Class::escape()
+Reference: string escape(string $expression [, bool $status = null])
+
+---
+
+Checks, whether to apply HTML escaping in the specified `$expression`. Returns the new expression. The priority of checking if the escaping is needed.
+
+1. The `$status` parameter is different than **NULL**.
+2. Current template settings
+3. OPT settings

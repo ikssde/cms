@@ -1,0 +1,67 @@
+Title: opt:separator
+SeeAlso:
+ - syntax.topics.sections
+ - syntax.instructions.repeat
+ - syntax.instructions.for
+ - syntax.instructions.foreach
+
+----
+
+`opt:separator` instruction can be used only within loop instructions. It allows to define a content that is displayed between every two iterations of the loop. It takes no attributes:
+~~~~
+[xml]
+<opt:repeat times="5">
+	<opt:separator> / </opt:separator>
+	{$opt.repeat}
+</opt:repeat>
+~~~~
+
+The code above produces the following result:
+
+~~~~
+1 / 2 / 3 / 4 / 5
+~~~~
+
+As we can see, the separator content apears neither before the first element nor after the last one.
+
+Attribute version
+=================
+
+The separators can be defined with an extra loop instruction attribute, `separator` that takes any expression as its value. By switching to the `str` namespace, we may define a static separator, or stay in the default one to read it from variable:
+
+~~~~
+[xml]
+<opt:repeat times="5" str:separator=" / ">
+	{$opt.repeat}
+</opt:repeat>
+~~~~
+
+This code will produce the same code, as the first example. Below, we can see, how to load the separator from a variable:
+
+~~~~
+[xml]
+<opt:repeat times="5" separator="$separatorDef">
+	{$opt.repeat}
+</opt:repeat>
+
+<opt:repeat times="5">
+	<opt:separator>{$separatorDef}</opt:separator>
+	{$opt.repeat}
+</opt:repeat>
+~~~~
+
+Note that the `opt:separator` tag allows to create more sophisticated separators constructed from other instructions. In the last example, we see a dynamic separator that grows during the execution:
+
+~~~~
+[xml]
+<opt:repeat times="5">
+	<opt:separator><opt:repeat times="$opt.repeat">-</opt:repeat></opt:separator>
+	{$opt.repeat}
+</opt:repeat>
+~~~~
+
+The result:
+
+~~~~
+1-2--3---4----5
+~~~~

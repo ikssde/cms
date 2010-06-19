@@ -1,0 +1,18 @@
+Testing opt:content-prepend.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<p opt:content="$foo" opt:content-prepend="a ">Default content</p>
+<p opt:content="$bar" opt:content-prepend="a ">Default content</p>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->bar = 'Modified content';
+
+>>>>result.txt
+<p>Default content</p>
+<p>a Modified content</p>

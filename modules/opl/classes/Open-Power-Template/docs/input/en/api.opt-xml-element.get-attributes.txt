@@ -1,0 +1,10 @@
+Title: getAttributes()
+ShortTitle: Opt_Xml_Element::getAttributes()
+Reference: array getAttributes()
+Status: public
+SeeAlso:
+ - api.opt-xml-element.get-attribute
+
+---
+
+Returns an associative array with all the tag attribute objects.

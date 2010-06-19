@@ -1,0 +1,48 @@
+Title: CDATA sections
+SeeAlso:
+ - syntax.instructions.literal
+SeeAlsoExternal:
+ - https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments Mozilla Developer Center - Properly Using CSS and JavaScript in XHTML Documents
+
+----
+
+A CDATA section is a special part of the XML document that is visible by the parser, but it is not processed. It allows to keep XML tags as a static text that will not be parsed. By default, OPT parses the CDATA section , like in XML - the content is displayed with the surrounding delimiters, but not parsed. However, sometimes we do not want that:
+
+~~~~
+[xml]
+<script type="text/javascript">
+<![CDATA[
+    document.write('Text ]]>{$info}<![CDATA[ - here is some info from the script.');
+]]>
+</script>
+~~~~
+
+Of course, OPT will destroy such code, because the JavaScript will be full of opening and closing CDATA tags. The problem can be solved with the `opt:literal` instruction. Now, the CDATA sections are still not parsed, but at least their tags are not rewritten to the output:
+
+~~~~
+[xml]
+<script type="text/javascript">
+<opt:literal><![CDATA[
+    document.write('Text ]]>{$info}<![CDATA[ - here is some info from the script.');
+]]></opt:literal>
+</script>
+~~~~
+
+By default, `opt:literal` produces CDATA tags around its content, so the final result is:
+
+~~~~
+[xml]
+<script type="text/javascript">
+<![CDATA[
+    document.write('Text SOME SCRIPT INFO - here is some info from the script.');
+]]>
+</script>
+~~~~
+
+`opt:literal` can also produce dynamic comment content or be transparent.
+
+> [warning]
+> JavaScript and CSS content enclosed with CDATA section can cause problems with some older browsers so your code may not work properly. It is recommended to use `mode="comment_cdata"` attribute on `opt:literal` instruction to solve this problem. More details can be found in [chapter about opt:literal][syntax.instructions.literal] and on [Mozilla Developer Center][proper_cdata] website.
+
+[proper_cdata]: https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments 
+    "Properly Using CSS and JavaScript in XHTML Documents - Using CDATA Instead of Comments"

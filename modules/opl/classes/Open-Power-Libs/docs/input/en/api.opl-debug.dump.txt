@@ -1,0 +1,8 @@
+Title: dump()
+ShortTitle: Opl_Loader::dump()
+Reference: void Opl_Loader::dump( Mixed $value, String $desc = '' )
+Status: static public
+
+----
+
+Dumps the specified `$value` to the script output. It allows to add an optional description that helps to find the dump in the output.

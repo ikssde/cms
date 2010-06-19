@@ -1,0 +1,11 @@
+Title: getElementsByTagName()
+ShortTitle: Opt_Xml_Scannable::getElementsByTagName()
+Reference: array getElementsByTagName(string $name [, $recursive = true])
+Status: public
+SeeAlso:
+ - api.opt-xml-scannable.get-elements-by-tag-name-ns
+ - api.opt-xml-scannable.get-elements-ext
+
+---
+
+Returns an array of all the descendant nodes with the name `$name`. If the optional argument `$recursive` is set to **false**, the matching nodes are searched only within the direct children of the current node.

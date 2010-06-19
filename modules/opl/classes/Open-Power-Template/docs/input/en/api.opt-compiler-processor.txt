@@ -1,0 +1,43 @@
+Title: Opt_Compiler_Processor class
+ShortTitle: Opt_Compiler_Processor
+Construct: class
+EExtendedBy:
+ - Opt_Instruction_Attribute
+ - Opt_Instruction_BaseSection
+ - Opt_Instruction_Block
+ - Opt_Instruction_Capture
+ - Opt_Instruction_Component
+ - Opt_Instruction_Cycle
+ - Opt_Instruction_Dtd
+ - Opt_Instruction_Dynamic
+ - Opt_Instruction_Extend
+ - Opt_Instruction_For
+ - Opt_Instruction_Foreach
+ - Opt_Instruction_Grid
+ - Opt_Instruction_If
+ - Opt_Instruction_Include
+ - Opt_Instruction_Literal
+ - Opt_Instruction_Prolog
+ - Opt_Instruction_Put
+ - Opt_Instruction_Repeat
+ - Opt_Instruction_Root
+ - Opt_Instruction_Separator
+ - Opt_Instruction_Snippet
+ - Opt_Instruction_Tag
+
+----
+
+The XML tags and attributes in the *opt* namespace are not parsed directly by the compiler, but by the instruction processors. They are special classes that extend the `Opt_Compiler_Processor` class and define, how to compile the XML tag into the valid PHP code. This class provides all the necessary prototypes and tools to write your own instruction processor.
+
+Class fields
+============
+
+The available fields are:
+
+ Name           | Type                | Description
+----------------|---------------------|:---------------------------------------------------------
+ `$_name`       | string              | The unique instruction identifier. The value must be set by the child class.
+ `$_tpl`        | Opt_Class           | The `Opt_Class` object
+ `$_compiler`   | Opt_Compiler_Class  | The compiler object
+ 
+ 

@@ -1,0 +1,20 @@
+Check if the legacy syntax for dynamic attribute values is disabled without
+backward compatibility.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo parse:bar="$foo">Text</foo>
+<foo bar="joe">Text</foo>
+</opt:root>
+
+>>>>data.php
+$this->tpl->backwardCompatibility = false;
+$view->foo = 'bar';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo parse:bar="$foo">Text</foo>
+<foo bar="joe">Text</foo>

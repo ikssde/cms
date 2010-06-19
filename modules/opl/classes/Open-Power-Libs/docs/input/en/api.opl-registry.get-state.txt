@@ -1,0 +1,15 @@
+Title: getState()
+ShortTitle: Opl_Registry::getState()
+Construct: static method
+Reference: mixed Opl_Registry::getState( string $name )
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The state name
+Returns: The state value
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-registry.set-state
+
+----
+
+Returns the specified value stored as `$name`. If the state does not exist, the method returns **null**.

@@ -1,0 +1,7 @@
+Title: opt:switch
+SeeAlso:
+ - syntax.instructions.if
+
+----
+
+Not documented yet.

@@ -1,0 +1,20 @@
+Title: strip()
+Reference: string strip(string $text)
+
+----
+
+Reduces the groups of white characters in `$text` into a single space: 
+
+~~~~
+[xml]
+{strip('This   	 is  a     text')}
+~~~~
+
+The result:
+
+~~~~
+This is a text
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, stripping them all and returning the modified container.

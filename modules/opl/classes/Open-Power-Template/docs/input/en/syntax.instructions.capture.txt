@@ -1,0 +1,62 @@
+Title: opt:capture
+
+----
+
+`opt:capture` captures the output of some template part and allows to paste it in other places.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ as             | ID                  | Yes       | The unique name of the captured output
+
+The access to the captured parts is possible with `$sys.capture.name`:
+
+~~~~
+[xml]
+<opt:capture as="options">
+    <a href="page/edit">Edit</a> | <a href="page/remove">Remove</a>
+</opt:capture>
+
+<h1>Some data</h1>
+{$data1.text}
+
+{u:$sys.capture.options}
+
+<h1>Some other data</h1>
+{$data2.text}
+
+{u:$sys.capture.options}
+~~~~
+
+> [information]
+> The code captured by one view is also visible in other views executed by OPT.
+
+<!-- # -->
+
+> [important]
+> Contrary to `opt:snippet` and `opt:insert`, this instruction captures the output code that would normally be sent to the browser. If you change one of the variables used in the `opt:capture` block between two placements `$opt.capture.myBlock`, the change will not be visible:
+> 
+>     [xml]
+>     {@foo is 1}
+>     <opt:capture as="foo">{@foo}</opt:capture>
+>     {$sys.capture.foo}
+>     {@foo is 2}
+>     {$sys.capture.foo}
+
+<!-- # -->
+
+> [error]
+> Remember that `$sys.capture.blockName` may be escaped when placed in the HTML code. If you are going to capture a lot of HTML, it is safe to display them with the **u:** modifier `{u:$sys.capture.alotofHTML}` just to be sure that it will not be escaped.
+
+The captured content can be also displayed with [opt:insert][syntax.instructions.insert]. It allows to select the content dynamically:
+
+~~~~
+[xml]
+<opt:capture as="foo">
+Some content here...
+</opt:capture>
+
+{@captured is 'foo'}
+<opt:insert captured="@captured">
+The default content.
+</opt:insert>
+~~~~

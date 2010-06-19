@@ -1,0 +1,99 @@
+Title: opt:selector
+FeatureInformation: sections
+SeeAlso:
+ - syntax.topics.sections
+ - syntax.instructions.section
+ - syntax.instructions.tree
+ - syntax.instructions.grid
+ - syntax.instructions.show
+ - syntax.instructions.separator
+ - syntax.attributes.selector
+
+----
+
+`opt:selector` works much like `opt:section`. The difference is that here we may define several types of element layout. OPT will choose one for each element, depending on one of its fields (by default, it is called "item"). Below, we can find an example of displaying the links to the result pages. Each list element represents one page, however we do not want them do look exactly the same. With `opt:selector` we define different looks for various types of pages (standard, active, dotted part to hide too many pages etc.):
+
+~~~~
+[xml]
+<opt:selector name="pages">
+	<opt:page>[ <a parse:href="$page.address">{$page.number}</a> ]</opt:page>
+	<opt:active>[ <a parse:href="$page.address" style="active">{$page.number}</a> ]</opt:active>
+	<opt:dots>...</opt:dots>
+</opt:selector>
+~~~~
+
+With `opt:selector` we defined different layout for various types of pages:
+
+1. Default page link
+2. Current page
+3. The dots to shorten the list, if there are too many pages (for example, *[ 1 ] ... [ 5 ] [ 6 ] [ 7 ] ... [ 15 ]*).
+
+Now, the pagination system must simply generate a list of pages with a field `item` to identify the requested type.
+
+Note that the layout types are defined as separate tags in one of namespaces recognized by OPT. The rest of tags located directly in `opt:selector` will be ignored. OPT tries to match the list elements to the tag names.
+
+Normally, OPT looks for the element type name in the variable `$sectionName.item`. This can be changed with an extra attribute, `type`:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ test           | ID                  | No        | The name of element variable with the type name
+ 
+~~~~
+[xml]
+<opt:selector name="pages" test="pageType">
+	<opt:page>[ <a parse:href="$page.address">{$page.number}</a> ]</opt:page>
+	<opt:active>[ <a parse:href="$page.address" style="active">{$page.number}</a> ]</opt:active>
+	<opt:dots>...</opt:dots>
+</opt:selector>
+~~~~
+
+Now the types are taken from `$pages.pageType` instead of `$pages.item`.
+
+Empty lists
+===========
+
+You may define the alternative content to be displayed, if the list is empty, using the tag `opt:selectorelse`:
+
+~~~~
+[xml]
+<opt:selector name="pages" test="pageType">
+	<opt:page>[ <a parse:href="$page.address">{$page.number}</a> ]</opt:page>
+	<opt:active>[ <a parse:href="$page.address" style="active">{$page.number}</a> ]</opt:active>
+	<opt:dots>...</opt:dots>
+	<opt:selectorelse>Sorry, the result set is empty.</opt:selectorelse>
+</opt:selector>
+~~~~
+
+Note that you must not use `opt:selectorelse`, if our selector works together with `opt:show`. In this case, `opt:showelse` is available:
+
+~~~~
+[xml]
+<opt:show name="pages" test="pageType">
+	<p><opt:selector>
+		<opt:page>[ <a parse:href="$page.address">{$page.number}</a> ]</opt:page>
+		<opt:active>[ <a parse:href="$page.address" style="active">{$page.number}</a> ]</opt:active>
+		<opt:dots>...</opt:dots>
+	</opt:selector></p>
+	<opt:showelse>
+	<p>Sorry, the result set is empty.</p>
+	</opt:showelse>
+</opt:show>
+~~~~
+
+opt:selector and snippets
+=========================
+
+`opt:selector` supports OPT snippets. Let's get back to our pagination example. It is obvious that on huge website we are not going to declare the layouts in each of our 100 templates that display some result sets. Instead of that, the generic layout can be moved to an external snippet and loaded with `opt:use` attribute:
+
+~~~~
+[xml]
+<opt:snippet name="defaultPagination">
+	<opt:page>[ <a parse:href="$defaultPagination.address">{$defaultPagination.number}</a> ]</opt:page>
+	<opt:active>[ <a parse:href="$defaultPagination.address" style="active">{$defaultPagination.number}</a> ]</opt:active>
+	<opt:dots>...</opt:dots>
+</opt:snippet>
+
+<opt:selector name="pages1" opt:use="defaultPagination" />
+
+<opt:selector name="pages2" opt:use="defaultPagination" />
+~~~~

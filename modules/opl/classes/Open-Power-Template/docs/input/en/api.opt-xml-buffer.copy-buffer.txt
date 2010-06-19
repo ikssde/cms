@@ -1,0 +1,8 @@
+Title: copyBuffer()
+ShortTitle: Opt_Xml_Buffer::copyBuffer()
+Reference: void copyBuffer(Opt_Xml_Buffer $node, int $sourceBuffer, int $destBuffer)
+Status: public
+
+---
+
+Copies the buffer `$sourceBuffer` from the node `$node` to the buffer `$destBuffer` in the current node.

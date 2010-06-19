@@ -1,0 +1,39 @@
+Title: Opl_Class class
+ShortTitle: Opl_Class
+Construct: abstract class
+EExtendedBy:
+ - Opc_Class
+ - Opf_Class
+ - Opt_Class
+
+----
+
+Generic core class for the libraries. It provides the basic configuration and plugin management functionality.
+
+Configuration support
+=====================
+
+The general library configuration should be done as public fields with short and intuitive names and default values set. However, `Opl_Class` supports also additional fields with `__get()` and `__set()` methods.
+
+> [warning]
+> If you try to read the undefined directive, `Opl_OptionNotExists_Exception` is thrown.
+
+There is also a generic interface for loading and returning the configuration:
+
+1. [Opl_Class::loadConfig()][api.opl-class.load-config]
+2. [Opl_Class::getConfig()][api.opl-class.get-config]
+
+Plugin support
+==============
+
+If the library is going to use plugins, it must implement [Opl_Class::_pluginLoader()][api.opl-class._plugin-loader] protected method. `Opl_Class` defines three configuration directives for plugins:
+
+**pluginDir**
+:	`string` A single directory with plugins.
+:	`array` A list of directories with plugins.
+
+**pluginDataDir**
+:	`string` A directory for storing the plugin loader information. It must be writable by the script.
+
+**pluginAutoload**
+:	`boolean` If set to **true**, the plugins are automatically detected and loaded once they are put in one of the `pluginDir` directories. If set fo **false**, you must manually remove the plugin loader information from `pluginDataDir`.

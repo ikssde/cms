@@ -1,0 +1,8 @@
+Title: addListOption()
+ShortTitle: Opl_Debug_Console::addListOption()
+Reference: void Opl_Debug_Console::addListOption( String $id, String $title, Mixed $value)
+Status: static public
+
+----
+
+Adds a new "key => value" pair to the list `$id`.

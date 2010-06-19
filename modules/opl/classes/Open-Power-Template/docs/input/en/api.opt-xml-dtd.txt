@@ -1,0 +1,7 @@
+Title: Opt_Xml_Dtd class
+ShortTitle: Opt_Xml_Dtd
+Construct: class
+
+----
+
+The class represents the Document Type Definition. It is not a part of the XML tree itself, but can be assigned to the `Opt_Xml_Root` objects using the `setDtd()` method. Open Power Template does not provide a parser for the DTD itself, so the definition is stored as a plain text. However, the behavior may be extended in the future.

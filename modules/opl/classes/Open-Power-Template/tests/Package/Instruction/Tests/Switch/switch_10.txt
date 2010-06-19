@@ -1,0 +1,32 @@
+Testing the nested opt:switch instruction with containers
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<!-- first switch -->
+<opt:switch test="$value1">
+<opt:contains value="foo">
+
+<opt:switch test="$value2">
+<opt:contains value="moo">Moo</opt:contains>
+</opt:switch>
+
+</opt:contains>
+<opt:contains value="bar">Bar</opt:contains>
+<opt:contains value="joe">Joe</opt:contains>
+<opt:contains value="goo">Goo</opt:contains>
+</opt:switch>
+
+
+</opt:root>
+
+>>>>data.php
+$view->value1 = array('foo', 'bar');
+$view->value2 = array('moo');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Moo
+Bar

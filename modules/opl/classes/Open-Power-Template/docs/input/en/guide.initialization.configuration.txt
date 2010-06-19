@@ -1,0 +1,125 @@
+Title: List of configuration options
+
+----
+
+Below, you can find a list of the configuration options available in OPT.
+
+Paths and directories
+=====================
+
+`sourceDir`
+:	The path to the directory with the XML templates. It must be readable by the script.
+:	The associative list of paths and their identifiers that contain XML templates. They must be readable by the script.
+
+`compileDir`
+:	The path to the directory with the compiled PHP templates. The script must have a write access to it.
+
+`pluginDir`
+:	The path to the directory that contains OPT plugins.
+:	The list of paths to the directories with OPT plugins.
+
+`pluginDataDir`
+:	The path to the directory, where the plugin engine may store some internal information to speed up the plugin loading. You can set it to the same directory as `compileDir`.
+
+Front-end options
+=================
+
+`compileMode`
+:	`Opt_Class::CM_DEFAULT` - the templates are recompiled only if they have been modified. Recommended for the development environment.
+:	`Opt_Class::CM_PERFORMANCE` - the templates are never recompiled. Recommended for the production environment with the assumption that we will not be modifying the templates directly on the server.
+:	`Opt_Class::CM_REBUILD` - the templates are recompiled every request. Recommended for the OPT instruction developers.
+
+`charset`
+:	The default charset used by [Opt_Output_Http::setContentType()][api.opt-output-http.set-content-type]. Default value: `utf-8`
+
+`contentType`
+:	The default content type used by [Opt_Output_Http::setContentType()][api.opt-output-http.set-content-type]. Default value: `Opt_Output_Http::XHTML`.
+
+`gzipCompression`
+:	**True** to enable the output compression in [Opt_Output_Http][api.opt-output-http] output system. You need to have the *zlib* extension installed in order to use this feature. Please note that it is recommended to enable the compression directly in the HTTP server, not in the script. Default value: **true**
+
+`headerBuffering`
+:	**True** to buffer the HTTP headers by [Opt_Output_Http][api.opt-output-http] and send them just before the HTML code. This allows to overwrite the previously set header. Default value: **false**
+
+`contentNegotiation`
+:	**True** to enable content negotiation for [Opt_Output_Http::setContentType()][api.opt-output-http.set-content-type]. You need to have the *Open Power Classes* library installed in order to use this feature.
+
+`errorReporting`
+:	The default error reporting during the template execution. After the template is executed, OPT restores the previous script settings. Default value: `E_ALL^E_NOTICE`
+
+`stdStream`
+:	The default identifier of the `sourceDir` path used, if the identifier is not specified explicitly. Default value: `file`.
+
+`debugConsole`
+:	**True** to enable the debug console for OPT. Remember to disable this option in your production environment! Default value: **false**
+
+`allowRelativePaths`
+:	Controls whether the relative paths are available as template names. This is disabled by default.
+:	Available since OPT 2.0.1.
+
+Compiler options
+================
+
+`mode`
+:	`Opt_Class::CHOOSE_MODE` - the compilation mode is chosen by the output system.
+:	`Opt_Class::XML_MODE` - the templates are compiled in the XML mode.
+:	`Opt_Class::QUIRKS_MODE` - the templates are compiled in the quirks mode.
+
+`unicodeNames`
+:	Whether to allow the Unicode characters in the XML tags. Default to **false** due to the performance issues.
+
+`htmlAttributes`
+:	Whether to allow the shortened form of attributes, for example `<tag attribute>` as a synonym to `<tag attribute="attribute">`. Default to **false**.
+
+`printComments`
+:	Whether to print the template comments in the output. Default to **false**.
+
+`prologRequired`
+:	Whether the XML prolog is required. The default setting, **true** means that the output prolog must be generated with `opt:prolog` instruction. Otherwise, the prologs are checked for the valid syntax and rewritten to the output.
+
+`stripWhitespaces`
+:	Whether to strip the unnecessary white spaces from the template. Default to **true**.
+
+`singleRootNode`
+:	Whether a single root node is obligatory. Default to **true**.
+
+`basicOOP`
+:	Whether the use of OOP in OPT expressions is allowed. Default to **true**
+
+`advancedOOP`
+:	Whether the templates can create objects and clone them. Default to **true**.
+
+`backticks`
+:	A callback to the backtick handler.
+:	**NULL**, if the backticks are not supported.
+
+`strictCallbacks`
+:	If set to **true** (the default setting), OPT strictly checks the callbacks during the compilation to ensure that the requested functions really exist.
+
+`escape`
+:	Whether to escape the displayed expression values by default. Default to **true**.
+
+`variableAccess`
+:	`Opt_Class::ACCESS_LOCAL` - the template variables are local. The access to global variables is possible via `$global`. This is the default setting.
+:	`Opt_Class::ACCESS_GLOBAL` - the template variables are global by default. The access to local variables is possible via `$this`.
+
+`defaultFormat`
+:	The default data format used by OPT.
+
+Misc. options
+=============
+
+`compileId`
+:	Allows to add an extra identifier to the compiled template name.
+
+`moneyFormat`
+:	The default money format used by the `money()` function.
+
+`numberDecimals`
+:	The default setting for the first argument of `number()` function.
+
+`numberDecPoint`
+:	The default setting for the second argument of `number()` function.
+
+`numberThousandSep`
+:	The default setting for the third argument of `number()` function.

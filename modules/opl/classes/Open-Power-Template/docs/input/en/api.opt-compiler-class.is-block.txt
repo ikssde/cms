@@ -1,0 +1,7 @@
+Title: isBlock()
+ShortTitle: Opt_Compiler_Class::isBlock()
+Reference: bool isBlock(string $name)
+
+---
+
+Returns **true**, if there is a block registered under the specified XML tag `$name`.

@@ -1,0 +1,46 @@
+Title: addLibrary()
+ShortTitle: Opl_Loader::addLibrary()
+Construct: static method
+Reference: void addLibrary(string $library, array $config);
+Visibility: public
+Arguments:
+ - Name: $library | EType: string | Desc: The library name and prefix of its classes.
+ - Name: $config | EType: array | Desc: The library configuration.
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opl-loader.remove-library
+
+----
+
+Adds the specific settings for the library `$library`. The rules will be applied to all the classes beginning with the prefix `$library`. The allowed settings are:
+
+* `directory` - the library may be located elsewhere than the main location.
+* `handler` - the library may use a custom autoloading handler to deal with specific needs. If we do not want to use any handler with the library, this option should be set to **null**. If the option is not defined, the default handler is used.
+
+> [warning]
+> By default, the autoloader uses the OPL handler. If you are going to use the autoloader with non-OPL libraries, you should disable it for them.
+
+~~~~
+[php]
+Opl_Loader::addLibrary('Foo', array('directory' => './foo', 'handler' => 'myHandlerFunction'));
+Opl_Loader::load('Foo_Class');
+~~~~
+
+The example above will load the `Foo_Class` source code from the `./foo/` directory and use the `myHandlerFunction` to deal with some specific autoloading needs.
+
+Library handlers
+================
+
+The standard autoloader converts the class name to the file name by replacing the underscores with the directory separator and adding the `.php` file extension. However, some libraries may have some specific needs. For example, in OPL the autoloader must perform the following extra actions:
+
+* To load the PHP 5.2 compatibility layer.
+* To load the library main file.
+* The exception classes are stored in one big file.
+
+Such needs are supported with external handlers. If your library needs one, with this method you can add it. The handler must be an ordinary function or class method:
+
+~~~~
+boolean autoloadingHandler(string $library, string $className)
+~~~~
+
+The method must return **true**, if the autoloader should still load the file using the standard rules and **false**, if the handler has already found and loaded the requested class.

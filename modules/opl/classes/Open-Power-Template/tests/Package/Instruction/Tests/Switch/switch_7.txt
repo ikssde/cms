@@ -1,0 +1,36 @@
+Testing the opt:switch instruction with default value and containers.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<!-- first switch -->
+<opt:switch test="$container1">
+<opt:contains value="foo">Foo</opt:contains>
+<opt:contains value="bar">Bar</opt:contains>
+<opt:contains value="joe">Joe</opt:contains>
+<opt:contains value="goo">Goo</opt:contains>
+<opt:default>Default</opt:default>
+</opt:switch>
+
+<!-- second switch -->
+<opt:switch test="$container2">
+<opt:contains value="foo">Foo</opt:contains>
+<opt:contains value="bar">Bar</opt:contains>
+<opt:contains value="joe">Joe</opt:contains>
+<opt:contains value="goo">Goo</opt:contains>
+<opt:default>Default</opt:default>
+</opt:switch>
+
+</opt:root>
+
+>>>>data.php
+$view->container1 = array('bar', 'joe');
+$view->container2 = array('loo', 'moo');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Bar
+Joe
+Default

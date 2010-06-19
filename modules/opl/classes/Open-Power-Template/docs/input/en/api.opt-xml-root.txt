@@ -1,0 +1,8 @@
+Title: Opt_Xml_Root class
+ShortTitle: Opt_Xml_Root
+Construct: class
+Extends: api.opt-xml-scannable
+
+----
+
+This class represents the root of the XML node and nothing more.

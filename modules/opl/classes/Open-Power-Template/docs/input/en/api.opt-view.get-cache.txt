@@ -1,0 +1,14 @@
+Title: getCache()
+ShortTitle: Opt_View::getCache()
+Construct: method
+Reference: Opt_Caching_Interface getCache()
+VersionSince: 2.0-RC1
+Visibility: public
+Returns: The caching interface object
+SeeAlso:
+ - api.opt-view.set-cache
+ - guide.cache
+ 
+----
+
+Returns the current caching interface associated with the view. If the global caching interface has been set for OPT and the programmer has not used `setCache()` method in the view, it returns the global caching interface.

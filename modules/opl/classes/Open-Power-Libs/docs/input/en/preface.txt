@@ -1,0 +1,29 @@
+Title: Preface
+
+----
+
+Open Power Libs is a project that aims to create a set of advanced and well-designed PHP5/PHP6 libraries. It is not a standalone framework, because it does not contain some of the tools necessary to build the website from scratch. However, you may think about it as an additional library collection for your favorite framework. The reason why we decided to write such a script, is easy. There are lots of good frameworks, but not all of their components are good enough. Let's take a look at the example - template engines. Most of them ends at putting PHP structures into Yet Another Syntax, and no doubt the programmers consider them evil and the framework designers choose pure PHP as a template language. But PHP is rather a programming language and some common tasks require much of coding or using various advanced features to keep the code simple enough. As we do not create a complete framework, we could spend much more time on designing a *better template engine*, that allows to solve problems in the way PHP was not and never will be able to do.
+
+Package contents
+================
+
+The status of the package contents:
+
+1. Open Power Libs core (OPL) - provides base classes and interfaces. Stable.
+2. Open Power Template (OPT) - a template engine. Stable.
+3. Open Power Classes (OPC) - a group of smaller supporting classes. Under development.
+4. Open Power Forms (OPF) - form processing. Planning.
+
+Of course, the libraries do not work alone. OPF cannot work without OPT, because all the forms and controls are drawn using the template engine features. On the other hand, most of OPC classes are standalone projects, but as they provide implementations for various OPT and OPF interfaces, they can also cooperate.
+
+Framework integration
+=====================
+
+OPL is not integrated by default with any particular framework. The basic integration is very simple - just load the core plus the libraries you need and start using them. However, this usually does not allow to use all of the framework features. The best results are achieved when OPL is plugged into the native framework subsystems. The library was designed to make this task as simple as possible, by analyzing the APIs of the most popular solutions.
+
+The official framework ports are on the way, too. The first that is going to appear, is OPL Zend Framework Port.
+
+Documentation contents
+======================
+
+Each of the libraries has its own documentation. This documentation provides only the description of the core subsystems and conventions used in the project.

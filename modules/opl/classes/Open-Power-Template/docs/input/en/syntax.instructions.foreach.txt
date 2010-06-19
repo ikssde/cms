@@ -1,0 +1,89 @@
+Title: opt:foreach
+SeeAlso:
+ - syntax.instructions.section
+ - syntax.instructions.for
+ - syntax.instructions.repeat
+ - syntax.instructions.separator
+
+----
+
+> [warning]
+> This chapter contains information about *programming constructs* that are not recommended to use. If you are only a template author, probably you will not have to use them. In case of questions, contact your programmer.
+
+`opt:foreach` iterates over the elements of container, PHP array or object. The index and the value of current element are saved to the variables pointed by the programmer, so that he could use them. The elements are returned in the order of the internal PHP data representation. Even if they are enumerated in the ascending order, but have been put in a more random way, the actual results may be different than expected.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ array          | Expression          | Yes       | A container with the elements. Note that if the container will be a scalar value, we will get an PHP error.
+ value          | ID                  | Yes       | The name of the variable to save the element values to.
+ index          | ID                  | No        | The name of the variable to save the element indices to.
+ separator      | Expression          | No        | The separator that will be put between every two list elements. [More about separators][syntax.instructions.separator].
+
+A sample code:
+
+~~~~
+[xml]
+<p>The options:</p>
+<ol>
+	<opt:foreach array="$optionList" index="name" value="value">
+	<li><strong>{@name}:</strong>{@value}</li>
+	</opt:foreach>
+</ol>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<p>The options:</p>
+<ol>
+	<li><strong>Option 1:</strong> Option value 1</li>
+	<li><strong>Option 2:</strong> Option value 2</li>
+	<li><strong>Option 3:</strong> Option value 3</li>
+</ol>
+~~~~
+
+In the example, `opt:foreach` was executed for a 3-element array. For each of them, the content of the loop was executed, and their index and values were available through `@name` and `@value` variables.
+
+In OPT this loop has one extra feature: `opt:foreachelse` placed directly in `opt:foreach`. It may contain the alternative content to be displayed if the specified container is empty. Below, you can find a modified example:
+
+~~~~
+[xml]
+<p>The options:</p>
+<ol>
+	<opt:foreach array="$optionList" index="name" value="value">
+	<li><strong>{@name}:</strong>{@value}</li>
+	<opt:foreachelse>
+	<li>We are sorry, there are no options.</li>
+	</opt:foreachelse>
+	</opt:foreach>
+</ol>
+~~~~
+
+> [information]
+> It does not matter where you exactly place `opt:foreachelse` - before the main content or after it.
+
+The result for an empty container will look like this:
+
+~~~~
+[xml]
+<p>The options:</p>
+<ol>
+	<li>We are sorry, there are no options.</li>
+</ol>
+~~~~
+
+`opt:foreach` should not be used too often. Open Power Template provides much more powerful instructions, sections. They are more portable and easier to use in the templates. Moreover, they hide the implementation from the user which is very important, when two sections are connected with an one-to-many relationship.
+
+`opt:for` cooperates with separators:
+
+~~~~
+[xml]
+<p><opt:foreach array="$things" value="name" str:separator=", ">{@name}</opt:foreach></p>
+~~~~
+
+A sample result:
+
+    hammer, saw, screwdriver, vice
+
+More separator examples can be found in the chapter explaining [separators][syntax.instructions.separator].

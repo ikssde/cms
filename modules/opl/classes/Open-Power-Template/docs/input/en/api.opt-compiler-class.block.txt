@@ -1,0 +1,7 @@
+Title: block()
+ShortTitle: Opt_Compiler_Class::block()
+Reference: string block(string $name)
+
+---
+
+Returns the name of the PHP block class registered as `$name` tag. If no block is connected to the tag, the `Opt_ObjectNotExists_Exception` exception is thrown.

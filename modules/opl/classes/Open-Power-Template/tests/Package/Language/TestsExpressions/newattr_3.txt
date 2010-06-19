@@ -1,0 +1,16 @@
+Testing the special "null" expression engine.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo bar="null:parse:$foo">Text</foo>
+</opt:root>
+
+>>>>data.php
+$view->foo = 'bar';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="parse:$foo">Text</foo>

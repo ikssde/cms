@@ -1,0 +1,105 @@
+Title: Parsing attributes
+
+----
+
+Usually, the instruction tags take some attributes to configure themselves. OPT supports parsing the attribute list with a convenient method, `_extractAttributes()`. The sample use can be found here:
+
+~~~~
+[php]
+$params = array(
+	'attr1' => array(0 => self::REQUIRED, self::EXPRESSION),
+	'attr2' => array(0 => self::REQUIRED, self::ID),
+	'attr3' => array(0 => self::OPTIONAL, self::ID, null),
+	'attr4' => array(0 => self::OPTIONAL, self::EXPRESSION, null)
+);
+
+$this->_extractAttributes($node, $params);
+~~~~
+
+The `$params` array contains a configuration. Each attribute is described by some flags:
+
+1. `REQUIRED`, if the attribute is required; otherwise - `OPTIONAL`
+2. The attribute type:
+   - `HARD_STRING` - any string
+   - `NUMBER` - any number (decimal or hexadecimal)
+   - `ID` - a valid identifier
+   - `ID_EMP` - a valid identifier or empty value
+   - `BOOL` - `yes` or `no`
+   - `EXPRESSION` - an OPT expression
+   - `ASSIGN_EXPR` - an OPT expression with assignments allowed
+   - `STRING` - an OPT expression with string value by default
+3. Default value for optional attributes.
+
+The configuration is passed by reference and the method replaces it with the extracted attribute values.
+
+Attribute types
+===============
+
+The attribute types divide into two groups. The first one are ordinary values - they are used by the compiler and the end user cannot read their values from a template variable or an expression. Moreover, the end user cannot change the expected type. This group includes `HARD_STRING`, `NUMBER`, `ID`, `ID_EMP` and `BOOL`. Another group are the OPT expressions, where the user may specify a template variable, function call etc. There are three such types: `EXPRESSION`, `ASSIGN_EXPR` and `STRING`. Note that the user may switch between these three types by changing the attribute namespace, so even if you have specified `STRING`, you must be prepared to work with an expression, too.
+
+The instruction processor **does not** get an expression result in this place, but the expression compiled to PHP code that should be pasted to one of the code snippets and inserted to code buffers. There is no way to predict the expression value during the compilation. Sample use:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+	$params = array(
+		'test' => array(0 => self::REQUIRED, self::EXPRESSION)
+	);
+	$this->_extractAttributes($node, $params);
+	
+	$node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, ' if('.$params['test'].'){ ');
+	$node->addAfter(Opt_Xml_Buffer::TAG_AFTER, ' } ');
+	$this->_process($node);
+} // end processNode();
+~~~~
+
+Variable number of attributes
+=============================
+
+To handle a variable number of attributes, we have to add a special attribute item to the configuration that will specify the expected type for all the "unknown" attributes:
+
+~~~~
+[php]
+$params = array(
+	'attr1' => array(0 => self::REQUIRED, self::EXPRESSION),
+	'__UNKNOWN__' => array(0 => self::OPTIONAL, self::EXPRESSION, null)
+);
+
+$unknown = $this->_extractAttributes($node, $params);
+~~~~
+
+The extra attributes are **returned** as a separate array, so that the instruction processor could distinguish them from the predefined attributes.
+
+Specific cases
+==============
+
+If we are programming the instruction attribute, we cannot use the `_extractAttributes()` method to parse the attribute value. Let's consider the following code:
+
+~~~~
+[xml]
+<div opt:myinstruction="$variable">
+	...
+</div>
+~~~~
+
+We want to parse the attribute value as an expression and to do this, we need to call the `compileExpression()` compiler function manually:
+
+~~~~
+[php]
+public function processAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+{
+	$expression = $this->_compiler->compileExpression($attr->getValue(), false, Opt_Compiler_Class::ESCAPE_ON);
+	
+	$node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, ' if('.$expression.'){ ');
+	$node->addAfter(Opt_Xml_Buffer::TAG_AFTER, ' } ');
+} // end processAttribute();
+~~~~
+
+The method takes three arguments:
+
+1. The expression to compile
+2. Whether we allow to use the assignment operator (**true**) or not (**false**)
+3. The escaping policy settings: `Opt_Compiler_Class::ESCAPE_ON`, `Opt_Compiler_Class::ESCAPE_OFF` or `Opt_Compiler_Class::ESCAPE_BOTH` to make the user choose.
+
+Unless we are going to parse the value as an expression, we have to process the value on our own.

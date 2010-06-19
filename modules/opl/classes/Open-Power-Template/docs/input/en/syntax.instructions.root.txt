@@ -1,0 +1,94 @@
+Title: opt:root
+SeeAlso:
+ - syntax.instructions.extend
+
+----
+
+`opt:root` provides a tag that may become a neutral root tag in the template. The XML standard permits only one main tag per file, but sometimes smaller templates represent a part of the code that does not follow this rule:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root>
+    <div>
+        ...
+    </div>
+    <div>
+        ...
+    </div>
+</opt:root>
+~~~~
+
+Without `opt:root`, we would have to remove one of the `<div>` tags in order to make the template standard compliant. 
+
+`opt:root` may also take optional attributes that apply to the current template.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ include        | Hard string         | No        | The template file to be included before compilation.
+ dynamic        | Option              | No        | Do we allow dynamic inclusion for this template?
+ escaping       | Option              | No        | Per-template escaping settings.
+
+Escaping control
+================
+
+Using the `escaping` attribute you may control the HTML escaping in the current template expressions. If it is not specified, OPT uses the default OPT settings.
+
+~~~~
+[xml]
+<opt:root escaping="yes">
+
+    <p>The HTML in the variable values will be escaped in this template: {$variable}</p>
+
+</opt:root>
+~~~~
+
+Including external templates
+============================
+
+Suppose we have two templates with HTML form code: `form1.tpl` and `form2.tpl`. We want to define a global layout for a form control in a snippet. It must be common for all the templates. If we achieve the modularity with `opt:include`, using the template inheritance is not very convenient:
+
+~~~~
+[xml]
+<!-- definitions.tpl -->
+<opt:root>
+    <opt:snippet name="control">
+        <!-- the control layout -->
+    </opt:snippet>
+
+    <opt:insert snippet="content" />
+</opt:root>
+
+<!-- form1.tpl -->
+<opt:extend file="definitions.tpl">
+    <opt:snippet name="content">
+        <!-- the form content that uses the "control" snippet. -->  
+    </opt:snippet>
+</opt:extend>
+~~~~
+
+In this case, we have to declare the form in the snippet, too. It must be loaded in `definitions.tpl` to be visible in the browser. Of course if we have other tasks for `defitions.tpl`, this is not so bad solution, but OPT provides another mechanism for such situations. `opt:root` can include an external template before the compilation just to load the snippets:
+
+~~~~
+[xml]
+<!-- definitions.tpl -->
+<opt:root>
+    <opt:snippet name="control">
+        <!-- the control layout -->
+    </opt:snippet>
+</opt:root>
+
+<!-- form1.tpl -->
+<opt:root include="definitions.tpl">
+    <!-- the form content that uses the "control" snippet. -->  
+</opt:root>
+~~~~
+
+Now we do not have to pack the form content in a fake snippet, because we do not use the template inheritance. 
+
+Note that the `include` attribute is processed during the template compilation and it is not possible to load its value from a variable. In the included template, all the content, except `opt:snippet` tags, is ignored, because it is hard to say, where it should appear. (Before? After the main template content? If so, then why?) OPT prevents us against the infinite recursive inclusions (A includes B, which includes A). The compilation is canceled and the library shows the error message.
+
+However, note that you may set the attribute `dynamic` to `yes`, which has the same effect as in `opt:extend` - it allows to set the template to be included by the script using the [Opt_View::inherit()][api.opt-view.inherit] method.
+
+> [warning]
+> Note on the performance and script resources. We do not recommend to create compound inclusion chains (A includes B which includes C, which includes D etc.). The `include` attribute is the only part of the compiler that is processed recursively. In case of advanced dependencies between the templates, the compilation may cause PHP stack overflow (*Nesting level too deep* message).

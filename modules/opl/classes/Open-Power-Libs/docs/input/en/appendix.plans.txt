@@ -1,0 +1,46 @@
+Title: Future release information
+Appendix: Yes
+
+----
+
+In this chapter, you can find some information about the future releases of OPL and the roadmap.
+
+Version compatibility
+=====================
+
+The PHP language evolves and introduces many important features with every new major release. We want to produce a reliable software that is compatible both forwards and backwards. Below, you can find an information about the OPL version compatibility with PHP releases.
+
+OPL 2.0
+:	Requires PHP 5.2.0+
+:	Must work on PHP 5.2, 5.3 and 6.0 in the future
+:	Support: at least to the end of 2010
+
+OPL 2.1
+:	Requires PHP 5.3.0+
+:	Must work on PHP 5.3 and 6.0
+:	Support: at least 2 years from the release date
+
+OPL 2.2 and the other
+:	Same requirements as 2.1
+
+OPL 3.0
+:	Requires PHP 6.0+
+:	Must work on PHP 6.0 and future releases
+
+Planned improvements
+====================
+
+Improved debug console
+----------------------
+
+In OPL 2.1 we would like to provide a new, more convenient and portable debugging console system, more similar to those ones that can be found in various frameworks. The backward compatibility will be retained. The rendering part will be separated from the data collector, so that it will be much easier to write custom rendering codes.
+
+Command Line Interface
+----------------------
+
+The libraries from 2.1 branch are planned to have a command line interface. OPL core will introduce a small framework for writing modular console management applications.
+
+Namespace supports
+------------------
+
+PHP 5.3 introduced the concept of namespaces. Currently, the autoloader cannot handle correctly the code that uses them. Such a support is planned for OPL 2.1.

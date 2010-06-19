@@ -1,0 +1,19 @@
+Title: money()
+Reference: string money(float $amount, string $format)
+
+----
+
+Formats the specified number `$amount` in order to be a valid money amount string. The `$format` defines the format and the detailed description of available codes can be found [in the PHP manual](http://docs.php.net/manual/en/function.money-format.php).
+
+> [information]
+> This function can operate also on a container of strings, operating on them all and returning the modified container.
+
+<!-- .. -->
+
+> [warning]
+> The behavior of this function depends on the current script locale.
+
+<!-- .. -->
+
+> [warning]
+> This function is not available the systems without strfmon capabilities. This definition includes Microsoft Windows operating system family.

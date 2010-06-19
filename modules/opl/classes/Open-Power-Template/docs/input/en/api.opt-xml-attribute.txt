@@ -1,0 +1,8 @@
+Title: Opt_Xml_Attribute class
+ShortTitle: Opt_Xml_Attribute
+Construct: class
+Extends: api.opt-xml-buffer
+
+----
+
+The class that represents the XML attribute.

@@ -1,0 +1,168 @@
+Title: Available data formats
+
+----
+
+There are five default data formats available in OPT, and three features they may implement:
+
+1. Ordinary variables
+2. Sections
+3. Section elements
+
+In this chapter, we will describe them and show, how they should be used.
+
+Available formats
+=================
+
+`Array`
+:	The default format, implements variables, sections and section elements.
+
+`SingleArray`
+:	Very similar to `Generic`. The only difference is how the child section data are handled.
+
+`Objective`
+:	Implements variables, sections and section elements. Assumes that the data are objects that may implement one of the standard interfaces, like `Iterator` in case of sections.
+
+`StaticGenerator`
+:	The format that generates the data on the fly when they are really needed. It implements only sections.
+
+`RuntimeGenerator`
+:	Similar to `StaticGenerator`, but if no generator is provided, it assumes that the script assigned some static data for the sections.
+
+Array
+=====
+
+This is the default data format for OPT. It evaluates all the containers as ordinary PHP arrays:
+
+~~~~
+[xml]
+{$container.item} is equivalent to {$container['item']}
+~~~~
+
+The section data are also parsed as arrays. The data format requires a separate template variable to store the data of nested sections in the following style:
+
+~~~~
+[xml]
+<opt:section name="s1">
+	{$s1.item}
+	<opt:section name="s2">
+		{$s2.item}
+	</opt:section>
+</opt:section>
+~~~~
+
+The PHP code to populate the section with this data format:
+
+~~~~
+[php]
+$view->s1 = array(0 =>
+	array('item' => 'Foo'),
+	array('item' => 'Bar'),
+	array('item' => 'Joe'),
+);
+$view->s2 = array(0 =>
+	// The data for "s2" items that are in the relationship with "Foo".
+	array(0 =>
+		array('item' => 'A'),
+		array('item' => 'B'),
+	),
+	// The data for "s2" items that are in the relationship with "Bar".
+	array(0 =>
+		array('item' => 'C'),
+		array('item' => 'D'),
+	),
+	// The data for "s2" items that are in the relationship with "Joe".
+	array(0 =>
+		array('item' => 'E'),
+		array('item' => 'F'),
+	)
+);
+~~~~
+
+And so on for the deeper relationships.
+
+> [error]
+> This data format requires the section element indexes to start from 0 and be continuous, i.e. 0, 1, 2, 3, etc. Any holes in the index enumeration are not supported.
+
+SingleArray
+===========
+
+This data format is an extension to the ordinary `Array` format. It modifies the section behavior, so that the nested sections are taken from the appropriate items of the upper-level sections. To populate the sections presented above, we would use the following code:
+
+~~~~
+[php]
+$view->s1 = array(0 =>
+	array('item' => 'Foo', 's2' =>
+		array(0 =>
+			array('item' => 'A'),
+			array('item' => 'B'),
+		),
+	),
+	array('item' => 'Bar', 's2' =>
+		array(0 =>
+			array('item' => 'C'),
+			array('item' => 'D'),
+		),
+	),
+	array('item' => 'Joe', 's2' =>
+		array(0 =>
+			array('item' => 'E'),
+			array('item' => 'F'),
+		),
+	),
+);
+$view->setFormat('s1', 'SingleArray');	// This is not necessary, as the top-level sections are not affected.
+$view->setFormat('s2', 'SingleArray');
+~~~~
+
+In other words, the data for the nested sections must be stored under the upper-level section item variable whose name corresponds to the nested section name. In the example the nested section is called `s2`, so the item with its data in `s1` must also be called `s2`.
+
+The other aspects of `Array` format are not changed and work in the same way, including the index enumeration issue.
+
+Objective
+=========
+
+This data format evaluates the containers as the object calls:
+
+~~~~
+[xml]
+{$container.item} is equivalent to {$container::item}
+~~~~
+
+It can be also applied to sections, allowing to iterate through objects that implement both `Countable` and `Traversable` interfaces (i.e. `Iterator` or `IteratorAggregate`). The nested section data are taken from the appropriate upper-level section item field, like in `SingleArray`. The data format also supports the section item variables that are evaluated as object field calls.
+
+> [information]
+> This data format does not put any special requirements on section element indexes.
+
+StaticGenerator
+===============
+
+This data format can be used with sections only and allows to lazy-load their data when they are really needed. The script must provide an object of `Opt_Generator_Interface` to the section variable instead of the list of elements.
+
+> [important]
+> The data format **must** be decorated in order to specify, what type of data the requested function is going to generate.
+
+~~~~
+[php]
+class myGenerator implements Opt_Generator_Interface
+{
+	public function generate($what)
+	{
+		return array(0 =>
+			array('item' => 'Item 1'),
+			array('item' => 'Item 2'),
+			array('item' => 'Item 3'),
+		);
+	} // end generate();
+} // end myGenerator;
+
+$view = new Opt_View('view.tpl');
+$view->section = new myGenerator();
+$view->setFormat('section', 'RuntimeGenerator/Array');
+~~~~
+
+The format is especially useful, if our web application supports many different themes. Some sections may be not used in some themes and with the generators, the web application does not waste the time to return the unnecessary data for them.
+
+RuntimeGenerator
+================
+
+This data format is an extension to the `StaticGenerator`. It allows to provide the generator optionally. If we do not specify the generator, the sections will look for the ordinary data.

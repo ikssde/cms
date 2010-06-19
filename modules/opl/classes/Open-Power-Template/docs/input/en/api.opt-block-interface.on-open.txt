@@ -1,0 +1,22 @@
+Title: onOpen()
+ShortTitle: Opt_Block_Interface::onOpen()
+Construct: abstract method
+Reference: boolean onOpen(Array $attributes)
+Visibility: public
+Arguments:
+ - Name: $attributes | EType: array | Desc: The associative array of block tag attributes.
+SeeAlso:
+ - api.opt-block-interface.on-close
+
+----
+
+Represents the action that must be performed for a block port opening tag:
+
+~~~~
+[xml]
+<opt:block from="$var"> <!-- here -->
+    ...
+</opt:block>
+~~~~
+
+The method may return **true** or **false** to specify, whether the contents of the tag should be displayed or not.

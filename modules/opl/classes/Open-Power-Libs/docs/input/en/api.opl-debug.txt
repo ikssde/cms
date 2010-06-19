@@ -1,0 +1,6 @@
+Title: Opl_Debug
+Construct: class
+
+----
+
+The class provides some debugging utilities helpful during the development process. Note that the final code **should not** contain any references to this class.

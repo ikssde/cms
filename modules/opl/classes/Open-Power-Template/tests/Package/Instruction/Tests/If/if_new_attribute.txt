@@ -1,0 +1,38 @@
+Test the attributed version of the new opt:if.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<ul>
+<opt:if>
+	<li opt:condition="$ok">Condition 1</li>
+	<li opt:condition="$fail">Condition 2</li>
+	<li opt:condition="$fail">Condition 3</li>
+	<li opt:else="yes">Other</li>
+</opt:if>
+</ul>
+---
+<ul>
+<opt:if>
+	<li opt:condition="$fail">Condition 1</li>
+	<li opt:condition="$fail">Condition 2</li>
+	<li opt:condition="$fail">Condition 3</li>
+	<li opt:else="yes">Other</li>
+</opt:if>
+</ul>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<ul>
+<li>Condition 1</li>
+</ul>
+---
+<ul>
+<li>Other</li>
+</ul>
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

@@ -1,0 +1,20 @@
+This test checks the empty parameter values (bug #63). The template should
+be executed properly.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:component from="$component" bar="">
+<opt:set name="foo" value="" />
+FOO
+</opt:component>
+
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+
+>>>>expected.txt
+Opt_Instruction_Exception

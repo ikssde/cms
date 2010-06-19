@@ -1,0 +1,113 @@
+Title: New data formats
+
+----
+
+Many OPT instructions and language structures do not have their true equivalent in PHP language which is used as a base language for the compiled templates. Data formats are the way to provide the compiler an implementation of these instructions and a flexibility for the programmer. On the template side, it is no more necessary to know the implementation issues - we just use the generic instructions and select the proper data format in the script, depending on its current needs. In this chapter we are going to show, how to write custom data formats for Open Power Template 2.
+
+Data format - a closer look
+===========================
+
+From the compiler point of view, a data format is a class extending `Opt_Compiler_Format` containing various PHP code snippets. If the compiler or an instruction wants to generate a piece of PHP code, it sends to the data format a request with the snippet name and the format class should return it. Sometimes the data formats needs extra information from the caller. It is provided with extra arguments assigned similarly to the template variables in the views. Finally, the programmer may decorate one data format with another. This causes the certain snippets to use another snippets from the decorated format during the PHP code generation, thus extending the functionality and creating many different possible combinations.
+
+Using data formats in the compiler
+==================================
+
+To use a data format in the compiler code, we have to obtain the data format object first. This can be done with [Opt_Compiler_Class::getFormat()][api.opt-compiler-class.get-format] method. As arguments, we specify the identifier of a resource (the same as in [Opt_View::setFormat()][api.opt-view.set-format]). Moreover, we may decide, whether to create a new object every time we call the method or restore an existing one, if possible:
+
+~~~~
+[php]
+$format = $this->compiler->getFormat('variable', true);
+~~~~
+
+Then, we can request a code snippet with `get()` method:
+
+~~~~
+[php]
+$format->assign('item', 'variablename');
+echo $format->get('variable:main');
+~~~~
+
+As we can see, the data are assigned to the format with the `assign()` method. In this case, we requested the format to create a PHP call to the template variable `$variablename`, which is later printed. The PHP snippets belong to different groups providing a certain functionality. Before we start using the data format, it is recommended to check, if the returned object actually supports it:
+
+~~~~
+[php]
+if($format->supports('variable'))
+{
+	// our code goes here
+}
+else
+{
+	// we cannot process $variablename, because the data format does not support "variable" group
+	throw new Opt_FormatNotSupported_Exception('variablename', 'variable');
+}
+~~~~
+
+Finally, we may request the data format to perform a certain action not connected with PHP code generation and check the value of the data format property:
+
+~~~~
+[php]
+// perform some action
+$format->action('variable:someaction');
+
+if($format->property('variable:someproperty'))
+{
+	// then do something extra...
+}
+~~~~
+
+Implementing our data format
+============================
+
+The data format is created by extending `Opt_Compiler_Format` class and overwriting the abstract method `_build()` used to prepare a snippet. Let's take a look at a simple data format:
+
+~~~~
+[php]
+class Opt_Custom_Format extends Opt_Compiler_Format
+{
+	protected $_supports = array('variable');
+	protected $_properties = array('variable:assign' => true);
+
+	protected function _build($name)
+	{
+		switch($name)
+		{
+			// let the variable to become a function
+			case 'variable:main':
+				return 'myVariableGenerator(\''.$this->_getVar('item').'\')';
+			case 'variable:assign':
+				return 'myVariableModifier(\''.$this->_getVar('item').'\', '.$this->_getVar('value').')';
+				
+			// some other snippets go here...
+		}
+	} // end _build();
+} // end Opt_Custom_Format;
+~~~~
+
+The `$_supports` protected field contains a list of functionalities supported by a certain data format. The `$_properties` list contains a list of properties and their values in the data format. The construction of `_build()` method is quite simple. We just get the snippet name and decide, what piece of code to generate. We may obtain the format variables with `_getVar()` method.
+
+> [warning]
+> Format variables are something completely different and independent from the view and template variables! Do not confuse these two ideas.
+
+To perform actions, we simply overwrite the `action()` method, for example:
+
+~~~~
+[php]
+public function action($name)
+{
+	if($name == 'section:forceItemVariables')
+	{
+		$this->_sectionItemVariables = true;
+	}
+} // end action();
+~~~~
+
+Conclusion
+==========
+
+The basics of writing data formats are easy, but you have probably noticed that we are already on the half of the way. We must learn about different snippets used in OPT and what the compiler expects there to be. It will be introduced in the next chapter. In the next chapters we are going to use the following terms:
+
+piece of expression
+:	a part of PHP expression. It must not contain curly brackets, semicolons etc. and must be deployable via copy+paste in any valid PHP expression.
+
+piece of code
+:	any part of PHP code. Curly brackets, semicolons, PHP control structures are allowed.

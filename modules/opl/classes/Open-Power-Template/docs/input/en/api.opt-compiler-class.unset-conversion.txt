@@ -1,0 +1,10 @@
+Title: unsetConversion()
+ShortTitle: Opt_Compiler_Class::unsetConversion()
+Reference: bool unsetConversion(string $original)
+SeeAlso:
+ - api.opt-compiler-class.convert
+ - api.opt-compiler-class.set-conversion
+
+---
+
+Removes the conversion rule for the `$original` string. If no such rule was defined, it returns **false**.

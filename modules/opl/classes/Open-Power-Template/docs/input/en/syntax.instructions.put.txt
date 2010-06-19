@@ -1,0 +1,30 @@
+Title: opt:put
+
+----
+
+Puts an OPT expression in the specified place. It has the similar meaning to the standard curly bracket syntax.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ value          | Expr. with assign.  | Yes       | The expression to be evaluated.
+ 
+The following lines perform exactly the same task:
+
+~~~~
+[xml]
+Text {$variable} Text
+Text <opt:put value="$variable" /> Text
+~~~~
+
+Because `opt:put` is an instruction, it can be combined with other instructions. An example:
+
+~~~~
+[xml]
+<opt:put value="$section.item" opt:section="section" separator=" | " />
+~~~~
+
+It can generate a sequence like this:
+
+~~~~
+Foo | Bar | Joe
+~~~~

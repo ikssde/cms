@@ -1,0 +1,156 @@
+Title: Template inclusion
+SeeAlso:
+ - syntax.topics.modularization
+ - syntax.instructions.include
+
+----
+
+The template inclusion is a way to organize and modularize your templates in OPT. It uses [opt:include][syntax.instructions.include] instruction to include one template within another. What is important, the new template is loaded during the execution stage, so the file name may be loaded from a variable or even section, creating a powerful tool.
+
+Note that OPT uses the idea of views on the script side. A view is a template with the data associated to it and is implemented as an PHP object. `opt:include` follows this concept and also operates on views.
+
+Basic use of opt:include
+========================
+
+Using `opt:include` is very simple. To include a left menu content in the following example, we must only specify the file name.
+
+~~~~
+[xml]
+<div id="menu">
+    <opt:include file="left_menu.tpl" />
+</div>
+~~~~
+
+However, this code is not fully completed. As we mentioned earlier, `opt:include` operates on views. In this particular case, OPT creates a new view for our template, but does not assign any data to it. In other words, your script has no way to assign the values to local variables in `left_menu.tpl` and they remain empty. There are two ways to solve this problem.
+
+1. Pass the variable values as extra parameters.
+2. Use the `import` attribute.
+
+~~~~
+[xml]
+<!-- pass the variables manually -->
+<div id="menu">
+    <opt:include file="left_menu.tpl" variable1="$someValue" variable2="calculateMe()" />
+</div>
+
+<!-- import all the variables from the current view -->
+<div id="menu">
+    <opt:include file="left_menu.tpl" import="yes" />
+</div>
+~~~~
+
+Loading the templates dynamically
+=================================
+
+In most cases, we would like to add more dynamics to our templates. We wish to choose the template to be included depending on our needs. The following code allows us to do this.
+
+~~~~
+[xml]
+<div id="menu">
+    <opt:include parse:file="$leftMenuTemplate" import="yes" />
+</div>
+~~~~
+
+We had to change the namespace of the `file` attribute to `parse` to notify OPT that the value we want to specify is not a string, but whole expression with variables etc. However, in this case we also create a new view from scratch and the rules for passing variable to it introduced in the previous part are still correct.
+
+Loading views
+=============
+
+So far, our views have been created on the template side in the background. However, sometimes we would like to prepare them on the script side and just execute them from another template. This is also possible with `opt:include`:
+
+~~~~
+[xml]
+<div id="menu">
+    <opt:include view="$leftMenuView" />
+</div>
+~~~~
+
+Here, the script has a full control over the variables passed to the left menu view, as it created it. But if you need, you may still pass some extra variables with the attributes or using `import` (the imported variables are added to the view and do not overwrite them).
+
+OT offers you a fast way to load the views from the section:
+
+~~~~
+[xml]
+<div id="menu">
+    <opt:section name="menuViewContainer">
+        <opt:include from="menuViewContainer" />
+    </opt:section>
+</div>
+~~~~
+
+`opt:include` assumes that the view object can be found at `$menuViewContainer.view` section variable.
+
+Organizing your templates with opt:include
+==========================================
+
+We are going to show you the ideas of a complete and ready-to-use solution for working with `opt:include`. We assume that the modules of our website create their own view objects. The script provides them a special API that allows them to assign the particular view to the specified placeholder. It is very easy to write - just a two-dimensional array and a function/method:
+
+~~~~
+[php]
+<?php
+class placeholderManager
+{
+    private $_views = array();
+  
+    public function definePlaceholder($placeholder)
+    {
+        if(!isset($this->_views[$placeholder]))
+        {
+            $this->_views[$placeholder] = array();
+        }
+    } // end definePlaceholder();
+  
+    public function addView($placeholder, Opt_View $view)
+    {
+        if(!isset($this->_views[$placeholder]))
+        {
+            // error!
+        }
+        // The standard format of OPT sections.
+        $this->_views[$placeholder][] = array('view' => $view);
+    } // end addView();
+
+    public function register(Opt_View $mainView)
+    {
+        foreach($this->_views as $name => $viewList)
+        {
+            $mainView->assign($name.'Views', $viewList);
+        }
+    } // end register();
+} // end placeholderManager;
+~~~~
+
+Now we are going to prepare the main template:
+
+~~~~
+[xml]
+<html>
+<head>
+    ...
+</head>
+<body>
+<div id="header">
+    ...
+</div>
+<div id="menu">
+    <!-- display all the menu views here -->
+    <opt:section name="menuViews">
+        <opt:include from="menuViews" />
+    </opt:section>
+</div>
+<div id="content">
+    <!-- display all the content views here -->
+    <opt:section name="contentViews">
+        <opt:include from="contentViews" />
+    </opt:section>
+</div>
+<div id="footer">
+    ...
+</div>
+</body>
+</html>
+~~~~
+
+Of course we can define as many placeholders, as we like. Moreover, the placeholders defined in the template do not have to be defined in the script. In this case, the sections will simply show nothing and the placeholder - remain empty. If you like to provide the support for placeholders also in the module templates, consider registering the placeholder data as global variables.
+
+Now we have a complete solution. The modules create a view object, when executed, associate data and register it in our placeholder manager. The script passes them to the templates and OPT displays them in the right place.

@@ -1,0 +1,8 @@
+Title: getBuffer()
+ShortTitle: Opt_Xml_Buffer::getBuffer()
+Reference: array getBuffer(int $bufferId)
+Status: public
+
+---
+
+Returns the array with all the code snippets assigned to the buffer `$bufferId`. If the buffer is empty, it returns an empty array.

@@ -1,0 +1,285 @@
+Title: Sections
+SeeAlso:
+ - syntax.instructions.section
+ - syntax.instructions.tree
+ - syntax.instructions.grid
+ - syntax.instructions.show
+
+----
+
+By *sections* we understand a group of instructions providing a comprehensive support for displaying various types of lists. They are strongly automated, intuitive and allow to achieve a lot without much effort. In many other template engines, similar solutions often depend on the data format and moreover, the template designer must connect the nested lists manually. In this place we must make it clear: if you do not use sections in OPT, you do not use this library properly. In this chapter we would like to provide a complete explanation of this topic then. The chapter contains the information common for all of the section types. The details and differences are explained in the particular section type reference.
+
+Section types
+=============
+
+There is a group of instructions that may be called *sections*. They share the common section API, but are used to display different types of lists. In OPT 2, we have the following section instructions:
+
+1. `opt:section` - the basic sections to display flat lists.
+2. `opt:selector` - they display flat lists, but allow to define more than one list element layouts that are chosen dynamically depending on the element settings.
+3. `opt:tree` - sections to display hierarchical lists (tree data).
+4. `opt:grid` - displays the data in a grid M x N elements.
+
+However, because they share the basic API, they can cooperate one with another. 
+
+Section structure
+=================
+
+On the template side, the section consists of the opening and closing tag. Between them, we define the layout of the single list element. The details of this process depend on the section type. For example, to display a hierarchical list, the `opt:tree` instruction requires more information than `opt:section` needs to display a flat list. Below, you can find an example of a simple section:
+
+~~~~
+[xml]
+<opt:section name="section">
+
+	<p>{$section.var1}, {$section.var2}</p>
+
+</opt:section>
+~~~~
+
+`opt:section` displays the elements linearly, one after another. The code above informs that the elements must be displayed as HTML paragraphs. Each section has its own name that should be unique (there are some exceptions from this rule, however this will be explained later). As we see, using the section name, we can access the list element variables: `$section.var`, `$section.var2`. The template above will work for each list whose elements contain two variables: `var1` and `var2`.
+
+> [error]
+> The section name **must not** be read from template variables: `<opt:section name="$block">`.
+
+The sections must take the list data somehow, but we haven't even defined any datasource variable. It is not a mistake. We can always define the location with the optional `datasource` attribute, but OPT goes further. Our section has already its own unique name: *section*, so it would be nice if it read the data from the variable `$section`. In other words, if the datasource is not specified, the section uses its own name to find the data. The two sections below do exactly the same thing:
+
+~~~~
+[xml]
+<opt:section name="section">
+	....
+</opt:section>
+
+<opt:section name="section" datasource="$section">
+
+</opt:section>
+~~~~
+
+Let's take a look at the element variables: `$section.var1` and `$section.var2`. OPT gives us here a couple of freedom. In practice, the section name does not have to be the first element of such container. We are allowed to follow it with any number of identifiers and the compiler will simply ignore them: `$foo.bar.joe.section.var1`. Once the section name is found in such call, the next identifier points to the element variable, and later, the identifiers works exactly like in typical containers. If `$section.var1` be a container with three elements: *foo*, *goo* and *hoo*, we would access them like that:
+~~~~
+[xml]
+<opt:section name="section">
+	<p>{$section.var1.foo}</p>
+	<p>{$section.var1.goo}</p>
+	<p>{$section.var1.hoo}</p>
+</opt:section>
+~~~~
+
+Of course, if the variable `$foo.bar.joe` does not contain any of active section names, it is parsed as a normal variable or container.
+
+The section elements do not have to be containers, but also simple scalar values:
+
+~~~~
+[xml]
+<opt:section name="section">
+	<p>Here, the elements are simple, scalar values: {$section}</p>
+</opt:section>
+~~~~
+
+Data formats
+============
+
+Of course, if the section operates on some real data, they must have a format. Usually, the template engines require you to deal with it on the template side, which is not convenient and decreases the portability. As you have probably noticed, we have said nothing about the formats in the already presented examples. This is one of the unique section features - they are fully format-independent. It is only the programmer and the PHP script issue and the template designer does not have to know, what the data really are. Notice that such code is much easier to read and portable. We can simply copy huge parts of one template, paste them in totally different place and they will simply adapt to the new location.
+
+> [important]
+> The format independence is one of the most important section features. As a template designer, you only mark, how should *some elements* containing *some kind of data* look like. The exact implementation is chosen during the compilation according to the information provided by the PHP script.
+
+Note that sections have nothing to do with the actual iteration process over the data structure. They do not put any constraints on the data structure type, element indexation or order resolving which are treated as an internal issue of the used data format. In the templates, you should never make assumptions about the sections that rely on such technical details.
+
+Nested sections
+===============
+
+The sections can be nested one in another. Suppose we want to display a list of categories, and each of them must contain some sample products. The code below solves this problem:
+~~~~
+[xml]
+<opt:section name="categories">
+	<p>Category: {$categories.name}</p>
+	<p>Featured products:</p>
+	<ul>
+
+	<opt:section name="products">
+		<li>{$products.name}</li>
+	</opt:section>
+
+	</ul>
+</opt:section>
+~~~~
+
+OPT assumes that if we nest one section in another, their data are connected with an one-to-many relationship. The compiler automatically establishes a connection between the categories and products using the data format rules.
+
+If the default behavior does not satisfy us, OPT provides several management tools. The most important is the `parent` attribute which allows to choose the parent section for the one-to-many relationship. The asterisk value `*` means the section is not related to any upper-level ones. Below, we can find a more complex version of the last example. Now we have some discounts for each category, but we do not want to display them above the product list. Instead, the discounts should be repeated for each product, because we want to create a links that allow to check the new price etc. So, the discount section must be located in `products`, but connected with a relationship to `categories.`
+
+~~~~
+[xml]
+<opt:section name="categories">
+	<p>Category: {$categories.name}</p>
+	<p>Featured products:</p>
+	<ul>
+
+	<opt:section name="products">
+		<li><p>{$products.name}</p>
+			<p>Discounts: 
+			<opt:section name="discounts" parent="categories" str:separator=", ">
+				<a parse:href="'discount.php?did='~$discounts.id~'&amp;prodid='~$products.id">Discount  {$discount.name}</a>
+			</opt:section>
+			</p>
+		</li>
+	</opt:section>
+	</ul>
+</opt:section>
+~~~~
+
+This example also shows that in the nested sections we still have the full access to the upper-level section data.
+
+To sum up, the following codes do exactly the same:
+
+
+##### Version 1:
+
+~~~~
+[xml]
+<opt:section name="categories">
+	<p>Category: {$categories.name}</p>
+	<p>Featured products:</p>
+	<ul>
+
+	<opt:section name="products">
+		<li>{$products.name}</li>
+	</opt:section>
+
+	</ul>
+</opt:section>
+~~~~
+
+##### Version 2:
+
+~~~~
+[xml]
+<opt:section name="categories">
+	<p>Category: {$categories.name}</p>
+	<p>Featured products:</p>
+	<ul>
+
+	<opt:section name="products" parent="categories">
+		<li>{$products.name}</li>
+	</opt:section>
+
+	</ul>
+</opt:section>
+~~~~
+
+> [warning]
+> If you use the `datasource` attribute, such section must not be connected with a relationship to any other upper-level section. The `parent` attribute is ignored then. Of course, you can always create such relationship manually, by specifying one of the upper section element variables as a datasource, but we do not guarantee you this will always work correctly. It will decrease the code portability and partially, get you dependent on the data formats.
+>
+>     [xml]
+>     <opt:section name="upper">
+>         <opt:section name="lower" datasource="$upper.someVariable">
+>             ...
+>         </opt:section>
+>     </opt:section>
+>
+> We strongly **do not recommend** using such code.
+
+Section attributes
+==================
+
+Below, you can find a list of section tag attributes:
+
+ Name          | Type (values)            | DEscription
+---------------|--------------------------|:-------------------------------------------
+ name          | hard string              | The section name. It is the only required attribute,
+ parent        | hard string              | The name of the upper-level and active section to create an one-to-many relationship. The asterisk `*` means "no relationship". By default, the sections are connected to the parent section.
+ datasource    | expression               | Specifies the data source for the current section. If we use this attribute, `parent` is ignored.
+ order         | asc, desc                | Specifies the element display order. The `desc` displays the elements in the descending order. Not all of the sections support it. In this case this attribute is ignored.
+ display       | expression               | An optional expression that forces to display the alternative section content message, if evaluated to **true**.
+ separator     | expression               | The separator that will be put between every two list elements. [More about separators][syntax.instructions.separator].
+
+Alternative section content
+===========================
+
+If the section contains no elements, we can specify the alternative content to display. In the section content we put the additional tag `opt:sectiontypeelse` (the exact name depends on the used section type), where we define the message:
+
+~~~~
+[xml]
+<opt:section name="categories">
+	<p>Category: {$categories.name}</p>
+
+	<opt:sectionelse>
+		<p>We are sorry but there are no categories in the system.</p>
+	</opt:sectionelse>
+</opt:section>
+~~~~
+
+opt:show instruction
+====================
+
+OPT provides more complex way to support empty sections. It is the [opt:show][syntax.instructions.show] instruction:
+
+~~~~
+[xml]
+<opt:show name="categories">
+	<ul>
+	<opt:section>
+		<li>{$categories.name}</li>
+	</opt:section>
+	</ul>
+
+	<opt:showelse>
+		<p>We are sorry but there are no categories in the system.</p>
+	</opt:showelse>
+</opt:show>
+~~~~
+
+In the example above, `opt:show` allows us not to display empty `<ul>` tags if there are no categories in the system. The detailed information on this instruction can be found on its documentation page. Here we will only give you the most basic rules.
+
+All the section attributes must be put in `opt:show` and the section tag **must not contain them**, because they are imported automatically to it. If the section tag contains them, OPT does not bind it with the `opt:show`. Suppose we have a list of products and if the products are displayed, we want to show also some bookmarks:
+
+~~~~
+[xml]
+<opt:show name="products">
+	<p>Bookmarks: <opt:section name="bookmarks" str:separator=", "/>{$bookmarks.name}</opt:section></p>
+
+	<ul>
+	<opt:section>
+		<li>{$products.name}</li>
+	</opt:section>
+	</ul>
+</opt:show>
+~~~~
+
+The first `opt:section` has attributes, so it is not bound to the `opt:show`. The second `opt:section` tag is empty and OPT imports the attributes from `opt:show` right here.
+
+> [warning]
+> The `opt:show` instruction does not start a section. The access to the section elements like `$products.name` is possible only within `opt:section`. It is also not possible to connect `bookmarks` and `products` with a relationship in the example above.
+
+<!-- ... -->
+
+> [error]
+> You must not define part of the attributes in `opt:show` and then add some extra ones in `opt:section` or similar.
+
+Conditional sections
+====================
+
+Sometimes we may want to show the section under a particular condition. OPT offers two ways to achieve this. The first one is the `display` attribute. If it is evaluated to **true**, the section shows the alternative content message even if it actually contains some items. To disable the section completely, we must use `opt:if`:
+
+~~~~
+[xml]
+<opt:section name="foo" opt:if="$someCondition">
+	Section content
+</opt:section>
+~~~~
+
+$sys special variable extensions
+================================
+
+Using the `$sys.section.sectionName` special variable, you can get some extra information about the specified section. The available values are:
+
+1. `$sys.section.sectionName.count` - returns the number of the elements in the section.
+2. `$sys.section.sectionName.size` - returns the current section element size.
+3. `$sys.section.sectionName.iterator` - the current element index (warning: it may vary among various data formats!)
+4. `$sys.section.sectionName.first` - **true** if the current element is the first section element.
+5. `$sys.section.sectionName.last` - **true** if the current element is the last section element.
+6. `$sys.section.sectionName.extreme` - **true** if the current element is the first or the last section element.
+
+Some section types might define also additional values.
+
+> [stop]
+> Remember that you must avoid attempts to modify any of the special variables above. Some of them are not in fact real variables, whereas others may cause unexpected behavior, when modified.

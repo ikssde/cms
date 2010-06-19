@@ -1,0 +1,12 @@
+Title: templateCacheStart()
+ShortTitle: Opt_Caching_Interface::templateCacheStart()
+Construct: abstract method
+Reference: boolean templateCacheStart(Opt_View $view)
+Visibility: public
+Arguments:
+ - Name: $view | Type: api.opt-view | Desc: The cached view object.
+Returns: The information whether to execute the view or not.
+
+----
+
+Checks if the template requested by the view is already cached and optionally prints the cached content to the output. The method must return **true**, if it read the content from the cache and **false** if the original template should be executed to rebuild the cache. To capture the template output, you may use the output buffering functions available in PHP.

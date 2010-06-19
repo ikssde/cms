@@ -1,0 +1,11 @@
+Title: removeGlobal()
+ShortTitle: Opt_View::removeGlobal()
+Construct: static method
+Reference: boolean removeGlobal( string $name )
+Visibility: public
+SeeAlso:
+ - api.opt-view.remove
+
+----
+
+Removes the existing global template variable `$name` and returns **true** in case of success.

@@ -1,0 +1,7 @@
+Title: OPT attributes
+SeeAlso:
+ - syntax.instructions
+
+----
+
+We have already learned that the instructions may parse particular XML tags in our templates to perform some tasks. The same applies to tag attributes. The attributes that are parsed by the instructions can be recognized by their namespaces. By default, they are members of `opt` namespace, but custom instructions may register them in different ones. The attributes are also very powerful and are able to manipulate the tags they are assigned to. They can be used both with ordinary and instruction tags.

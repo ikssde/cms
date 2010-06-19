@@ -1,0 +1,8 @@
+Title: cleanCompiler()
+ShortTitle: Opt_Compiler_Class::cleanCompiler()
+Reference: void cleanCompiler()
+Status: static
+
+---
+
+Resets the compiler to the initial state. It is used in the critical situations, when the compilation process has been broken, to unlock the compiler.

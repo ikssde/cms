@@ -1,0 +1,9 @@
+Title: contains()
+Reference: boolean contains(container $container, mixed $item)
+
+----
+
+Returns **true**, if the `$container` contains `$item`.
+
+> [help]
+> A note for PHP programmers: the function can be applied to objects, if they implement `ArrayAccess` and either `Iterator` or `IteratorAggregate` interface.

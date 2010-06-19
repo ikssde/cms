@@ -1,0 +1,31 @@
+Title: setup()
+ShortTitle: Opt_Class::setup()
+Construct: method
+Reference: void setup([mixed $config])
+Visibility: public
+Arguments:
+ - Name: $config | EType: mixed | Desc: The library configuration to be loaded on setup
+VersionSince: 2.0-dev7
+SeeAlso:
+ - api.opt-class.setup
+ 
+----
+
+Performs the main initialization of OPT. If the optional argument `$config` is specified, it is transparently sent to [Opt_Class::loadConfig()][api.opt-class.load-config]. Before using this method, we are obligated to configure the library and load the necessary extensions.
+
+~~~~
+[php]
+$tpl = new Opt_Class;
+$tpl->sourceDir = './templates/';
+$tpl->compileDir = './templates_c/';
+$tpl->setup();
+
+$view = new Opt_View('template.tpl');
+$view->foo = 'bar';
+
+$out = new Opt_Output_Http;
+$out->render($view);
+~~~~
+
+> [error]
+> You must not render the views before using `Opt_Class::setup()`. This may cause an unexpected behavior.

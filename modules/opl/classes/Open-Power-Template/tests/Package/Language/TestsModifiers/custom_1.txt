@@ -1,0 +1,21 @@
+Check the custom modifiers.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root escaping="no">
+<foo bar="parse:r:$variable1"></foo>
+{p:$variable2}
+{b:$variable2}
+</opt:root>
+
+>>>>data.php
+$view->variable1 = 'joe';
+$view->variable2 = '<foo />';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="HI!joe"></foo>
+&lt;foo /&gt;
+<foo />

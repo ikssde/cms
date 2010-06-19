@@ -1,0 +1,10 @@
+Title: _build()
+ShortTitle: Opt_Compiler_Format::_build()
+Reference: string _build(string $name)
+Status: abstract protected
+SeeAlso:
+ - api.opt-compiler-format.get
+
+---
+
+Builds a PHP code hook identified by the name `$name`. The list of the default code hooks supported by OPT can be found in the [Opt_Compiler_Format::get()][api.opt-compiler-format.get] method documentation page.

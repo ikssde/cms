@@ -1,0 +1,7 @@
+Title: component()
+ShortTitle: Opt_Compiler_Class::component()
+Reference: string component(string $name)
+
+---
+
+Returns the name of the PHP component class registered as `$name` tag. If no component is connected to the tag, the `Opt_ObjectNotExists_Exception` exception is thrown.

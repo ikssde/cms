@@ -1,0 +1,11 @@
+Title: setTemplate()
+ShortTitle: Opt_View::setTemplate()
+Construct: method
+Reference: void setTemplate( string $template )
+Visibility: public
+SeeAlso:
+ - api.opt-view.__construct
+
+----
+
+Binds a template file `$template` to the view. Alternatively, you may bind it directly in the view constructor.

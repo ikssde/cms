@@ -1,0 +1,57 @@
+Title: Variables
+
+----
+
+In this chapter, we are going to learn, how to change the behavior of variables with OPT data formats.
+
+Configuration
+=============
+
+The variable access snippets are located in the `variable` group, so you must add it to `$_supports` field in your data format. Furthermore, you need to set up the property `variable:assign`. It is a boolean value that controls whether your data format supports assignments of a new value to the variables. Another property is `variable:useReference`. Its value should be **true** if the data format permits reading the variables via references. For example, the data format shown in the example below that implements the template variables as functions, should use **false** here, as it is not possible in PHP to access the returned function values via references.
+
+Reading the values
+==================
+
+The snippet that returns the PHP code to read a variable value is called `variable:main`. It should return a *piece of expression* that reads the value. The variable name is provided in the `item` format variable.
+
+~~~~
+[php]
+	case 'variable:main':
+		return 'myVariableReader(\''.$this->_getVar('item').'\')';
+~~~~
+
+OPT supports both local and global template variables. The data formats may return different PHP codes for those two types of variables. The requested type is provided in the `access` format variable which takes two possible values:
+
+1. `Opt_Class::ACCESS_LOCAL` - accessing a local variable
+2. `Opt_Class::ACCESS_GLOBAL` - accessing a global variable
+
+The alternative PHP code:
+
+~~~~
+[php]
+	case 'variable:main':
+		if($this->_getVar('item') == Opt_Class::ACCESS_LOCAL)
+		{
+			return 'myVariableReader(\''.$this->_getVar('item').'\')';
+		}
+		else
+		{
+			return 'myGlobalVariableReader(\''.$this->_getVar('item').'\')';
+		}
+~~~~
+
+Modifying the variable values
+=============================
+
+It is also possible to control the variable assignments via the `variable:assign` snippet. The new value is provided in the `value` format variable that must be placed somewhere in the returned code.
+
+> [error]
+> The `value` format variable actually contains neither PHP nor OPT expression that generates the specified value and there is no way to identify, what exactly the programmer is going to assign. The exact value is an internal token used by the expression engine to identify subexpressions.
+
+A sample code:
+
+~~~~
+[php]
+	case 'variable:assign':
+		return 'myVariableModifier(\''.$this->_getVar('item').'\', '.$this->_getVar('value').')';
+~~~~

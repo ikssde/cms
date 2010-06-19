@@ -1,0 +1,25 @@
+Title: setDefaultHandler()
+ShortTitle: Opl_Loader::setDefaultHandler()
+Construct: static method
+Reference: void setDefaultHandler(callback $handler);
+Visibility: public
+Arguments:
+ - Name: $handler | EType: callback | Desc: The callback to the new default library handler.
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opl-loader.add-library
+
+----
+
+Sets the default autoloading handler that will be used for all the libraries that do not have their own specific settings. The `$handler` argument must be a valid PHP callback to the following function or method:
+
+~~~~
+boolean autoloadingHandler(string $library, string $className)
+~~~~
+
+The function must return **true**, if the standard autoloading process should be still performed or **false**, if the handler has already found and loaded the requested class.
+
+To disable the default handler feature, you must set the `$handler` argument to **null**.
+
+> [warning]
+> The autoloader is initialized with the OPL handler by default. If you wish to use the autoloader with non-OPL libraries, you should use this method to disable it.

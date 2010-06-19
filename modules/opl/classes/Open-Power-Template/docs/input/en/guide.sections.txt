@@ -1,0 +1,187 @@
+Title: Working with sections
+SeeAlso:
+ - syntax.topics.sections
+
+----
+
+Sections can be considered as *smart loops*. On the template side, they allow to avoid dealing with the implementation issues, such as iterating through the data structure, checking the existence of elements etc. More about section features can be found in the [Sections][syntax.topics.sections] chapter and here we are going to describe, how to use them on the script side.
+
+Basic overview
+==============
+
+Suppose we want to display a list of comments on our blog. We must specify, how a single comment should look like and where to display particular item variables:
+
+~~~~
+[xml]
+<h2>Comments</h2>
+<opt:show name="comments">
+	<p>There are {$commentNum} comments.</p>
+	<opt:section>
+		<div class="comment">
+			<p class="author">Written by {$comments.author} on {$comments.date}</p>
+			
+			{$comments.body}
+		</div>
+	</opt:section>
+	
+	<!-- the alternative content, if there are no comments -->
+	<opt:showelse>Nobody has written a comment yet! Be first!</opt:showelse>
+</opt:show>
+~~~~
+
+To populate a section, we must create a template variable with the same name as the section:
+
+~~~~
+[php]
+$view = new Opt_View('comments.tpl');
+
+$view->commentNum = 3;
+$view->comments = array(0 =>
+	array('author' => 'John', 'date' => 'Mar 13 2009', 'body' => 'Nice article!'),
+	array('author' => 'Adam', 'date' => 'Mar 15 2009', 'body' => 'Thanks a lot, it was very helpful'),
+	array('author' => 'Susan', 'date' => 'Mar 17 2009', 'body' => 'One small suggestion... '),
+);
+~~~~
+
+As you see, the variable `comments` is an array of arrays. Each sub-array represents the data of a single comment. If the main array is empty or we do not set the variable, the user will see *Nobody has written a comment yet! Be first!*
+
+> [warning]
+> By default, the section items must be enumerated from 0 and the indices must not contain any holes, like `3, 4, 6`. Using a database row index is a *bad* choice.
+
+Relationships
+=============
+
+Two nested sections can be connected with a one-to-many relationship. It means that their data somehow depend one by another:
+
+~~~~
+[xml]
+<h1>Categories</h1>
+
+<p>Below, you can find a list of the categories and the products associated with them.</p>
+
+<opt:section name="categories">
+	<h2>{$categories.name}</h2>
+	<p>{$categories.description}</p>
+	<opt:show name="products">
+	<p>Products:</p>
+	<ul>
+		<li opt:section="products">{$products.name}</li>
+	</ul>
+	<opt:showelse>There are no products in this category.</opt:showelse>
+	</opt:show>
+</opt:section>
+~~~~
+
+OPT automatically connects two nested sections with a relationship and we must provide proper data for them in our script. By default, it is done by creating two variables, one for each section and populating it separately:
+
+~~~~
+[php]
+$view = new Opt_View('categories.tpl');
+$view->categories = array(0 =>
+	array('name' => 'Fruit', 'description' => 'Our best fruit!'),
+	array('name' => 'Vegetables', 'description' => 'Vegetables from the best farms.')
+);
+
+$view->products = array(0 =>
+	// Products in "Fruit"
+	array(0 =>
+		array('name' => 'Apples'),
+		array('name' => 'Pears'),
+		array('name' => 'Bananas'),
+	),
+	// Products in "Vegetables"
+	array(0 =>
+		array('name' => 'Tomatos'),
+		array('name' => 'Onions'),
+		array('name' => 'Carrots'),
+	)
+);
+~~~~
+
+In `products`, we provide a separate list of products for each category listed in `categories`. The items are matched by the array indices.
+
+Using opt:tree
+==============
+
+OPT provides a special section instruction to render hierarchical data structures (trees), [opt:tree][syntax.instructions.tree]:
+
+~~~~
+[xml]
+<opt:tree name="tree">
+	<opt:list><ul><opt:content /></ul></opt:list>
+	<opt:node><li>{$tree.title} <opt:content /></li></opt:node>  
+</opt:tree>
+~~~~
+
+They are only a different type of sections and we can apply the same rules to them, as to the other types. However, `opt:tree` has one special requirement in order to work. We must provide somehow the data that describe, what element is nested in whom. We may achieve it by adding a special variable to the tree item, `depth`:
+
+~~~~
+[php]
+$view = new Opt_View('tree.tpl');
+
+$view->tree = array(0 =>
+	array('title' => 'Main category 1', 'depth' => 0),
+	array('title' => 'Main category 2', 'depth' => 0),
+	array('title' => 'Subcategory 2.1', 'depth' => 1),
+	array('title' => 'Main category 3', 'depth' => 0),
+	array('title' => 'Subcategory 3.1', 'depth' => 1),
+	array('title' => 'Item 3.1.1', 'depth' => 2),
+	array('title' => 'Item 3.1.2', 'depth' => 2),
+	array('title' => 'Item 3.1.3', 'depth' => 2),
+	array('title' => 'Subcategory 3.2', 'depth' => 1),
+	array('title' => 'Subcategory 3.3', 'depth' => 1),
+	array('title' => 'Item 3.3.1', 'depth' => 2),
+	array('title' => 'Main category 4', 'depth' => 0),
+	array('title' => 'Subcategory 4.1', 'depth' => 1),
+	array('title' => 'Item 4.1.1', 'depth' => 2)
+);
+~~~~
+
+Now we get a tree with the items nested properly.
+
+The tree checks the validity of the `depth` element items. Firstly, it determines the initial depth, taken from the first element. In the case above, the initial depth is 0. You may choose the other initial depths, such as `1` or `533`, too. In the next elements, the depth must be greater or equal to the initial depth. If it becomes lower for some reason, the template would throw an exception.
+
+Using opt:selector
+==================
+
+[opt:selector][syntax.instructions.selector] is a combination of ordinary sections and the *switch* statement. It allows to define several possible ways to render an item and automatically chooses between them. Let's take a look at the menu. We have there some entitled URL-s, but we want also to show horizontal lines between the groups of items, and moreover, one of the items must be marked as the *currently viewed*. `opt:selector` is the best choice for this task:
+
+~~~~
+[xml]
+<div id="menu">
+	<ul>
+	<opt:selector name="menu">
+		<opt:active><li class="active"><a parse:href="$menu.address">{$menu.title}</a></li></opt:active>
+		<opt:horiz><li class="horiz">&nbsp;</li></opt:horiz>
+		<opt:default><li><a parse:href="$menu.address">{$menu.title}</a></li></opt:default>
+	</opt:selector>	
+	</ul>
+</div>
+~~~~
+
+In order to populate a selector, we must provide an extra variable to each item that indicates the requested way to display it. It must match the name of one of OPT tags within the selector (without the namespace):
+
+~~~~
+[php]
+$view = new Opt_View('menu.tpl');
+$view->menu = array(0 =>
+	array('item' => 'default', 'title' => 'Index', 'address' => '#'),
+	array('item' => 'active', 'title' => 'Login', 'address' => '#'),
+	array('item' => 'default', 'title' => 'Register', 'address' => '#'),
+	array('item' => 'horiz'),
+	array('item' => 'default', 'title' => 'Articles', 'address' => '#'),
+	array('item' => 'default', 'title' => 'Contact', 'address' => '#'),
+);
+~~~~
+
+Note that `$menu.item` does not have to be named `item`. You can control, what variable to take the item type from, using `test` attribute on the `opt:selector` attribute.
+
+Are arrays the only way to populate a section?
+==============================================
+
+No at all. In this chapter we have shown the default way of populating sections that uses ordinary arrays, but the sections are much more flexible. In the next chapters, you will meet the concept of *data formats* that allow the sections to support anything you want. 
+
+Conclusion
+==========
+
+Sections are very flexible OPT constructs and we recommend to use them rather than `opt:foreach` or `opt:for`.

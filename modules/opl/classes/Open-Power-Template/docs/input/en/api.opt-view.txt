@@ -1,0 +1,43 @@
+Title: Opt_View class
+ShortTitle: Opt_View
+VersionSince: 2.0-dev7
+Construct: class
+
+----
+
+This class represents a view which is an OPT template and the data associated to it. The views can be rendered using the output systems or the [opt:include][syntax.instructions.include] instruction in the templates. It must be pointed that the view contains also all the inherited templates.
+
+Using views
+===========
+
+To use a view, we must begin with creating a view object. You should use different object for different templates in your script. Once this step is done, we may assign some data from the script. By default, they will be visible only for the view template, however - we are also able to create global template variables.
+
+~~~~
+[php]
+$view1 = new Opt_View('template_1.tpl');
+$view2 = new Opt_View('template_2.tpl');
+
+// Assign the data to local template variables
+
+$view2->bar = 'bar';
+$view2->foo = 'joe';
+
+$view1->foo = 'foo';
+$view1->includedView = $view2;
+
+// Assign the data to global template variables
+
+Opt_View::assignGlobal('globalVar', 'foo');
+
+// Render the views:
+
+$out = new Opt_Output_Http;
+$out->render($view1);
+~~~~
+
+In order to display the `$view2`, the template `template_1.tpl` from `$view1` must contain the following code:
+
+~~~~
+[xml]
+<opt:include view="$includedView" />
+~~~~

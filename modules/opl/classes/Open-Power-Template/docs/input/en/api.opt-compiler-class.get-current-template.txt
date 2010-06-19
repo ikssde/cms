@@ -1,0 +1,8 @@
+Title: getCurrentTemplate()
+ShortTitle: Opt_Compiler_Class::getCurrentTemplate()
+Reference: string getCurrentTemplate()
+Status: static
+
+---
+
+Returns the currently processed template file name.

@@ -1,0 +1,10 @@
+Title: appendData()
+ShortTitle: Opt_Xml_Cdata::appendData()
+Reference: void appendData(string $text)
+Status: public
+SeeAlso:
+ - api.opt-xml-text.append-data
+
+---
+
+Appends the `$text` to the end of the text stored in the current node.

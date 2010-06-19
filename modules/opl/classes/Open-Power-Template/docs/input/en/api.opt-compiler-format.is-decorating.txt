@@ -1,0 +1,9 @@
+Title: isDecorating()
+ShortTitle: Opt_Compiler_Format::isDecorating()
+Reference: boolean isDecorating()
+SeeAlso:
+ - api.opt-compiler-format.decorate
+
+---
+
+Returns **true** if the format object decorates another format object.

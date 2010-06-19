@@ -1,0 +1,422 @@
+Title: Coding standards
+
+----
+
+This document describes the coding standards used by OPL. All the PHP files in the project fall under these rules.
+
+Directory structure
+===================
+
+The installation directory (in this document: `/src`) is divided into several directories, one for each library. The library directory names **must** be a three-letter codes with the first character capitalized created from the first letters of the library name words. For example, *Open Power Template* code is *OPT* (directory name: *Opt*). In the rest of the document, the library directory in the file path will be marked as *Opx*.
+
+The library directories contain the PHP files and other subdirectories. The names **must** begin with a capital letter.
+
+File structure
+==============
+
+The PHP file must begin with the `<?php` string and a license/copyright header that can be found in `HEADER` file. You **must not** end the file with `?>`.
+
+The file is divided into several parts marked by comment. The code template is:
+
+~~~~
+[php]
+<?php
+/*
+ *  OPEN POWER LIBS <http://www.invenzzia.org>
+ *  ==========================================
+ *
+ * This file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE. It is also available through
+ * WWW at this URL: <http://www.invenzzia.org/license/new-bsd>
+ *
+ * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
+ * and other contributors. See website for details.
+ *
+ */
+
+/*
+ * Optional file description
+ */
+
+/*
+ * Function definitions
+ */
+
+// code here
+
+/*
+ * Interface definitions
+ */
+
+// code here
+
+/*
+ * Class definitions
+ */
+
+// code here
+~~~~
+
+Feel free to remove the parts you do not use.
+
+By default, the file **must** contain exactly one class or interface, but it **can** contain more than one functions at the same time. The functions **must** be for internal use only, otherwise you **must** be sure that they will be available, when the user calls them, as the autoloader does not capture ordinary functions.
+
+The exceptions are:
+
+1. Core files (`/src/Opx/Class.php`). They **may** contain any number of classes and interfaces. They **should** be necessary to make the library work, so that OPL does not waste time to include them from separate files.
+2. Exception files (`/src/Opx/Exception.php`) They **may** contain any number of classes whose names end with word **Exception**.
+
+Naming rules
+============
+
+Naming rules for classes, interfaces, functions and class fields.
+
+1. Class names look as follows: `Opx_Something_More`. The name must begin with a three-letter library code. The name parts are separated with underline and begin with a big letter. They are automatically mapped to a file in the filesystem. For example, `Opx_Something_More` will be loaded from `/src/Opx/Something/More.php`.
+2. Interfaces follow the same rules as classes, but the last part of their name **should** be `Interface`, for example: `Opl_Translation_Interface`.
+3. Exception classes follow the same rules, as the rest of the classes, except that the last part of their name must be `Exception`, for example: `Opl_Debug_Exception`. Moreover, they **must** be stored in `/src/Opx/Exception.php` file.
+4. For class function and field names, we use `camelCase`.
+5. Protected, private and public internal use methods or fields must have names that begin with an underline, for example: `_foo()`.
+6. For class constants, we use `BIG_LETTER_NOTATION`.
+7. For variable names, we use `$camelCase`.
+8. For standard function names, we use the same rules, as for classes, except that the name does not refer to the filesystem. Example: `Opl_Error_Handler` in `/src/Opl/Exception.php` file.
+
+> [important]
+> The names should be clever enough to illustrate what the particular function/class does. Moreover, you should keep the same naming patterns in your project - if your class contains several methods that do almost the same, all of their names should be similar. For example, in Open Power Template, the compiler contains a group of methods that allow to obtain various things. They are named like this: `isProcessor()`, `isNamespace()`, `isFunction()` etc.
+
+Basic code formatting
+=====================
+
+The indentation **must** be done with tabulation. Spaces **must not** be used to format or indent the source code. 
+
+Classes, functions, etc.
+========================
+
+All the classes, functions and interfaces **may** be one tab away from the left margin:
+
+~~~~
+[php]
+// Good
+class Opx_Foo
+{
+
+}
+
+	// Also good
+	class Opx_Foo
+	{
+
+	}
+~~~~
+
+Each curly bracket increases the indentation by one. 
+
+Opening curly brackets **must** be in a separate line:
+
+~~~~
+[php]
+// Good
+class Opx_Foo
+{
+
+}
+
+// Veeery bad, die, go to hell!
+class Opx_Bar{
+
+}
+~~~~
+
+Class and interface closing curly brackets **must** be accompanied with the class/interface name written in the single line comment that looks like this: `// end classname;`
+
+~~~~
+[php]
+class Opx_Foo
+{
+
+} // end Opx_Foo;
+~~~~
+
+The methods must follow it as well, but here we add also the round brackets to indicate what it is:
+
+~~~~
+[php]
+class Opx_Foo
+{
+    public function foo()
+    {
+
+    } // end foo();
+
+} // end Opx_Foo;
+~~~~
+
+All of the class items **must** have the visibility modifier: `public`, `protected` or `private`. You **must not** use `var` keyword or write methods without a `public` modifier.
+
+Control structures
+==================
+
+Basic information
+-----------------
+
+**While** statement:
+
+~~~~
+[php]
+while($expression)
+{
+	someContent();
+}
+~~~~
+
+**For** statement:
+
+~~~~
+[php]
+for($i = 0; $i < 10; $i++)
+{
+	someContent();
+}
+~~~~
+
+**do... while** statement:
+
+~~~~
+[php]
+do
+{
+	someContent();
+}
+while($expression);
+~~~~
+
+**foreach** statement:
+
+~~~~
+[php]
+foreach($array as $value)
+{
+	someCode();
+}
+
+foreach($array as $index => $value)
+{
+	someCode();
+}
+~~~~
+
+**if-else** statement:
+
+~~~~
+[php]
+if($expression)
+{
+	someContent();
+}
+elseif($expression)
+{
+	someContent();
+}
+else
+{
+	someContent();
+}
+~~~~
+
+**switch** statement:
+
+~~~~
+[php]
+switch($expression)
+{
+	case 'value1':
+	case 'value2':
+		someContent();
+		break;
+	case 'value3':
+		someContent();
+		break;
+	default:
+		someContent();
+}
+~~~~
+
+**Try... catch** statement:
+
+~~~~
+[php]
+try
+{
+	someContent();
+}
+catch(Exception $exception)
+{
+	exceptionHandler($exception);
+}
+~~~~
+
+Additional information
+----------------------
+
+**For** statements **should** be used to iterate through an array with numeric indexes:
+
+~~~~
+[php]
+$cnt = sizeof($array);
+for($i = 0; $i < $cnt; $i++)
+{
+	someContent($array[$i]);
+}
+~~~~
+
+To iterate through associative arrays, we use **foreach**.
+
+In **switch**, we are allowed to create constructs with advanced flow control (i.e. conditional breaks), if it makes the code shorter and simpler to understand.
+
+If we have to move the iterator until the condition is not true, we can use the following construct:
+
+~~~~
+[php]
+for(start_condition; end_condition; iterate){}
+~~~~
+
+Expressions
+===========
+
+Basic information
+-----------------
+
+The operators **should** be separated from values with one space. It can be avoided, if the expression is very long:
+
+~~~~
+[php]
+// short expression
+$a + $b
+// very long expression
+$a+$b+$c+$d+$e+$f+$g+$h+$i+$j+$k+$l+$m+$n+$o+$p+$r+$s+$t+$u+$v+$w+$x+$y+$z
+~~~~
+
+For strings, single quotes **must** be used unless we have newline/carriage return/tab characters to show. We connect the strings with the values with dots:
+
+~~~~
+[php]
+'Single quoted text';
+'Single quoted text '.$data.' with some data';
+"Double quoted text, because it uses \r\n";
+~~~~
+
+The object access operators are written without surrounding spaces:
+
+~~~~
+[php]
+$obj->method();
+class::method();
+~~~~
+
+The use of brackets:
+
+~~~~
+[php]
+$a * ($b + $c)
+$a[$b][$c]
+~~~~
+
+The conditional operator **should** be written in brackets:
+
+~~~~
+[php]
+$a = ($b == true ? 'Foo' : 'Bar');
+~~~~
+
+Data type information
+---------------------
+
+OPL makes use of the `NULL` type. The methods **must** return `null` instead of the requested content, if such content has not been found:
+
+~~~~
+[php]
+if(!isset($foo[$resource]))
+{
+	return NULL;
+}
+return $foo[$resource];
+~~~~
+
+To check, whether the `NULL` value has been returned, we the `=== null` expression:
+
+~~~~
+[php]
+if($foo === null)
+{
+	someContent();
+}
+~~~~
+
+Other issues
+============
+
+Data structures
+---------------
+
+If we are going to use a data structure, we **must** use SPL implementations:
+
+1. `SplDoublyLinkedList`
+2. `SplQueue`
+3. `SplStack`
+4. `SplHeap`
+5. `SplPriorityQueue`
+6. `SplFixedArray`
+
+However, we must pay attention to PHP 5.2. If the requested functionality is not implemented in `/Opl/Php52.php`, we should implement it.
+
+Comments
+--------
+
+The code **must** be commented. For short notes, we use single-line comments:
+
+~~~~
+[php]
+// Now we must do foo.
+~~~~
+
+> [error]
+> We do not comment obvious things and issues.
+
+For longer explanations, we use multiline comments:
+
+~~~~
+[php]
+/* This is a multiline
+ * comment that explains
+ * something
+ */
+~~~~
+
+In the development code, we **should** mark the unfinished places with *TODO* comments:
+
+~~~~
+[php]
+// TODO: Implement XXX!
+~~~~
+
+Documentation
+-------------
+
+The methods and the most important class fields **should** be equipped with phpdoc That briefly describes the particular item and provides some information on the arguments and return values.
+
+~~~~
+[php]
+/**
+ * This method does something.
+ * 
+ * @param string $foo The required argument
+ * @param int $bar=5 optional The optional argument
+ * @return int
+ */
+public function something($foo, $bar = 5)
+{
+	// ...
+} // end something();
+~~~~
+
+> [important]
+> Please note that phpdoc **is not** used to generate the API reference, but rather provides the basic help for programmers and IDE.

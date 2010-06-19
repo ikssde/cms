@@ -1,0 +1,10 @@
+Title: getDtd()
+ShortTitle: Opt_Xml_Root::getDtd()
+Reference: Opt_Xml_Dtd getDtd()
+Status: public
+SeeAlso:
+ - api.opt-xml-root.set-dtd
+
+---
+
+Returns the `Opt_Xml_Dtd` node assigned to the root node or **null**, if there is no such node.

@@ -1,0 +1,36 @@
+Title: getOutputBuffers()
+ShortTitle: Opt_View::getOutputBuffers()
+Construct: method
+Reference: array getOutputBuffers()
+VersionSince: 2.0.1
+Visibility: public
+Returns: The static parts of the template.
+SeeAlso:
+ - api.opt-view.has-dynamic-content
+ - extending.caching-systems
+
+----
+
+This method is used in the caching systems to support the [opt:dynamic][syntax.instructions.dynamic] tag in the cached views. It returns the list of cached parts of the executed template, except the last one which must be closed manually.
+
+The dynamic part of the cached template is saved by the compiler in the file with the `.dyn` extension in the compilation directory. It is a serialized array of PHP code snippets which should be mingled with the static data returned by this method. Below, you can see a sample mingling algorithm:
+
+~~~~
+[php]
+if($view->hasDynamicContent())
+{
+	$list = $view->getOutputBuffers();
+	$dynamic = unserialize(file_get_contents($tpl->compileDir.$view->_convert($view->getTemplate()).'.dyn'));
+
+	$output = '';
+
+	for($i = 0; $i < sizeof($list); $i++)
+	{
+		$output .= $list[$i].'<'.'?php '.$dynamic[$i].' ?>';
+	}
+	$output .= ob_get_flush();
+}
+~~~~
+
+> [error]
+> In order to get the content of the last buffer, you must use `ob_get_flush()`, as the returned code must also appear in the browser.

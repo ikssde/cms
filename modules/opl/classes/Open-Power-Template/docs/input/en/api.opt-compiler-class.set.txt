@@ -1,0 +1,7 @@
+Title: set()
+ShortTitle: Opt_Compiler_Class::set()
+Reference: void set(string $name, mixed $value)
+
+---
+
+Creates the new compiler state variable with the name `$name` and value `$value`.

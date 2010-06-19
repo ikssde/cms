@@ -1,0 +1,25 @@
+Title: get()
+ShortTitle: Opt_View::get()
+Construct: method
+Reference: boolean get( string $name )
+VersionSince: 2.0-beta2
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The variable name
+Returns: The template variable value
+SeeAlso:
+ - api.opt-view.__get
+
+----
+
+Returns the value of the `$name` template variable.
+
+~~~~
+[php]
+$view->variable = 'foo';
+
+echo $view->get('variable'); // prints "foo"
+~~~~
+
+> [information]
+> You may also read the variable value using the magic method [Opt_View::get()][api.opt-view.__get]: `$view->variable`. It is the recommended solution.

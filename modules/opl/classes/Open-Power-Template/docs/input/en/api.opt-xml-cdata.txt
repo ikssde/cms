@@ -1,0 +1,21 @@
+Title: Opt_Xml_Cdata class
+ShortTitle: Opt_Xml_Cdata
+Construct: class
+Extends: api.opt-xml-node
+ExtendedBy:
+ - api.opt-xml-comment
+
+----
+
+`Opt_Xml_Cdata` objects represent a static text within the tags. They may be children of `Opt_Xml_Text` only, together with `Opt_Xml_Expression`.
+
+> [information]
+> These nodes support the optional state variable `cdata` (for more information on state variables, see [Opt_Xml_Buffer][api.opt-xml-buffer]). If it is set to **true**, the text stored in this tag becomes a CDATA section.
+
+<!-- # -->
+
+> [help]
+> To disable CDATA in all the descendants of the specified node, we can use the public method of `Opt_Instruction_Literal` processor:
+>
+>     [php]
+>     $compiler->processor('literal')->disableCDATA($node);

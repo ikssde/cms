@@ -1,0 +1,7 @@
+Title: inherits()
+ShortTitle: Opt_Compiler_Class::inherits()
+Reference: string inherits(string $name)
+
+---
+
+Returns the template name that the template `$name` is extending or **null**, if there is no such rule in the compiler.

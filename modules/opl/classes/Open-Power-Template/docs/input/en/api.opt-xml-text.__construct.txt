@@ -1,0 +1,8 @@
+Title: __construct()
+ShortTitle: Opt_Xml_Text::__construct()
+Reference: __construct([string $text])
+Status: public
+
+---
+
+The default node constructor that allows to specify the optional initial `$text`. In this case, the constructor creates also a new [Opt_Xml_Cdata][api.opt-xml-cdata] node and initializes it with `$text`.

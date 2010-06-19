@@ -1,0 +1,14 @@
+Title: setDirectory()
+ShortTitle: Opl_Loader::setDirectory()
+Construct: static method
+Reference: void Opl_Loader::setDirectory( string $directory )
+Visibility: public
+Arguments:
+ - Name: $directory | EType: string | Desc: The new directory with the libraries.
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-loader.map-library
+
+----
+
+Sets the directory, where the autoloader should look for class files.

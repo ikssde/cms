@@ -1,0 +1,8 @@
+Title: backtrace()
+ShortTitle: Opl_Debug::backtrace()
+Reference: void Opl_Debug::backtrace()
+Status: static public
+
+----
+
+Prints the debug backtrace.

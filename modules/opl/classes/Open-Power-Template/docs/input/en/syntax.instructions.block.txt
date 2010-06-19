@@ -1,0 +1,21 @@
+Title: opt:block
+SeeAlso:
+ - syntax.instructions.component
+ - syntax.topics.blocks
+ - syntax.topics.components
+
+----
+
+`opt:block` creates a port for custom block objects in the template. To get to know more about blocks, see [this chapter][syntax.topics.blocks].
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ from           | Expression          | Yes       | Where to load the block object from
+ *              | Expression          | No        | Any other tags are converted into block attributes
+
+The block port is a runtime instruction and the script may freely assign different block objects to the port:
+
+~~~~
+[xml]
+<opt:block from="$block">The content controlled by the block.</opt:block>
+~~~~

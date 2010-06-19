@@ -1,0 +1,26 @@
+Title: addBefore()
+ShortTitle: Opt_Xml_Buffer::addBefore()
+Reference: void addBefore(int $buffer, string $code)
+Status: public
+SeeAlso:
+ - api.opt-xml-buffer.add-after
+
+---
+
+Adds the code snippet `$code` to the beginning of the buffer `$buffer`.
+
+~~~~
+[php]
+class Opt_Processor_Foo extends Opt_Compiler_Processor
+{
+	protected $_name = 'foo';
+
+	public function processNode(Opt_Xml_Node $node)
+	{
+		$node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, 'echo \'hello\';');
+	} // end processNode();
+} // end Opt_Processor_Foo;
+~~~~
+
+> [information]
+> See the description of [Opt_Xml_Buffer::addAfter()][api.opt-xml-buffer.add-after] to get to know more information about this method.

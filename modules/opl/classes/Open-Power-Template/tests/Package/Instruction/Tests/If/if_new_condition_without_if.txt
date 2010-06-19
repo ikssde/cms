@@ -1,0 +1,27 @@
+Without "opt:if", OPT should ignore opt:condition etc.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "OK" -->
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<ul>
+	<li opt:condition="$ok">Condition 1</li>
+	<li opt:condition="$fail">Condition 2</li>
+	<li opt:condition="$fail">Condition 3</li>
+	<li opt:else="yes">Other</li>
+</ul>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<ul>
+<li>Condition 1</li>
+<li>Condition 2</li>
+<li>Condition 3</li>
+<li>Other</li>
+</ul>
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

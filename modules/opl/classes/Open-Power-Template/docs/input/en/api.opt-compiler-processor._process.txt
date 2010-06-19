@@ -1,0 +1,26 @@
+Title: _process()
+ShortTitle: Opt_Compiler_Processor::_process()
+Construct: method
+Reference: void _process(Opt_Xml_Scannable $node)
+Visibility: final protected
+Arguments:
+ - Name: $node | Type: api.opt-xml-scannable | Desc: The node whose children should be enqueued for processing.
+SeeAlso:
+ - api.opt-compiler-processor._enqueue
+ - api.opt-compiler-processor.process-node
+ 
+----
+
+This method should be used only in [Opt_Compiler_Processor::processNode()][api.opt-compiler-processor.process-node]. It adds the children of `$node` to the compiler processing queue. The most common use is to inform the compiler to parse the content of the instruction tag:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+    // Parse the children, too.
+    $this->_process($node);
+} // end processNode();
+~~~~
+
+> [information]
+> The node itself is not enqueued. If you want to enqueue a certain node directly, please use [_enqueue()][api.opt-compiler-processor._enqueue].

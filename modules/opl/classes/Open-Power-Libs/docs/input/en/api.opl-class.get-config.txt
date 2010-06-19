@@ -1,0 +1,11 @@
+Title: getConfig()
+ShortTitle: Opl_Class::getConfig()
+Construct: method
+Reference: array Opl_Class::getConfig()
+Visibility: public
+Returns: The current library configuration.
+VersionSince: 2.0.0-dev8
+
+----
+
+Returns the entire library configuration as an array.

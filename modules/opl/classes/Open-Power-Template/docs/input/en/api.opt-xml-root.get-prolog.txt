@@ -1,0 +1,10 @@
+Title: getProlog()
+ShortTitle: Opt_Xml_Root::getProlog()
+Reference: Opt_Xml_Prolog getProlog()
+Status: public
+SeeAlso:
+ - api.opt-xml-root.set-prolog
+
+---
+
+Returns the `Opt_Xml_Prolog` node assigned to the root node or **null**, if there is no such node.

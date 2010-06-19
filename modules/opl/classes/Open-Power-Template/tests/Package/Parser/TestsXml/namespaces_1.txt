@@ -1,0 +1,19 @@
+Tests the namespaces for tags. "ns1" is registered in OPT, so it must be removed
+during the processing.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo xmlns:ns1="http://xml.invenzzia.org/test/ns1">
+<ns1:bar>Test</ns1:bar>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>

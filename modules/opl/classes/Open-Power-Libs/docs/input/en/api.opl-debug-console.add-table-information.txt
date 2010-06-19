@@ -1,0 +1,8 @@
+Title: addTableInformation()
+ShortTitle: Opl_Debug_Console::addTableInformation()
+Reference: void Opl_Debug_Console::addTableInformation( String $id, String $information )
+Status: static public
+
+----
+
+Adds some extra information that will be displayed under the specified table title.

@@ -1,0 +1,28 @@
+Title: postprocessAttribute()
+ShortTitle: Opt_Compiler_Processor::postprocessAttribute()
+Construct: optional method
+Reference: void postprocessAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attribute)
+Visibility: public
+Arguments:
+ - Name: $node | Type: api.opt-xml-node | Desc: The node with the attribute to process.
+ - Name: $attribute | Type: api.opt-xml-attribute | Desc: The attribute to process.
+SeeAlso:
+ - api.opt-compiler-processor.process-attribute
+
+---
+
+Works much like [Opt_Compiler_Processor::postprocessNode()][api.opt-compiler-processor.postprocess-node], but it allows to postprocess the instruction XML attribute. In order to be executed by the compiler, the [Opt_Compiler_Processor::processAttribute()][api.opt-compiler-processor.process-attribute] must set the attribute variable `postprocess` to **true**:
+
+~~~~
+[php]
+public function processAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+{
+    // The attribute must be postprocessed after the node children are parsed.
+    $attr->set('postprocess', true);
+} // end processAttribute();
+
+public function postprocessAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+{
+    echo 'Hello world!';
+} // end postprocessAttribute();
+~~~~

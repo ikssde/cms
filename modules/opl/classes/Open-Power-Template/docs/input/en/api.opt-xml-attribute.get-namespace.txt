@@ -1,0 +1,8 @@
+Title: getNamespace()
+ShortTitle: Opt_Xml_Attribute::getNamespace()
+Reference: string getNamespace()
+Status: public
+
+---
+
+Returns the XML attribute namespace or **NULL**, if the namespace is not defined.

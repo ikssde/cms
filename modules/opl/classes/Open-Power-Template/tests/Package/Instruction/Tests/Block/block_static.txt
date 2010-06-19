@@ -1,0 +1,22 @@
+This test checks the defined blocks.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+FOO
+<opt:myBlock>
+BAR
+</opt:myBlock>
+FOO
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON OPEN: 0
+BAR
+ON CLOSE
+FOO

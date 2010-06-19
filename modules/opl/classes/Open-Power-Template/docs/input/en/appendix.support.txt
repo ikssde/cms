@@ -1,0 +1,16 @@
+Title: Support
+Appendix: Yes
+
+----
+
+If you have a problem with the OPT library and do not know how to solve it, take a look at our discussion board, [forums.invenzzia.org](http://forums.invenzzia.org/) - we will try to help you find the solution and talk about many other things.
+
+Support rules
+=============
+
+* We do not offer e-mail support (especially via our private mailboxes). You will be redirected to the discussion board.
+* The discussion board is not a place to report **bugs**. Of course, it is possible that something that looks like a problem is in fact a bug, but obvious issues must be reported in the bugtracker immediately.
+* The default discussion board language is English, however they might appear some national boards.
+* Before starting a new topic, use the search tool and check the documentation. Although it is not finished yet, in come cases it is useful.
+* To get a precise and fast answer, you must provide a detailed description of your problem. Add some code snippets, information on the used software versions (OPT, PHP, framework) and describe what does not work.
+* Please read the discussion board rules before posting.

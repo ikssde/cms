@@ -1,0 +1,17 @@
+Title: opt:capture
+SeeAlso:
+ - syntax.instructions.capture
+
+----
+
+The attribute does exactly the same, as [opt:capture][syntax.instructions.capture] instruction. Its value must be a valid identifier that allows to access the captured output:
+
+~~~~
+[xml]
+<div>
+    <a href="$url" opt:capture="url">{$urlName}</a>
+    <p>{$sys.capture.url}</p>
+</div>
+~~~~
+
+Note that the tag with `opt:capture` attribute also belongs to the captured output.

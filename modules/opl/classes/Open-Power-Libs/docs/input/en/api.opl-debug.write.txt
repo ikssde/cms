@@ -1,0 +1,8 @@
+Title: write()
+ShortTitle: Opl_Loader::write()
+Reference: void Opl_Loader::write( String $value, Boolean $console = false )
+Status: static public
+
+----
+
+Prints the specified value in the output. If the `$console` is set to **false**, the method packs the value into HTML tags that cause it to be displayed in the new line. For `$console = true`, it simply adds the newline characters to the value.

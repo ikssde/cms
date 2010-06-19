@@ -1,0 +1,11 @@
+Title: __construct()
+ShortTitle: Opt_Compiler_Class::__construct()
+Construct: constructor
+Reference: __construct(mixed $parentObject)
+Visibility: public
+Arguments:
+ - Name: $parentObject | EType: mixed | Desc: The parent object used to import the parser configuration etc.
+
+----
+
+Creates the new compiler object. The `$parentObject` may be either `Opt_Class` instance or another `Opt_Compiler_Class`. It imports the necessary settings and initializes the compiler. 

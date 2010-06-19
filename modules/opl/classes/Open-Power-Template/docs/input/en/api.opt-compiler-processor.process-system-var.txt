@@ -1,0 +1,19 @@
+Title: processSystemVar()
+ShortTitle: Opt_Compiler_Processor::processSystemVar()
+Reference: void processSystemVar(Array $sys)
+Status: extendable public
+
+---
+
+Parses the OPT special container `$sys.processorName`. You should extend it to provide your own implementation for this variable. The method takes the array of the indexes that create the variable call. For example, the `$sys.foo.bar` is processed by the *foo* processor and `processSystemVar()` receives an array of three values:
+
+~~~~
+0 => sys
+1 => foo
+2 => bar
+~~~~
+
+The expected returned value is the PHP code generated from the container.
+
+> [warning]
+> `$opt` is an alias to `$sys` in the templates. In this case, the first element of the array is *opt* instead of *sys*.

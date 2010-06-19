@@ -1,0 +1,52 @@
+Title: _resolveContextInfo()
+ShortTitle: Opl_ErrorHandler::_resolveContextInfo()
+Reference: void Opl_ErrorHandler::_resolveContextInfo( Opl_Exception $exception )
+VersionSince: 2.0.0-dev8
+Status: protected
+
+----
+
+Displays the informers associated with the specified exception `$exception`.
+
+> [information]
+> **Informer** is a special method in the error handler that is able to display some extra information about the exception, for example the library configuration or the backtrace.
+
+The list of informers is stored in the protected field `$_context`. The method may be used in `display()` to display the context information in the specified place.
+
+Context help
+============
+
+A sample list of informers may look like this:
+
+~~~~
+[php]
+protected $_context = array(
+	'Exception_Name_1' => array(
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
+	),
+	'Exception_Name_2' => array(
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
+	),
+	// For other exceptions
+	'__UNKNOWN__' => array(
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
+	),
+);
+~~~~
+
+The informers are simple methods that take the exception object as the first argument, but optionally, they can take much more. The method name must begin with `_print`, so that `Informer1` points to `_printInformer1` method. The HTML code must be displayed with `echo`.
+
+Available informers
+=====================
+
+OPL provides the following filters:
+
+1. `ErrorInfo` - displays the text provided in the argument.
+2. `StackInfo` - used to display stack assigned to the exception, with marking the last element as invalid. In the argument we can specify the stack title.
+3. `BasicConfiguration` - used to print the basic library configuration. This method must be extended in the particular library error handlers in order to work.
+4. `Backtrace` - prints the backtrace.
+
+The libraries may also provide their own informers.

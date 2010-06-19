@@ -1,0 +1,7 @@
+Title: isFunction()
+ShortTitle: Opt_Compiler_Class::isFunction()
+Reference: string isFunction(string $name)
+
+---
+
+Checks, whether the `$name` represents a function name that is allowed to be used in the templates (this means - is it registered or not). It returns its original PHP name or **null**, if the class is not registered in the parser.

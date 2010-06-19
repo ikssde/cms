@@ -1,0 +1,11 @@
+Title: assignRef()
+ShortTitle: Opt_View::assignRef()
+Construct: method
+Reference: void assignRef( string $name, mixed &$value )
+Visibility: public
+SeeAlso:
+ - api.opt-view.assign-ref-global
+
+----
+
+Registers a new template local variable with the name `$name` and passes its value by reference. It should be used for larger variables whose copying could be too slow.

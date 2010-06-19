@@ -1,0 +1,23 @@
+Title: Installation
+
+----
+
+This chapter describes the installation issues. OPL is available in two versions:
+
+1. Standard (a group of separate PHP files)
+2. PHAR archives. PHAR comes from *PHP Archive* and it is the new PHP solution similar to Java JAR files.
+
+System requirements
+===================
+
+If using the standard version, OPL requires at least PHP 5.2. The recommended version is PHP 5.2.6, as the earlier ones contain an ugly bug that can affect some of the libraries.
+
+OPL makes use of some classes available from PHP 5.3. On PHP 5.2, it activates its own replacements with the necessary functionality which are a bit slower.
+
+The recommended version is PHP 5.3. OPL is also checked against PHP 6.
+
+Required PHP modules:
+
+1. PCRE (bundled as of PHP 5.3)
+2. PHAR (bundled as of PHP 5.3), if using PHAR version.
+3. SPL

@@ -1,0 +1,15 @@
+Title: set()
+ShortTitle: Opt_Component_Interface::set()
+Construct: abstract method
+Visibility: public
+Reference: void set(string $name, mixed $value)
+Arguments:
+ - Name: $name | EType: string | Desc: The component parameter name
+ - Name: $value | EType: mixed | Desc: The new component parameter value
+SeeAlso:
+ - api.opt-component-interface.get
+ - api.opt-component-interface.defined
+
+----
+
+Sets the `$name` component parameter to `$value`. 

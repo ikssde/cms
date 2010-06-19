@@ -1,0 +1,8 @@
+Title: property()
+ShortTitle: Opt_Compiler_Format::property()
+Reference: mixed property(string $property)
+Status: final
+
+---
+
+Returns the value of the specified format `$property`. The property values are stored in the `$_properties` protected class field.

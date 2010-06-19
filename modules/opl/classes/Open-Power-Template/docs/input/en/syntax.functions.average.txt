@@ -1,0 +1,9 @@
+Title: average()
+Reference: number average(container $container)
+SeeAlso:
+ - syntax.functions.sum
+ - syntax.functions.stddev
+
+----
+
+The function assumes that all the values in the container are numbers and returns their average value.

@@ -1,0 +1,36 @@
+Title: Function reference
+SeeAlso:
+ - syntax.expressions.functions
+
+----
+
+In this chapter, the available functions are described. 
+
+In OPT, all the functions that operate on the specified value, take it always as the first parameter, even if their equivalent in PHP requires it as the last one!
+
+Function data
+=============
+
+Unlike PHP, many functions may operate both on a single value and a container of values. In the second case, the function is applied to all of the container elements:
+
+~~~~
+[xml]
+
+<p>A formatted, single value: {money($profits.corporation)}</p>
+
+<p>The function used on the container:</p>
+
+{@formattedProfits are money($profits)}
+
+<p>Corporation customer profits: {@formattedProfits.corporation}</p>
+<p>Individual customer profits: {@formattedProfits.individual}</p>
+<p>Training profits: {@formattedProfits.training}</p>
+
+~~~~
+
+The function result is returned and must be saved to another variable in order to be used or passed to another function.
+
+OPT and Unicode
+===============
+
+The available functions are not designed for any particular character encoding due to the planned support for Unicode in PHP6. If you want to use UTF-8 with PHP 5.x, you have to be patient or write your own versions of the functions. We will try to release an optional set of UTF-ready functions as a plugin before releasing the first stable OPT version.

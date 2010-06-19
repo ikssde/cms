@@ -1,0 +1,46 @@
+Title: manageAttributes()
+ShortTitle: Opt_Component_Interface::manageAttributes()
+Construct: abstract method
+Visibility: public
+Reference: array manageAttributes(string $name, array $attributes)
+Arguments:
+ - Name: $name | EType: string | Desc: The tag name.
+ - Name: $attributes | EType: array | Desc: The initial assotiative array of tag attribute values
+Returns: Modified list of tag attribute values
+
+----
+
+`manageAttributes()` handles the attribute lists of the XML tags with the ` opt:component-attributes` attribute or within the `com` namespace in the component port. It allows the component to extend the tag with some extra attributes (or modify their default values), for example to configure its look according to the current component status. The attributes are passed as an associative array, where the index is the attribute name, and the method should return the same, but modified array. The `$name` argument contains the tag name and it can be used to identify the tag we are going to process. The value of ` opt:component-attributes` is added to the tag name and concatenated with the `#` symbol, for example: `div#default`.
+
+
+Let's take a look at the following component port: 
+
+~~~~
+[xml]
+<opt:component from="$component">
+	<div class="field" opt:component-attributes="default">
+		<p>{$opt.component.title}</p>
+		<span><opt:display /></span>
+		<opt:onEvent name="error">
+			<p>An error occurred: {$errorMessage}</p>
+		</opt:onEvent>
+	</div>
+</opt:component>
+~~~~
+
+If the component is in the invalid state (for example, the user entered the invalid value in the form field), we wish to change the CSS class of the entire `<div>`. Because it contains the `opt:component-attributes` attribute, OPT will capture this tag and send its attributes to `manageAttributes()`. It can modify the CSS class then:
+
+~~~~
+[php]
+public function manageAttributes($name, Array $attributes)
+{
+	if(!$this->valid)
+	{
+		$attributes['class'] .= 'error';
+	}
+	return $attributes;
+} // end manageAttributes();
+~~~~
+
+> [important]
+> If your component does not provide any support for ` opt:component-attributes`, the method should return the `$attributes` argument.

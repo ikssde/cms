@@ -1,0 +1,47 @@
+Title: opt:repeat
+SeeAlso:
+ - syntax.instructions.section
+ - syntax.instructions.for
+ - syntax.instructions.foreach
+ - syntax.instructions.separator
+
+----
+`opt:repeat` is a simple loop that repeats its content the specified number of times. It takes two attributes:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ times          | Expression          | Yes       | The number of iterations
+ separator      | Expression          | No        | The separator layout. More about separators can be found [here][syntax.instructions.separator].
+
+A simple example:
+
+~~~~
+[xml]
+<ol>
+	<opt:repeat times="10">
+	<li>{$sys.repeat + 1}</li>
+	</opt:repeat>
+</ol>
+~~~~
+
+And its result:
+
+~~~~
+[xml]
+<ol>
+	<li>1</li>
+	<li>2</li>
+	<li>3</li>
+	<li>4</li>
+	<li>5</li>
+	<li>6</li>
+	<li>7</li>
+	<li>8</li>
+	<li>9</li>
+	<li>10</li>
+</ol>
+~~~~
+
+The number of current iteration is stored under `$sys.repeat`. Note that the iterations are enumerated from 0. This is why we are adding 1 to each index in order to display human-readable numbers that start from 1.
+
+`opt:repeat` supports separators that work exactly, like in other loops. The examples of use can be found in the chapter explaining [separators][syntax.instructions.separator].

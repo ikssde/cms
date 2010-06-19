@@ -1,0 +1,36 @@
+Block nesting should be possible.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+FOO
+<opt:block from="$block">
+BAR
+<opt:block from="$nested">
+JOE
+</opt:block>
+ENDBAR
+</opt:block>
+FOO
+</opt:root>
+
+>>>>data.php
+
+$view->block = new Extra_Mock_Block;
+$view->nested = new Extra_Mock_Block;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON OPEN: 0
+BAR
+VIEW PASSED
+ON OPEN: 0
+JOE
+ON CLOSE
+ENDBAR
+ON CLOSE
+FOO

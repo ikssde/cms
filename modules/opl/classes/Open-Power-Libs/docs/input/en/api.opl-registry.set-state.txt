@@ -1,0 +1,21 @@
+Title: setState()
+ShortTitle: Opl_Registry::setState()
+Construct: static method
+Reference: void Opl_Registry::setState( string $name, mixed $value )
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The new state name
+ - Name: $value | EType: mixed | Desc: The state value
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-registry.get-state
+
+----
+
+Stores the specified scalar `$value` (string, integer, boolean etc.) under the `$name`. This is used also as a global OPL configuration utility:
+
+~~~~
+[php]
+Opl_Registry::setState('foo', 'value');
+echo Opl_Registry::getState('foo');
+~~~~

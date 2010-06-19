@@ -1,0 +1,8 @@
+Title: getNamespace()
+ShortTitle: Opt_Xml_Element::getNamespace()
+Reference: string getNamespace()
+Status: public
+
+---
+
+Returns the current tag namespace or **null**, if it is not specified.

@@ -1,0 +1,14 @@
+Title: hasDynamicContent()
+ShortTitle: Opt_View::hasDynamicContent()
+Construct: method
+Reference: boolean hasDynamicContent()
+VersionSince: 2.0.1
+Visibility: public
+Returns: True, if the cached content still has some dynamic parts.
+SeeAlso:
+ - api.opt-view.get-output-buffers
+ - extending.caching-systems
+
+----
+
+This method is used in the caching systems to support the [opt:dynamic][syntax.instructions.dynamic] tag in the cached views. It returns **true**, if the instruction has been used and there is some content that must remain dynamic even in the cache file. The method should be used in conjunction with [getOutputBuffers()][api.opt-view.get-output-buffers].

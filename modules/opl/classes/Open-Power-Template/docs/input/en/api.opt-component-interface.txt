@@ -1,0 +1,6 @@
+Title: Opt_Component_Interface
+Construct: interface
+
+----
+
+This is the PHP interface to write OPT component-compatible classes. It has to be implemented in our class, if its objects are going to be used by the components. Note that the class does not have to be registered in OPT unless we create defined components.

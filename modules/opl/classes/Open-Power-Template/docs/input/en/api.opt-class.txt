@@ -1,0 +1,30 @@
+Title: Opt_Class class
+ShortTitle: Opt_Class
+EExtends: Opl_Class
+Construct: class
+
+----
+
+This is the main class of Open Power Template. It provides the configuration, plugin support and initialization issues. You need only one object of this class in your script. Below, a sample initialization is shown:
+
+~~~~
+[php]
+$tpl = new Opt_Class;
+// Load part of the configuration from the external INI file
+$tpl->loadConfig('./someconfig.ini');
+
+// Configure the paths
+$tpl->sourceDir = './templates/';
+$tpl->compileDir = './templates_c/';
+
+// Register new add-ons
+$tpl->register(Opt_Class::OPT_COMPONENT, 'opt:myComponent', 'My_Component_Class');
+
+// Perform the initialization
+$tpl->setup();
+~~~~
+
+Now we can create [Opt_View][api.opt-view] objects and parse the templates.
+
+> [error]
+> Do not forget to call [Opt_Class::setup()][api.opt-class.setup] method.

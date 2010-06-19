@@ -1,0 +1,69 @@
+The test checks if opt:tree works with opt:body when opt:else is within opt:tree.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:tree name="tree">
+FOE
+<opt:body>
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+</opt:body>
+EOF
+<opt:else>NO DATA</opt:else>
+</opt:tree>
+
+<opt:tree name="tree2">
+FOE
+<opt:body>
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree2.title} START:
+<opt:content />
+NODE {$tree2.title} END
+</opt:node>
+</opt:body>
+EOF
+<opt:else>NO DATA</opt:else>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOE
+LIST START:
+NODE 1 START:
+LIST START:
+NODE 1.1 START:
+LIST START:
+NODE 1.1.1 START:
+NODE 1.1.1 END
+LIST END:
+NODE 1.1 END
+LIST END:
+NODE 1 END
+LIST END:
+EOF
+NO DATA
+
+>>>>data.php
+$view->tree = array(0 =>
+	array('title' => '1', 'depth' => 0),
+	array('title' => '1.1', 'depth' => 1),
+	array('title' => '1.1.1', 'depth' => 2),
+);
+$view->tree2 = array();

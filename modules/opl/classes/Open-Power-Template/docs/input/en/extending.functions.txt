@@ -1,0 +1,91 @@
+Title: New functions
+
+----
+
+Functions are the easiest to create and register in OPT, as they have exactly the same form in the templates:
+
+~~~~
+[php]
+function myFunction($argument1, $argument2)
+{
+  // do something here
+} // end myFunction();
+
+// ...
+$tpl->register(Opt_Class::PHP_FUNCTION, 'myFunction', 'myFunction');
+~~~~
+
+Practical tricks
+================
+
+The functions can either return the value or **echo** it. At the first sight, it gives the same effect in both of cases:
+
+~~~~
+[xml]
+<p>{myFunction()}</p>
+~~~~
+
+However, if we use the function in a more complex expression:
+
+~~~~
+[xml]
+{@variable is myFunction()}
+~~~~
+
+We will see the difference. In the first case, the function result is saved in the variable, in the second - printed, and the variable contains nothing.
+
+> [help]
+> Your functions **should** always return the value instead of echoing it, unless you know, what you are doing.
+
+Writing aggregate functions
+===========================
+
+Open Power Template supports aggregate functions that can operate either on a single value or a container. You can easily write your own aggregate functions, too, using a simple interface provided by `Opt_Function`:
+
+~~~~
+[php]
+function myAggregateFunction($item, $argument)
+{
+	if(Opt_Function::isContainer($item))
+	{
+		return Opt_Function::processContainer('myFunction', array($item, $argument));
+	}
+	
+	// Do something here with a single value
+	return $item.' '.$argument;
+} // end myAggregateFunction();
+~~~~
+
+If we notice that the first argument is a valid container (an OPT convention says that the value that we are going to operate on, should be provided as the first argument), we return the value from `processContainer()` static method. As the first argument, we must provide the name of the function that will modify a single value (usually it will be the same function, but this does not have to be the rule), and as the second one - the list of arguments. Please note that the first item of this array must be the container!
+
+Registering functions
+=====================
+
+During the function registration, we may perform several tricks. As you have probably noticed, we have specified the function name twice. The first name shows, how the function will be named in the template. The second one is the real PHP function name and **it may be any valid PHP code**. In fact, you are allowed to register static methods as OPT functions, namespace elements and many other things:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'myFunction', 'myClass::myStaticMethod');
+~~~~
+
+Another interesting feature is the ability to modify the argument order during the template compilation, so that you do not have to create a PHP wrapper function. The order rules are specified before the real PHP function name and are enclosed within `#`:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'regexReplace', '#3,1,2#preg_replace');
+~~~~
+
+It could be read like this:
+
+* The first argument in templates must be in the third place in the compiled template.
+* The second argument - in the first one.
+* The third one - in the second.
+
+We may also specify some optional values:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'foo', '#3,1,2:null#foo');
+~~~~
+
+In this case, the third argument in templates is optional, but in PHP it is required. We must specify the default value (here, **null**) for the compiler then by adding `:null` to the position number.

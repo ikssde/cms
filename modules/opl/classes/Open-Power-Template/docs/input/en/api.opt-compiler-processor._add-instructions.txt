@@ -1,0 +1,25 @@
+Title: _addInstructions()
+ShortTitle: Opt_Compiler_Processor::_addInstructions()
+Reference: void _addInstructions(mixed $instructions)
+Status: final protected
+SeeAlso:
+ - api.opt-compiler-processor.configure
+ - api.opt-compiler-processor._add-attributes
+
+---
+
+Registers a single or a group of XML tags that can be parsed with this particular processor. `$instructions` can be a string with the attribute name or an array of names. The compiler will redirect the processing of those tags to the processor, if it finds any of them. The method must not be used outside [Opt_Compiler_Processor::configure()][api.opt-compiler-processor.configure]. Example: 
+
+~~~~
+[php]
+class Opt_Processor_Foo extends Opt_Compiler_Processor
+{
+	protected $_name = 'foo';
+
+	public function configure()
+	{
+		$this->_addInstructions('opt:foo');
+		$this->_addInstructions(array('opt:bar', 'opt:joe'));
+	} // end configure();
+} // end Opt_Processor_Foo;
+~~~~

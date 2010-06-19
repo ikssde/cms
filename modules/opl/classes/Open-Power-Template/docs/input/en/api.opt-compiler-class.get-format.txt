@@ -1,0 +1,7 @@
+Title: getFormat()
+ShortTitle: Opt_Compiler_Class::getFormat()
+Reference: Opt_Compiler_Rewriter getFormat(string $id [ bool $restore = true ] )
+
+---
+
+Returns the data format object for the specified variable identifier. If the programmer has not defined any special format, the default format object is returned. Normally, the method creates a new format object for each call, but if the optional attribute `$restore` is set to **false**, it can also return the previously created object for this `$id`.

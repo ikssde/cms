@@ -1,0 +1,24 @@
+Title: Opt_Compiler_Class class
+ShortTitle: Opt_Compiler_Class
+Construct: class
+
+----
+
+The main compiler class. A single compiler can compile only one template or inheritance chain at the same time. If you want to compile another template during the compilation, you have to create the new compiler object. Note that the default constructor can copy all the settings from the other compiler objects.
+
+Compiler state variables
+========================
+
+During the compilation, the processors have access to the compiler state variables with the [Opt_Compiler_Class::get()][api.opt-compiler-class.get] and [Opt_Compiler_Class::set()][api.opt-compiler-class.set] methods. The following variables are created and managed by the compiler or the standard instructions:
+
+**template**
+:	`string` The main template name that is being compiled.
+
+**currentTemplate**
+:	`string` The currently compiled template (including the inherited ones).
+
+**mode**
+:	`int` The compilation mode (XML or quirks).
+
+**escaping**
+:	`boolean` Per-template HTML escaping rule.

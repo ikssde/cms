@@ -1,0 +1,19 @@
+Tests, if the DOM tags are properly converted to the OPT XML nodes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<bar>Test</bar>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<bar>Test</bar>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>

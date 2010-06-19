@@ -1,0 +1,23 @@
+Title: display()
+ShortTitle: Opl_ErrorHandler::display()
+Reference: void Opl_ErrorHandler::display( Opl_Exception $exception )
+VersionSince: 2.0.0-dev8
+Status: public
+
+----
+
+Displays the specified exception and runs informers, if necessary.
+
+~~~~
+[php]
+try
+{
+
+
+}
+catch(Opl_Exception $exception)
+{
+	$handler = new Opl_ErrorHandler;
+	$handler->display($exception);
+}
+~~~~

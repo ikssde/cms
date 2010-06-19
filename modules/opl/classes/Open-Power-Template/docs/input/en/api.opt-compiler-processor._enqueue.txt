@@ -1,0 +1,29 @@
+Title: _enqueue()
+ShortTitle: Opt_Compiler_Processor::_enqueue()
+Construct: method
+Reference: void _enqueue(Opt_Xml_Node $node)
+Visibility: final protected
+Arguments:
+ - Name: $node | Type: api.opt-xml-node | Desc: The node that should be enqueued for processing.
+VersionSince: 2.0.4
+SeeAlso:
+ - api.opt-compiler-processor._process
+ - api.opt-compiler-processor.process-node
+ 
+----
+
+This method should be used only in [Opt_Compiler_Processor::processNode()][api.opt-compiler-processor.process-node]. 
+It adds the specified `$node` to the compiler processing queue. The most common use is to inform the compiler to parse the specified tag:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+    $custom = new Opt_Xml_Element('foo');
+    $node->appendChild($custom);
+
+    // Ignore the default nodes, and parse only our custom node
+    // we have already created.
+    $this->_enqueue($custom);
+} // end processNode();
+~~~~

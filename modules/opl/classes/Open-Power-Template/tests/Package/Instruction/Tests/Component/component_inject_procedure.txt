@@ -1,0 +1,28 @@
+This test checks injecting the procedure to the component.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:procedure name="injector" data="required">
+<p>Hi universe: {@data}</p>
+</opt:procedure>
+
+<opt:component from="$component" injected="str:foo">
+<opt:inject procedure="injector" />
+<opt:display />
+</opt:component>
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+PARAM injected PASSED
+COMPONENT DISPLAYED
+<p>Hi universe: foo</p>

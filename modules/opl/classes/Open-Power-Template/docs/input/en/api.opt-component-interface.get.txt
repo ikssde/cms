@@ -1,0 +1,15 @@
+Title: get()
+ShortTitle: Opt_Component_Interface::get()
+Construct: abstract method
+Visibility: public
+Reference: mixed get(string $name)
+Arguments:
+ - Name: $name | EType: string | Desc: The component parameter name
+Returns: Component parameter value
+SeeAlso:
+ - api.opt-component-interface.set
+ - api.opt-component-interface.defined
+
+----
+
+Returns the component parameter `$name` value. 

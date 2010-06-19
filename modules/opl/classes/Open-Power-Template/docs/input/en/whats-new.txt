@@ -1,0 +1,81 @@
+Title: What's new in OPT 2.1?
+
+----
+
+Open Power Template 2.1 is the first major revision of the library, providing lots of improvements and new features. In this document, we will take a brief look at them and refer to different documentation pages that describe the changes.
+
+OPL Core improvements
+=====================
+
+Open Power Template 2.1 works on an improved OPL core, also labbeled 2.1. It brings an extended autoloader with namespace support, new debug console, logger and command-line interface tools. Now you have much bigger control over the application and are able to extract much more useful information about the library.
+
+Expression syntax changes
+=========================
+
+The expression parser was rewritten from scratch with PHP Parser Generator by Gregory Beaver. This change made possible to implement lots of new features that would be very hard to add to the old code. Among the most interesting ones, we can mention:
+
+1. Container constructors: `$a is ['foo': 'bar', 'joe': 'goo']`
+2. New simple operators: `$foo contains $bar`
+3. Compound operators: `$integer is between 7 and 18`, `$container contains both 'foo' and 'bar'` etc.
+4. Named function arguments: `function('arg1': 'value', 'arg2': 'value', 'arg3': 'value')`
+5. Dynamic container calls: `$foo.($idx).bar`
+
+Template syntax changes
+=======================
+
+There are three critical template syntax modifications. The expression types are no longer selected with attribute namespaces, but encoded in the attribute value:
+
+~~~~
+[xml]
+<span title="parse:$variable">...</span>
+~~~~
+
+This improvement allows to use expressions in attributes that already have a namespace.
+
+Some instructions used inconsistent tag and attribute naming style, i.e `camelStyle` and `pause-style`. In OPT 2.1 all the tag names have been converted to the `pause-style` and the old equivalents are no longer available. 
+
+New instructions
+================
+
+OPT 2.1 brings some new and interesting instruction that simplify writing templates.
+
+Procedures
+----------
+
+Procedures are a dynamic equivalent of well-known snippets. You can enclose pieces of commonly used template code in procedures and then call them in various places of templates. The main difference between them and snippets is that the called procedure can be chosen dynamically:
+
+~~~~
+[xml]
+<opt:procedure name="myProcedure">
+<p>Hi universe!</p>
+</opt:procedure>
+
+{@procedureName is 'myProcedure'}
+
+<opt:use procedure="@procedureName" />
+~~~~
+
+Procedures can take arguments, but they do not return any value. Their output is some XML (HTML) code.
+
+Switch
+------
+
+OPT 2.1 implements *super-switch*, an enhanced version of well-known **switch** instruction. OPT switch supports nested choices:
+
+~~~~
+[xml]
+<opt:switch test="$value">
+	<opt:equals value="str:foo">
+		Choice 1
+	</opt:equals>
+	<opt:equals value="str:bar">
+		Choice 2
+		<opt:equals value="str:joe">
+			Nested choice
+		</opt:equals>
+		End of choice 2
+	</opt:equals>
+</opt:switch>
+~~~~
+
+Note that OPT permits the code to appear **after** a nested case which is a significant improvement over the default **switch** behaviour known from PHP. The template designer is not limited when it comes to the nesting level.

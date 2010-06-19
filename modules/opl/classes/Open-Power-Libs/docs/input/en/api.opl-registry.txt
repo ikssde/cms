@@ -1,0 +1,7 @@
+Title: Opl_Registry class
+ShortTitle: Opl_Registry
+Construct: class
+
+----
+
+Generic storage class that helps to manage global objects, settings and other data.

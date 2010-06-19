@@ -1,0 +1,8 @@
+Title: set()
+ShortTitle: Opt_Xml_Buffer::set()
+Reference: void set(string $name, mixed $value)
+Status: public
+
+---
+
+Sets the state variable `$name` to `$value`.

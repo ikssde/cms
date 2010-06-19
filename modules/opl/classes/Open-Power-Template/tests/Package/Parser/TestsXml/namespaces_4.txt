@@ -1,0 +1,22 @@
+Tests the namespaces for tags. "ns2" is not registered in OPT and it must appear
+in the output.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/namespaces/opt">
+<foo xmlns:ns2="http://xml.invenzzia.org/test/ns2">
+<ns2:bar>Test</ns2:bar>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo xmlns:ns2="http://xml.invenzzia.org/test/ns2">
+<ns2:bar>Test</ns2:bar>
+<joe>Test</joe>
+<goo>Test</goo>
+</foo>

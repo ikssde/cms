@@ -1,0 +1,17 @@
+Title: getGlobal()
+ShortTitle: Opt_View::getGlobal()
+Construct: static method
+Reference: mixed getGlobal( string $name )
+VersionSince: 2.0-beta2
+Visibility: public
+SeeAlso:
+ - api.opt-view.assign-global
+ 
+----
+
+Returns the value of the `$name` global variable.
+
+~~~~
+[php]
+Opt_View::getGlobal('variable');
+~~~~

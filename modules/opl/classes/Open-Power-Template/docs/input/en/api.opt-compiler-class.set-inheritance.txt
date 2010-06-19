@@ -1,0 +1,7 @@
+Title: setInheritance()
+ShortTitle: Opt_Compiler_Class::setInheritance()
+Reference: void setInheritance(array $templates)
+
+----
+
+Exports the dynamic inheritance information to the compiler. The `$templates` is an associative array of pairs `extending template => extended template`.

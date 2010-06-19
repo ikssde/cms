@@ -1,0 +1,14 @@
+Title: getTranslationInterface()
+ShortTitle: Opt_Class::getTranslationInterface()
+Construct: method
+Reference: Opl_Translation_Interface getTranslationInterface()
+Visibility: public
+Returns: The current translation interface.
+VersionSince: 2.0-beta2
+SeeAlso:
+ - api.opt-class.set-translation-interface
+ - guide.i18n
+ 
+----
+
+Returns the current OPL translation interface object assigned to OPT. The returned value is **null**, if no object is set.

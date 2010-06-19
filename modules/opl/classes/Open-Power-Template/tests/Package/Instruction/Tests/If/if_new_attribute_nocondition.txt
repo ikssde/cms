@@ -1,0 +1,47 @@
+Test the attributed version of the new opt:if. If there is a sub-node
+without either opt:else or opt:condition, it should be displayed normally,
+and the rest of the code should skip it.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "OK" -->
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<ul>
+<opt:if>
+	<li opt:condition="$ok">Condition 1</li>
+	<li>No condition</li>
+	<li opt:condition="$fail">Condition 2</li>
+	<li opt:condition="$fail">Condition 3</li>
+	<li opt:else="yes">Other</li>
+</opt:if>
+</ul>
+---
+<ul>
+<opt:if>
+	<li opt:condition="$fail">Condition 1</li>
+	<li>No condition</li>
+	<li opt:condition="$ok">Condition 2</li>
+	<li opt:condition="$fail">Condition 3</li>
+        <li>No condition</li>
+	<li opt:else="yes">Other</li>
+</opt:if>
+</ul>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<ul>
+<li>Condition 1</li>
+<li>No condition</li>
+</ul>
+---
+<ul>
+<li>No condition</li>
+<li>Condition 2</li>
+<li>No condition</li>
+</ul>
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

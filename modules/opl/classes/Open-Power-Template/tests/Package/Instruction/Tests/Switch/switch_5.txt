@@ -1,0 +1,31 @@
+Testing the nested opt:switch instruction.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<!-- first switch -->
+<opt:switch test="$value1">
+<opt:equals value="foo">
+
+<opt:switch test="$value2">
+<opt:equals value="moo">Moo</opt:equals>
+</opt:switch>
+
+</opt:equals>
+<opt:equals value="bar">Bar</opt:equals>
+<opt:equals value="joe">Joe</opt:equals>
+<opt:equals value="goo">Goo</opt:equals>
+</opt:switch>
+
+
+</opt:root>
+
+>>>>data.php
+$view->value1 = 'foo';
+$view->value2 = 'moo';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Moo

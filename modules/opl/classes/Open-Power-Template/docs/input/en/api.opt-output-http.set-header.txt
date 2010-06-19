@@ -1,0 +1,14 @@
+Title: setHeader()
+ShortTitle: Opt_Output_Http::setHeader()
+Construct: method
+Reference: boolean setHeader(string $name, string $value)
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: Header name
+ - Name: $value | EType: string | Desc: Header value
+
+----
+
+Sends a HTTP header, sanitizing its value by removing the new line characters. If the configuration directive `headerBuffering` is disabled, the new header is sent instantly, otherwise it is buffered and sent together with the rendered view.
+
+The method returns **false**, if the headers have been already sent.

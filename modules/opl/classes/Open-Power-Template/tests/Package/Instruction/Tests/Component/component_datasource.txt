@@ -1,0 +1,22 @@
+This test checks the datasource attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:component from="$component" datasource="$datasource">
+</opt:component>
+
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+$view->datasource = array('foo' => 'bar');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+DATASOURCE PASSED

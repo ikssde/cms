@@ -1,0 +1,68 @@
+Title: opt:for
+SeeAlso:
+ - syntax.instructions.section
+ - syntax.instructions.foreach
+ - syntax.instructions.repeat
+ - syntax.instructions.separator
+
+----
+
+> [warning]
+> This chapter contains information about *programming constructs* that are not recommended to use. If you are only a template author, probably you will not have to use them. In case of questions, contact your programmer.
+
+`opt:for` is a loop that repeats its content until the specified expressions are **true**. The syntax looks familiar for anyone who programmed in PHP or C language. We define three expressions:
+
+1. The initial expression executed before entering the loop.
+2. The ending condition tested to check if the loop must be finished.
+3. The iteration expression executed after each iteration.
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ begin          | Assignment expr.    | Yes       | The initial expression.
+ while          | Assignment expr.    | Yes       | The ending condition
+ iterate        | Assignment expr.    | Yes       | The iteration expression
+ separator      | Expression          | No        | The separator that will be put between every two list elements. [More about separators][syntax.instructions.separator].
+
+Below, you can find a sample code that displays numbers from 1 to 10:
+
+~~~~
+[xml]
+<ol>
+<opt:for begin="@i is 0" while="@i lt 10" iterate="@i++">
+	<li>{@i + 1}</li>
+</opt:for>
+</ol>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<ol>
+	<li>1</li>
+	<li>2</li>
+	<li>3</li>
+	<li>4</li>
+	<li>5</li>
+	<li>6</li>
+	<li>7</li>
+	<li>8</li>
+	<li>9</li>
+	<li>10</li>
+</ol>
+~~~~
+
+In the example, we create the `@i` variable that becomes our iteration counter. The initial value is set to 0. In the `while` attribute we specify that the loop must continue until the value of `@i` is less than 10, and every iteration we increment it by 1 (`iterate` attribute). It must be noted that the same effect can be achieved with much simpler construct, `opt:repeat`.
+
+`opt:for` cooperates with separators:
+
+~~~~
+[xml]
+<p><opt:for begin="@i is 1" while="@i lte 6" iterate="@i++" str:separator=" / ">{@i}</opt:for></p>
+~~~~
+
+The result:
+
+    1 / 2 / 3 / 4 / 5 / 6
+
+More separator examples can be found in the chapter explaining [separators][syntax.instructions.separator].

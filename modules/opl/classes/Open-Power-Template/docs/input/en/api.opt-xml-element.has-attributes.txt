@@ -1,0 +1,10 @@
+Title: hasAttributes()
+ShortTitle: Opt_Xml_Element::hasAttributes()
+Reference: bool hasAttributes()
+Status: public
+SeeAlso:
+ - api.opt-xml-element.count-attributes
+
+---
+
+Returns **true**, if the tag contains any attributes.

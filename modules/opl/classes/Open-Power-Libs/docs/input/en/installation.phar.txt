@@ -1,0 +1,33 @@
+Title: PHAR installation
+
+----
+
+PHAR archives solve some problems with the directory structure and the initialization. Be sure that you have the appropriate archives and simply include them:
+
+~~~~
+[php]
+require('./opl.phar');
+require('./opt.phar');
+require('./opf.phar');
+
+// use the libraries now
+~~~~
+
+All the initialization is done automatically. 
+
+> [information]
+> When loading a PHAR archive like above, PHP does not parse and execute all the scripts in the archive. It executes only the part called *stub* which initializes the library. The rest of the content is executed on demand.
+
+The ordinary directory structure is necessary, if you are going to use third party components and add-ons. OPL libraries allow you to load them with the plugin system or include and register manually. In the second case, you might need to specify the exact paths to the class files manually, because the autoloader will try to find them in the archives:
+
+~~~~
+[php]
+require('./opl.phar');
+require('./opt.phar');
+require('./opf.phar');
+
+Opl_Loader::mapAbsolute('Opx_Extra_Addon', './addons/Opx/Extra/Addon.php');
+~~~~
+
+> [information]
+> You can also pack the addons into another PHAR archive and configure the stub properly.

@@ -1,0 +1,7 @@
+Title: isOptAttribute()
+ShortTitle: Opt_Compiler_Class::isOptAttribute()
+Reference: Opt_Compiler_Processor isOptAttribute(string $name)
+
+---
+
+Checks if the `$name` is the name of the attribute which can be parsed by one of the instruction processors. It returns the processor object or **null**, if it cannot recognize the attribute.

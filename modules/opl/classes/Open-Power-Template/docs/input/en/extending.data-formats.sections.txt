@@ -1,0 +1,323 @@
+Title: Sections
+
+----
+
+The data formats can be used to affect the section behavior. Sections are quite complex elements, when it comes to the implementation and there are many issues that you have to pay attention to.
+
+Configuration
+=============
+
+The snippets that affect section behavior are a part of `section` group that must be added to your `$_supports` list. The following properties are required to be set:
+
+1. `section:useReference` - **true**, if the section variables can be obtained via reference (similarly to `variable:useReference` and `item:useReference`)
+2. `section:anyRequests` - specify there any extra requests from the section manager that are required by the data format to create a relationship with the parent section. The request is saved to the `requestedData` format variable. The recognized values are:
+   - `ancestorNames` - returns the names of all the section ancestors.
+   - `ancestorNumbers` - returns the numbers (nesting levels) of all the section ancestors.
+3. `section:itemAssign` - **true**, if the assignment to the current list item (i.e. `$sectionName`) is allowed.
+4. `section:variableAssign` - **true**, if the assignment to the current list item variable (i.e. `$sectionName.variable`) is allowed.
+
+The list of all the snippets used by sections is:
+
+1. `section:init`
+2. `section:endLoop`
+3. `section:isNotEmpty`
+4. `section:started`
+5. `section:finished`
+6. `section:done`
+7. `section:loopBefore`
+8. `section:startAscLoop`
+9. `section:startDescLoop`
+10. `section:item`
+11. `section:variable`
+12. `section:reset`
+13. `section:next`
+14. `section:valid`
+15. `section:populate`
+16. `section:count`
+17. `section:size`
+18. `section:iterator`
+19. `section:isFirst`
+20. `section:isLast`
+21. `section:isExtreme`
+
+Conventions
+===========
+
+The section instructions require the data format to use the following variable names in PHP code snippets:
+
+1. `$_sectSECTIONNAME_vals` - the list of section items.
+2. `$_sectSECTIONNAME_v` - the currently rendered item.
+3. `$_sectSECTIONNAME_cnt` - the number of items in the list.
+
+> [error]
+> The code snippets returned by your data formats are obliged to use the variable names mentioned above.
+
+Unsually, the default data formats use also `$_sectSECTIONNAME_i` or `$_sectSECTIONNESTING_i` as an iterator variables, but this is not required.
+
+> [information]
+> If the `$_sectSECTIONNAME_v` variable is required, OPT executes the `section:forceItemVariables` action to notify the data format about it.
+
+Basic iteration
+===============
+
+The most important snippets are `section:init`, `section:isNotEmpty`, `section:startAscLoop`, `section:startDescLoop` and `section:endLoop`.
+
+First, the section must obtain the list data that are going to be rendered. This is done in `section:init`. Basically, if the section has no parent, the data should be located somewhere in the `$this->_data` array that stores the local variables unless the `datasource` attribute is provided. However, in other case we must ask the parent section for the necessary data. Below, you can find the complete implementation from `SingleArray` data format:
+
+~~~~
+[php]
+// Get the section data
+$section = $this->_getVar('section');
+
+// If the section has a parent, we must obtain also the parent section data and ask
+// its data format to generate the link to the data.
+if(!is_null($section['parent']))
+{
+	$parent = Opt_Instruction_BaseSection::getSection($section['parent']);
+	$parent['format']->assign('item', $section['name']);
+	
+	// Access via reference, if possible
+	if($parent['format']->property('section:useReference'))
+	{
+		return '$_sect'.$section['name'].'_vals = &'.$parent['format']->get('section:variable').'; ';
+	}
+	return '$_sect'.$section['name'].'_vals = '.$parent['format']->get('section:variable').'; ';
+}
+// The "datasource" attribute is set
+elseif(!is_null($section['datasource']))
+{
+	return '$_sect'.$section['name'].'_vals = '.$section['datasource'].'; ';
+}
+// Otherwise, we simply get the data from a template variable
+else
+{
+	$this->assign('item', $section['name']);
+	return '$_sect'.$section['name'].'_vals = &'.$this->get('variable:main').'; ';
+}
+~~~~
+
+Note that sections do not have to read their data from the parent section variable. For example, the default `Array` data format uses separate template variables for storing nested sections and uses the iteration variables to create relationships. It makes use of the `section:anyRequests` property, asking for the list of parent section nesting levels, so that it could generate the correct calls:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+
+if(!is_null($section['datasource']))
+{
+	return '$_sect'.$section['name'].'_vals = '.$section['datasource'].'; ';
+}
+
+$this->assign('item', $section['name']);
+$code = '$_sect'.$section['name'].'_vals = &'.$this->get('variable:main');
+
+$ancestors = $this->_getVar('requestedData');
+foreach($ancestors as $i)
+{
+	$code .= '[$_sect'.$i.'_i]';
+}
+
+return $code.';';
+~~~~
+
+Once we have obtained the data, we have to check whether the list actually contains any item. This is done with a conditional instruction and the data format must provide the condition in `section:isNotEmpty` snippet:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+return 'is_array($_sect'.$section['name'].'_vals) && ($_sect'.$section['name'].'_cnt = sizeof($_sect'.$section['name'].'_vals)) > 0';
+~~~~
+
+> [warning]
+> The condition must also save the total number of items to the `$_sectSECTIONNAME_cnt` variable, as it is shown in the code snippet above.
+
+Optionally, the data format may define some extra code in the following snippets:
+
+1. `section:started` - executed just after the condition that checks if the section contains elements (`opt:show` tag)
+2. `section:loopBefore` - executed just before entering the section loop.
+3. `section:finished` - opposite of `section:started`. It is executed just before finishing the section condition block (`</opt:show>`).
+4. `section:done` - executed after the condition block.
+
+If the data format has nothing to add to these snippets, it should return empty strings then. 
+
+> [information]
+> Note that the condition block is always added to the section, even if it does not use `opt:show` tag.
+
+Finally, the data format provides a basic loop header that iterates through all the list elements. There are expected two versions of it: `section:startAscLoop` for the ascending order and `section:startDescLoop` for the descending order. It is up to you what loop to use. For example, both `Array` and `SingleArray` data formats use ordinary **for**, whereas `Objective` provides **foreach**. The snippet must contain an opening curly bracket:
+
+~~~~
+[php]
+return 'for($_sect'.$section['nesting'].'_i = 0; $_sect'.$section['nesting'].'_i < $_sect'.$section['name'].'_cnt; $_sect'.$section['nesting'].'_i++){ ';
+~~~~
+
+This is the absolute minimum that must be implemented for section, however it is not the end.
+
+Section record structure
+========================
+
+The code snippets shown above make use of the `$section` array obtained from the `section` format variable. It contains all the information about the processed section:
+
+1. `name` - the section name
+2. `parent` - the name of the parent section or **null**
+3. `order` - `asc` for ascending order and `desc` for descending
+4. `datasource` - the compiled expression provided in the `datasource` attribute or **null**
+5. `display` - the display conditional expression provided in the `display` attribute or **null**
+6. `separator` - the value of the `separator` attribute or **null**
+7. `show` - the `opt:show` node or **null**
+8. `node` - the main section node
+9. `attr` - the attribute node, if it is an attributed section or **null**
+10. `format` - the data format that is responsible for implementing the specified section
+
+The array for the current section can be always obtained from the format variable list:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+~~~~
+
+If we know the name of a different section, we may obtain its array, too:
+
+~~~~
+[php]
+$section = Opt_Instruction_BaseSection::getSection('someOtherSection');
+~~~~
+
+Accessing list elements
+=======================
+
+Another element that data formats are responsible for is reading the current list item variables:
+
+~~~~
+[xml]
+<opt:section name="foo">
+	This: {$foo}
+	And this: {$foo.bar}
+</opt:section>
+~~~~
+
+The `$foo` access is processed with `section:item` snippet and should return the whole item, for example:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+return '$_sect'.$section['name'].'_v';
+~~~~
+
+The `$foo.bar` access is processed with `section:variable` snippet. Here, the following strategy is recommended:
+
+1. The data format generates the code for `$foo` part and redirects `.bar` to the `item:item` snippet unless it has some specific needs.
+2. If the data format decorates another format, the `.bar` should be redirected to the decorator. 
+
+The example code:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+if($this->isDecorating())
+{
+	return '$_sect'.$section['name'].'_v'.$this->_decorated->get('item:item');
+}
+return '$_sect'.$section['name'].'_v->'.$this->_getVar('item');
+~~~~
+
+The decorator pattern allows using different data formats for sections and for section item data (for example, the list itself is an object, but the list items are arrays).
+
+In the code snippets above, we assumed that the current section item is always stored in `$_sect'.$section['name'].'_v` variable. It it not always true. For example, in the data formats where sections are based on **for** loop, it would be nice to have a direct access: `$_sect'.$section['name'].'_vals[$_sect'.$section['nesting'].'_i]`. Here we face a significant problem. While `opt:section` does not care about it, some other section do. To avoid it, OPT notifies the data format, if it expects the section item to be stored in `$_sect'.$section['name'].'_v`. We can capture the notification using the `action()` method:
+
+~~~~
+[php]
+public function action($name)
+{
+	if($name == 'section:forceItemVariables')
+	{
+		$this->_sectionItemVariables = true;
+	}
+} // end action();
+~~~~
+
+Then, we may use this state variable to generate different PHP code:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+if($this->_sectionItemVariables)
+{
+	if($this->isDecorating())
+	{
+		return '$_sect'.$section['name'].'_v'.$this->_decorated->get('item:item');
+	}
+	$section = $this->_getVar('section');
+	return '$_sect'.$section['name'].'_v[\''.$this->_getVar('item').'\']';
+}
+if($this->isDecorating())
+{
+	return '$_sect'.$section['name'].'_vals[$_sect'.$section['nesting'].'_i]'.$this->_decorated->get('item:item');
+}
+return '$_sect'.$section['name'].'_vals[$_sect'.$section['nesting'].'_i][\''.$this->_getVar('item').'\']';
+~~~~
+
+Similarly to `variable:assign` and `item:assign`, the sections may provide `section:itemAssign` and `section:variableAssign` to process assigning new values to the section variables.
+
+Iteration snippets
+==================
+
+`opt:section`, the simplest section instruction uses the `section:startAscLoop` and `section:startDescLoop` to generate the iteration code. The other section types have more complex implementation and they require a lower-level iteration snippets to be available. The set of iteration snippets is quite similar to the methods provided by the PHP `Iterator` interface:
+
+1. `section:reset` - PHP code that resets the iterator to the first element.
+2. `section:next` - PHP code that moves to the next section item.
+3. `section:valid` - PHP expression that tests if the current item actually exists.
+
+> [warning]
+> For the descending section order, the snippets above should actually iterate from the last to the first list item!
+
+Unsually, when using the iteration snippets, the section code must make use of the `$_sect'.$section['name'].'_v` mentioned earlier. OPT may request to populate this variable with the current item data, using the `section:populate` snippet. The code below comes from the `Objective` format implementation:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+if($section['order'] == 'asc')
+{
+	return '$_sect'.$section['name'].'_v = $_sect'.$section['name'].'_vals->current(); $_sect'.$section['name'].'_i = $_sect'.$section['name'].'_vals->key();';
+}
+else
+{
+	return '$_sect'.$section['name'].'_v = current($_sect'.$section['name'].'_vals); $_sect'.$section['name'].'_i = key($_sect'.$section['name'].'_vals);';
+}
+~~~~
+
+The iterator variable should be returned by the `section:iterator` snippet, for example:
+
+~~~~
+[php]
+$section = $this->_getVar('section');
+return '$_sect'.$section['name'].'_i';
+~~~~
+
+Special section variable
+========================
+
+OPT sections provide some extra information through the `$system` special variable. The data format should generate the proper PHP codes for all the calls concerning sections. Firstly, we may request to count the number of list items and the variables in the item (implementations from the `Array` format):
+
+~~~~
+[php]
+case 'section:count':
+	$section = $this->_getVar('section');
+	return '$_sect'.$section['name'].'_cnt';
+case 'section:size':
+	$section = $this->_getVar('section');
+	if($this->_sectionItemVariables)
+	{
+		return 'sizeof($_sect'.$section['name'].'_v)';
+	}
+	return 'sizeof($_sect'.$section['name'].'_vals[$_sect'.$section['nesting'].'_i])';
+~~~~
+
+Then, we have three expressions that should test whether the current item is:
+
+1. The first item on the list (`section:isFirst`)
+2. The last item on the list (`section:isLast`)
+3. The first OR the last item on the list (`section:isExtreme`)
+
+Conclusion
+==========
+
+Although implementing a data format for sections seems to be quite complex contrary to the variables and container items, but gives you fantastic opportunities impossible to achieve with ordinary PHP interfaces. Individual users may not find it useful, but framework developers or the programmers who wish to create an advanced code base for their projects should be very interested in creating specialized sections that allow to provide the direct access to various data hidden behind abstract and simple sections.

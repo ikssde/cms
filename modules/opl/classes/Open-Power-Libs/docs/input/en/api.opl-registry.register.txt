@@ -1,0 +1,22 @@
+Title: register()
+ShortTitle: Opl_Registry::register()
+Construct: static method
+Reference: void Opl_Registry::register( string $name, object $object )
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The name that will be given to the object in the registry.
+ - Name: $object | EType: object | Desc: The object to store.
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-registry.get
+
+----
+
+Registers the specified object as `$name`.
+
+~~~~
+[php]
+Opl_Registry::register('foo', new Opl_Foo_Object);
+
+$obj = Opl_Registry::get('foo');
+~~~~

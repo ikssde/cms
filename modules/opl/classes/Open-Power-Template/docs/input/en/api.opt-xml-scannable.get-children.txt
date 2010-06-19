@@ -1,0 +1,8 @@
+Title: getChildren()
+ShortTitle: Opt_Xml_Scannable::getChildren()
+Reference: array getChildren()
+Status: public
+
+---
+
+Returns the array of the current node children. The array keeps the children order.

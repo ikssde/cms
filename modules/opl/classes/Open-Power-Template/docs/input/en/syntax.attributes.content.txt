@@ -1,0 +1,80 @@
+Title: opt:content
+SeeAlso:
+ - syntax.instructions.put
+
+----
+
+The attribute takes any expression as its value. If the result is non-empty or the specified variable exists, it will be displayed in the place of default tag content:
+
+~~~~
+[xml]
+<h1 opt:content="$article.title">Default title</h1>
+~~~~
+
+If the variable `$article.title` is not defined, we see the text *Default title*.
+
+Escaping issues
+===============
+
+The attribute value may use the escaping modifiers **e:** and **u:**. The escaped content is used only to display the expression value. The emptiness is checked on the original value.
+
+Prepending and appending some data to the content
+=================================================
+
+Consider the following situation:
+
+~~~~
+[xml]
+<tr>
+ <td class="title">Estimated time:</td>
+ <td class="value" opt:content="$time"><em>No time specified</em></td>
+</tr>
+~~~~
+
+If the time is not specified, the user might want to see an appropriate message. However, let's see what happens if the time is set. We get the following output:
+
+~~~~
+[xml]
+<tr>
+ <td class="title">Estimated time:</td>
+ <td class="value">38</td>
+</tr>
+~~~~
+
+OPT displayed the value correctly, but it missed the unit which we would like to be displayed, too. In OPT 2.0 we had to write a complete condition here, but fortunately OPT 2.1 introduces extra attributes `opt:content-append` and `opt:content-prepend` that co-operate with `opt:content` and allow to append or prepend some extra stuff on demand:
+
+~~~~
+[xml]
+<tr>
+ <td class="title">Estimated time:</td>
+ <td class="value" opt:content="$time" opt:content-append=" s."><em>No time specified</em></td>
+</tr>
+~~~~
+
+Now OPT will append the unit, if the time is specified.
+
+> [information]
+> By default, `opt:content-prepend` and `opt:content-append` expect strings as their values. In order to read their value from an expression, we must select the parser explicitely: `opt:content-append="parse:$variable"`.
+
+Custom displaying routine
+=========================
+
+Let's consider another example:
+
+~~~~
+[xml]
+<tr>
+ <td class="title">Date checked:</td>
+ <td class="value" opt:content="$dateChecked"><em>Not checked yet.</em></td>
+</tr>
+~~~~
+
+Suppose that the date is provided as an UNIX timestamp (number of seconds since 1.1.1970). In this case, OPT would display us the very number, but we want a formatted date. Since OPT 2.1 we may use `opt:content-display` which provides an expression used to display the matched value:
+
+~~~~
+[xml]
+<tr>
+ <td class="title">Date checked:</td>
+ <td class="value" opt:content="$dateChecked" opt:content-display="date($format, $dateChecked)"><em>Not checked yet.</em></td>
+</tr>
+~~~~

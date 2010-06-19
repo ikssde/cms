@@ -1,0 +1,20 @@
+Title: isImage()
+Reference: boolean isImage(string $text)
+
+----
+
+Returns **true**, if the `$text` is a valid URL/path to the image file. The function checks it by the file extension. Currently recognized ones are:
+
+1. JPG
+2. PNG
+3. BMP
+4. GIF
+5. SVG
+
+Sample use:
+
+~~~~
+[xml]
+<!-- displays the IMG tag, if the `$text` contains a path to the image -->
+<img parse:src="$text" opt:if="isImage($text)" />
+~~~~

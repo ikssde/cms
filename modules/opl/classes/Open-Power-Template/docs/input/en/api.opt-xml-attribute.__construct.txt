@@ -1,0 +1,8 @@
+Title: __construct()
+ShortTitle: Opt_Xml_Attribute::__construct()
+Reference: __construct(string $name, string $value)
+Status: public
+
+---
+
+Creates a new attribute object with the name `$name` and value `$value`. The `$name` may contain the XML namespace, using the notation *namespace:name*.

@@ -1,0 +1,24 @@
+Title: opt:if
+SeeAlso:
+ - syntax.instructions.if
+
+----
+
+This attribute allows to display the tag conditionally:
+
+~~~~
+[xml]
+<p opt:if="$showParagraph == true">This paragraph is displayed only if the condition is true.</p>
+~~~~
+
+The code above is equivalent of:
+
+~~~~
+[xml]
+<opt:if test="$showParagraph == true">
+<p>This paragraph is displayed only if the condition is true.</p>
+</opt:if>
+~~~~
+
+> [stop]
+> Within `opt:if` attribute the `opt:elseif` and `opt:else` tags do not work.

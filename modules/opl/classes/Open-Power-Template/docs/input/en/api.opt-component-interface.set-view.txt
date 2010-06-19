@@ -1,0 +1,11 @@
+Title: setView()
+ShortTitle: Opt_Component_Interface::setView()
+Construct: abstract method
+Visibility: public
+Reference: void setView(Opt_View $view) 
+Arguments:
+ - Name: $view | Type: api.opt-view | Desc: The view the component is deployed in.
+
+----
+
+This method is called by the executed template, when the component is going to be deployed in the port. OPT passes the view object that processes the template as an argument.

@@ -1,0 +1,64 @@
+Title: getElementsExt()
+ShortTitle: Opt_Xml_Scannable::getElementsExt()
+Reference: array getElementsExt(string $namespace, string $name)
+VersionSince: 2.0-dev8
+Status: public
+SeeAlso:
+ - api.opt-xml-scannable.get-elements-by-tag-name
+ - api.opt-xml-scannable.get-elements-by-tag-name-ns
+
+----
+
+This method works much like [Opt_Xml_Scannable::getElementsByTagNameNS()][api.opt-xml-scannable.get-elements-by-tag-name-ns], however it does not check the descendants of matching nodes. Its use is very common in OPT. Suppose we are writing the new instruction processor. The main instruction tag is `opt:foo`, but it must have also a descendant `opt:bar`:
+
+~~~~
+[xml]
+<opt:foo>
+    <div>
+        <opt:bar>Hello world!</opt:bar>
+    </div>
+</opt:foo>
+~~~~
+
+While parsing `opt:foo` we need to find the `opt:bar` for some reason and moreover simply to check if it is defined exactly once:
+
+~~~~
+[php]
+$barNodes = $node->getElementsByTagNameNS('opt', 'bar');
+if(sizeof($nodes) != 1)
+{
+	throw new Opt_InstructionTooManyItems_Exception('opt:bar', 'opt:foo', 'One');
+}
+~~~~
+
+The first impression is that this code is correct. However, let's take a look at the following situation:
+
+~~~~
+[xml]
+<opt:foo>
+    <div>
+        <opt:bar>
+
+            <opt:foo>
+                <div>
+                    <opt:bar>Hello world!</opt:bar>
+                </div>
+            </opt:foo>
+
+        </opt:bar>
+    </div>
+</opt:foo>
+~~~~
+
+In this case the code above will surely cause error, even if it is easily noticeable that the second `opt:bar` should be connected to the nested `opt:foo`! Here, we must use `getElementsExt()`:
+
+~~~~
+[php]
+$barNodes = $node->getElementsExt('opt', 'bar');
+if(sizeof($nodes) != 1)
+{
+	throw new Opt_InstructionTooManyItems_Exception('opt:bar', 'opt:foo', 'One');
+}
+~~~~
+
+As this method does not visit the descendants of `opt:bar`, everything starts to work. 

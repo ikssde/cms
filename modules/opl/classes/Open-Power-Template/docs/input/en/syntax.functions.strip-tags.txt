@@ -1,0 +1,25 @@
+Title: stripTags()
+Reference: string stripTags(string $text [, string $allowedTags ])
+
+----
+
+Strips the XML/HTML tags from `$text`. In the optional argument, `$allowedTags`, we may specify the allowed tags that must not be stripped:
+
+~~~~
+[xml]
+<p>User interests: {stripTags($user.interests)}</p>
+<p>User signature: {stripTags($user.signature, '&lt;a&gt;&lt;br&gt;')}</p>
+~~~~
+
+> [important]
+> Stripping HTML should be a part of the presentation layer only in certain cases. If you are going to display the same value in many places, consider moving this task to your script in order not to make a mistake.
+
+<!-- ... -->
+
+> [information]
+> This function can operate also on a container of strings, spacifying them all and returning the modified container.
+
+<!-- ... -->
+
+> [error]
+> Remember that the allowed tag names **must be** written using entities, if they are specified explicitly in the template.

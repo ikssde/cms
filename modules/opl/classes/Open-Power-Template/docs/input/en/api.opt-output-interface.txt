@@ -1,0 +1,10 @@
+Title: Opt_Output_Interface class
+ShortTitle: Opt_Output_Interface
+Construct: interface
+ImplementedBy:
+ - api.opt-output-http
+ - api.opt-output-return
+
+----
+
+In OPT, the views are executed by outputs. This interface provides a generic output API for OPT.

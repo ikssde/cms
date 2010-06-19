@@ -1,0 +1,8 @@
+Title: isInstruction()
+ShortTitle: Opt_Compiler_Class::isInstruction()
+Reference: Opt_Compiler_Processor isInstruction(string $name)
+Status: public
+
+---
+
+Checks if the `$name` is the name of the XML tag which can be parsed by one of the instruction processors. It returns the processor object or **null**, if it cannot recognize the tag.

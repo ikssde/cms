@@ -1,0 +1,145 @@
+Title: Variables
+
+----
+
+Variables are items that are used to storing values. Each variable has its own unique name that allows to identify it. The value of a variable can be any type of data: strings, numbers, floating point numbers, logical values, or even compound PHP data types, such as arrays and objects. The variable name begins with an underscore or a letter, and later the digits from 0 to 9 are also allowed. Variable names are case-sensitive. In OPT, there are several types of variables.
+
+Simple variables
+================
+
+Simple variables are intended to be created by the script that executes the template. Their name is followed with a dollar sign. The script can assign any data to this variables, and the template can place it somewhere, so this type is used to communicate between the logic and the presentation layer. Below, we can see a sample use:
+
+~~~~
+[xml]
+<p>Hello my friend, do you need {$item}?</p>
+~~~~
+
+If the script assigns the text *sunglasses* to `$item`, the parser returns the following result:
+
+~~~~
+[xml]
+<p>Hello my friend, do you need sunglasses?</p>
+~~~~
+
+In the next part of the documentation, the term *variables* means usually *simple variables*.
+
+> [information]
+> By default, the variables are assigned to the specified template only. So, if the script assigns some value to `$foo` in `template1.tpl`, this value will not be seen in `template2.tpl`. In this case we say that the variables are local. The configuration allows to make the variables global by default.
+
+Template variables
+==================
+
+The template variables are created and managed by the template itself. The difference is that the name begins with `@`, not `$`. It was introduced to avoid naming collisions, and technically, they are handled differently in the OPT core. Note that template variables are always global: if `template1.tpl` sets the variable `@foo`, it is also visible in every template that is parsed later.
+
+Language variables
+==================
+
+This type of variable provides a support to the translation interface in OPT. It looks like this: `$group@identifier` and it returns a text that is assigned to the specified identifier in the specified group. The translation interface should assign different text to the same identifier, depending on the language set by the script.
+
+~~~~
+[xml]
+<p>{$form@field_name}: <input type="text" name="name" /></p>
+~~~~
+
+Of course, nothing wrong will happen if you find some other use for this syntax. Note that you may also create a translation interface port with [backtick strings][syntax.expressions.backticks].
+
+Containers
+==========
+
+You are not limited to store only one value in a variable. If a variable can handle more values, we call it simply *container*. Each container element of the container has its own unique index, which may be either alphanumeric or numeric: *foo*, **7** etc. The index allows to access the value from a container: `$container.element`. Containers are very convenient, both for the programmer and for you. Let's assume we want to display some information about a person. Using normal variables, the code looks like this:
+
+~~~~
+[xml]
+<p>Name: {$person_name}</p>
+<p>Surname: {$person_surname}</p>
+<p>Age: {$person_age}</p>
+~~~~
+
+However, each of these variables must be assigned manually, whereas such data are usually retrieved in the script as arrays or something like that. It's much easier to assign entire group of values, but this leads us to the following template:
+
+~~~~
+[xml]
+<p>Name: {$person.name}</p>
+<p>Surname: {$person.surname}</p>
+<p>Age: {$person.age}</p>
+~~~~
+
+The containers are also useful for template designers, because some functions can operate directly on whole container. For example, we can display the number of items in the container:
+
+~~~~
+[xml]
+<p>{count($person)} parameters describe this guy:</p>
+<p>Name: {$person.name}</p>
+<p>Surname: {$person.surname}</p>
+<p>Age: {$person.age}</p>
+~~~~
+
+The next example illustrates, how to create some kind of financial report:
+
+~~~~
+[xml]
+{@formattedProfits are money($profits)}
+
+<p>Corporation customer profits: {@formattedProfits.corporation}</p>
+<p>Individual customer profits: {@formattedProfits.individual}</p>
+<p>Training profits: {@formattedProfits.training}</p>
+<p>Total profit: {money(sum($profits))}</p>
+~~~~
+
+`{@formattedProfits are money($profits)}`
+:	Here we say that we want to keep all the values in `$profits` in the money notation, for example **$35.45**. The new container must be saved to the new variable: `$formattedProfits` in order not to overwrite the original container.
+
+`{money(sum($profits))}`
+:	We request to sum all the values in `$profits` (that is why we have not overwritten that container!) and display the result in the money notation.
+
+As you can see, many functions, like `money()` can operate both on single values and the entire containers.
+
+> [information]
+> Unlike many other template engines, containers **do not represent** any particular PHP type. Although they are arrays by default, they may be fully functionable objects as well. The script gives the compiler hints on the container types and OPT generates a suitable PHP template that fulfills the demands.
+
+Arrays
+======
+
+Arrays are one of the PHP compound types that has been ported to OPT. Arrays are much like containers - they are also variables that store more than one value. The syntax is a bit different and uses square brackets to enclose the index name: `$array[index]`. Moreover, the index name can be loaded from other variable: `$array[$index]`. Note that arrays also cooperate with many functions:
+
+~~~~
+[xml]
+{@formattedProfits are money($profits)}
+
+<p>Corporation customer profits: {@formattedProfits[corporation]}</p>
+<p>Individual customer profits: {@formattedProfits[individual]}</p>
+<p>Training profits: {@formattedProfits[training]}</p>
+<p>Total profit: {money(sum($profits))}</p>
+~~~~
+
+> [warning]
+> We do not recommend using the array syntax unless it is really necessary. Containers allow to create more generic templates that can be reused with other PHP applications, even if they use different internal types to pass the data to the parser.
+
+Special variables
+=================
+
+OPT reserves three variable names for its own purposes:
+
+`$sys` or `$opt`
+:	This is a special container that provides various information on the parser and instructions.
+
+`$global`
+:	The container with global variables that are visible in all the parsed templates.
+
+`$this`
+:	The container with local variables assigned to the particular template.
+
+The basic information of the `$sys` special variable is:
+
+`$sys.version`
+:	OPT version
+
+`$sys.const.name`
+:	The value of specified PHP constant.
+
+Many instructions share their own information using `$sys`. For example, the section status information are available under `$sys.section.foo`.
+
+For programmers
+===============
+
+Contrary to PHP, OPT does not report nonexistent variables as mistakes. However, if you wish to be informed of them, you can simply change the error reporting level in the configuration (`errorReporting` directive) to `E_ALL | E_NOTICE`.

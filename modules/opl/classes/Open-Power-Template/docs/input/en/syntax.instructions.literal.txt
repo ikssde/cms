@@ -1,0 +1,71 @@
+Title: opt:literal
+SeeAlso:
+ - syntax.cdata
+SeeAlsoExternal:
+ - https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments Mozilla Developer Center - Properly Using CSS and JavaScript in XHTML Documents
+
+----
+
+`opt:literal` instruction controls the parsing of XML CDATA sections with OPT. Normally, OPT compiles them according to their semantics: it moves them to the output, but without parsing their content. CDATA tags are moved, too. For template designer, such behavior is not always acceptable. Having the JavaScript code and some data do be put into it, we would like to escape part of that code not to be parsed by OPT, but at the same time, it will be decorated with a huge amount of `<![CDATA[` and `]]>` and the browser will not parse such result.
+
+~~~~
+[xml]
+<script type="text/javascript">
+<![CDATA[
+    document.write('Hello my friend, do you need {$object} or ]]>{$object}<![CDATA[?');
+]]>
+</script>
+~~~~
+
+In the example above, the output JS code is simply destroyed. Here it's a place for `opt:literal`. We can enclose our JS code inside it, and then the template CDATA sections will not be rewritten to the output. Instead, `opt:literal` will generate its own CDATA beginning and end that encloses the complete code:
+
+~~~~
+[xml]
+<script type="text/javascript">
+<opt:literal>
+<![CDATA[
+    document.write('Hello my friend, do you need {$object} or ]]>{$object}<![CDATA[?');
+]]>
+</opt:literal>
+</script>
+~~~~
+
+Result:
+
+~~~~
+[xml]
+<script type="text/javascript">
+<![CDATA[
+    document.write('Hello my friend, do you need {$object} or sunglasses?');
+]]>
+</script>
+~~~~
+
+However, `opt:literal` offers you more decorators. It can be used to generate dynamic HTML comments or simply to hide the existence of CDATA sections from the browser. The behavior may be chosen with the following attribute:
+
+ Name  | Type | Required? | Default | Description
+-------|------|-----------|---------|:-----------------------------------
+ type  | ID   | No        | cdata   | What to display?
+
+Allowed values are:
+
+* `cdata` - enclose the tag content with `<![CDATA[` and `]]>`, like in the example above.
+
+    > [warning]
+    > JavaScript and CSS content enclosed with pure CDATA section can cause problems with some older browsers so your code may not work properly. It is recommended to use `comment_cdata` mode to solve this problem. 
+
+* `comment_cdata` - enclose the tag content with `/* <![CDATA[ */` and `/* ]]> */`.
+
+    > [information]
+    > Recommended mode to use with JavaScript and CSS content. Opening and closing CDATA tags surrounded by multiline comments (supported by both JS and CSS) are valid and leave the compatibility with older browsers. [(Source)][proper_cdata]
+
+* `comment` - enclose the tag content with HTML comment tags `<!--` and `-->`.
+
+    > [important]
+    > This option should not be used with CSS and JavaScript content. Modern browsers ignore code in these tags when used in correct XML/XHTML document. Use `comment_cdata` instead.
+
+* `transparent` - do not enclose the content with anything.
+
+
+[proper_cdata]: https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments 
+    "Properly Using CSS and JavaScript in XHTML Documents - Using CDATA Instead of Comments"

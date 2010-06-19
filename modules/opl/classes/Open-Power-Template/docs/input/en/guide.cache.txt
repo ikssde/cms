@@ -1,0 +1,64 @@
+Title: Caching
+SeeAlso:
+ - extending.caching-systems
+
+----
+
+Although Open Power Template does not have its own caching system, it provides an API to write and use external caching systems. To see, how to implement a caching system in OPT, please read [Extending OPT: Caching systems][extending.caching-systems]. This chapter covers the topic of using it.
+
+General overview
+================
+
+The caching systems are represented in OPT by objects implementing `Opt_Caching_Interface` interface. They may be enabled on two levels:
+
+1. Globally - the new views import the global caching system.
+2. Per-view - the caching system is enabled only in a single view. It overwrites the global setting.
+
+Global caching settings
+=======================
+
+In order to enable a caching system globally, we need a caching system object and the object of `Opt_Class`:
+
+~~~~
+[php]
+$cache = new cachingSystem;
+$tpl = new Opt_Class;
+// ...
+
+$tpl->setCache($cache);
+~~~~
+
+To disable a caching system, the `setCache()` method must be called without an argument:
+
+~~~~
+[php]
+$tpl->setCache();
+~~~~
+
+The newly created views will import the caching system into their scope.
+
+Local caching settings
+======================
+
+The view objects also provide `setCache()` method:
+
+~~~~
+[php]
+$cache = new cachingSystem;
+$view = new Opt_View('template.tpl');
+// ...
+
+$view->setCache($cache);
+~~~~
+
+It overwrites the global setting and is applied only for the view template.
+
+Caching system configuration
+============================
+
+Open Power Template interface provides only the necessary methods to communicate with the caching system. The certain settings depend on the used caching system implementation and have nothing to do with OPT. Refer to your caching system manual in order to learn, how to configure it properly.
+
+Where to get the caching systems from?
+======================================
+
+You might wonder why OPT does not have its own caching system. The answer is simple: this is not a template engine task, even if it makes use of it. Many frameworks already provide their own advanced and robust implementations of caching libraries. Following the Ockham rule, we do not see the point in reinventing the wheel. The `Opt_Caching_Interface` is simple enough to make the integration very easy and you might check out the existing framework ports as they may offer ready implementations.

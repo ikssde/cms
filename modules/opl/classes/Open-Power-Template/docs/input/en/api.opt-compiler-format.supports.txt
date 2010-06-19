@@ -1,0 +1,25 @@
+Title: supports()
+ShortTitle: Opt_Compiler_Format::supports()
+Reference: boolean supports(string $name)
+SeeAlso:
+ - api.opt-compiler-format.get
+
+---
+
+Returns true, if the data format supports the specified feature. The feature list is stored in the `$_supports` protected array.
+
+Available features
+==================
+
+The default Open Power Template compiler and instruction set consists of the following data format features:
+
+`section`
+:	The data format implements the code hooks necessary for the sections.
+
+`variable`
+:	The data format implements the code hooks necessary to handle the template variables.
+
+`item`
+:	The data format implements the code hooks necessary to handle the container calls.
+
+Third party add-ons may define their own feature sets.

@@ -1,0 +1,29 @@
+opt: attributes in :com should be skipped.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:component from="$component">
+<div foo="bar joe-goo" opt:component-attributes="yes" opt:if="$foo">
+Foo.
+</div>
+</opt:component>
+
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+$view->foo = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+ATTRIBUTE MANAGEMENT FOR: div#yes
+foo: bar joe-goo
+<div foo="bar joe-goo">
+Foo.
+</div>

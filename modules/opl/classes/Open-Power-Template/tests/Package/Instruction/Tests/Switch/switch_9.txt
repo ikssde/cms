@@ -1,0 +1,95 @@
+Testing the opt:switch instruction: "break" equivalents and containers.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+
+<!-- first switch -->
+<opt:switch test="$value1">
+<opt:contains value="foo">
+Foo
+<opt:contains value="bar">
+Bar
+<opt:contains value="joe">
+Joe
+</opt:contains>
+</opt:contains>
+Goo
+<opt:contains value="hoo">
+Hoo
+</opt:contains>
+</opt:contains>
+</opt:switch>
+
+<!-- second switch -->
+<opt:switch test="$value2">
+<opt:contains value="foo">
+Foo
+<opt:contains value="bar">
+Bar
+<opt:contains value="joe">
+Joe
+</opt:contains>
+</opt:contains>
+Goo
+<opt:contains value="hoo">
+Hoo
+</opt:contains>
+</opt:contains>
+</opt:switch>
+
+<!-- third switch -->
+<opt:switch test="$value3">
+<opt:contains value="foo">
+Foo
+<opt:contains value="bar">
+Bar
+<opt:contains value="joe">
+Joe
+</opt:contains>
+</opt:contains>
+Goo
+<opt:contains value="hoo">
+Hoo
+</opt:contains>
+</opt:contains>
+</opt:switch>
+
+<!-- fourth switch -->
+<opt:switch test="$value4">
+<opt:contains value="foo">
+Foo
+<opt:contains value="bar">
+Bar
+<opt:contains value="joe">
+Joe
+</opt:contains>
+</opt:contains>
+Goo
+<opt:contains value="hoo">
+Hoo
+</opt:contains>
+</opt:contains>
+</opt:switch>
+
+</opt:root>
+
+>>>>data.php
+$view->value1 = array('foo');
+$view->value2 = array('bar');
+$view->value3 = array('joe');
+$view->value4 = array('hoo');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Foo
+Bar
+Joe
+Goo
+Hoo
+Bar
+Joe
+Joe
+Hoo

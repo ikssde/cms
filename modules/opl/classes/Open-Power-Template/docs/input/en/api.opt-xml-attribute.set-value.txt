@@ -1,0 +1,8 @@
+Title: setValue()
+ShortTitle: Opt_Xml_Attribute::setValue()
+Reference: void setValue(string $value)
+Status: public
+
+---
+
+Sets the new XML attribute value.

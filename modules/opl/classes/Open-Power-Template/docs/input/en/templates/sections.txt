@@ -1,0 +1,2 @@
+> [help]
+> This chapter describes one of section instructions. We recommend to read [Sections][syntax.topics.sections] first to get to know more about them.

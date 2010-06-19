@@ -1,0 +1,8 @@
+Title: substringData()
+ShortTitle: Opt_Xml_Cdata::substringData()
+Reference: string substringData(int $offset, int $count)
+Status: public
+
+---
+
+Returns the specified substring.

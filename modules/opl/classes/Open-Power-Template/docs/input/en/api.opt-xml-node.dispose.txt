@@ -1,0 +1,15 @@
+Title: dispose()
+ShortTitle: Opt_Xml_Node::dispose()
+Reference: void dispose()
+Status: public
+VersionSince: 2.0-beta2 
+
+----
+
+The PHP garbage collector does not recognize cycles between objects, causing problems with freeing the XML tree memory with ordinary `unset()`. In order to destroy the tree, you should use this very method:
+
+~~~~
+[php]
+$tree->dispose();
+unset($tree);
+~~~~

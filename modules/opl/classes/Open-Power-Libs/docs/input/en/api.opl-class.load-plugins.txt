@@ -1,0 +1,18 @@
+Title: loadPlugins()
+ShortTitle: Opl_Class::loadPlugins()
+Construct: method
+Reference: void Opl_Class::loadPlugins()
+Visibility: public
+EThrows:
+ - Opl_NotWriteable_Exception
+ - Opl_FileNotExists_Exception
+ - Opl_InvalidType_Exception
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-class._plugin-loader
+
+----
+
+Loads the plugins stored in all of the `pluginDir` directories. The directories are scanned only once, to create a temporary PHP file which loads the rest. The file is saved in `pluginDataDir`. If `pluginAutoload` is **true**, the plugin directories are scanned for modifications. If there are any new plugins, the temporary file is rebuilt.
+
+In order to create a support for plugins in your library, you have to implement the `Opl_Class::_pluginLoader()` method.

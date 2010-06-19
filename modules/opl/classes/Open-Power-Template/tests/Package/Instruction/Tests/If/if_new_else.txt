@@ -1,0 +1,31 @@
+Test the new "opt:if" feature with "opt:else".
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "OK" -->
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:if>
+	<opt:condition test="$ok">Condition 1</opt:condition>
+	<opt:condition test="$fail">Condition 2</opt:condition>
+	<opt:condition test="$fail">Condition 3</opt:condition>
+	<opt:else>Other</opt:else>
+</opt:if>
+---
+<opt:if>
+	<opt:condition test="$fail">Condition 1</opt:condition>
+	<opt:condition test="$fail">Condition 2</opt:condition>
+	<opt:condition test="$fail">Condition 3</opt:condition>
+	<opt:else>Other</opt:else>
+</opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Condition 1
+---
+Other
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

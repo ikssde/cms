@@ -1,0 +1,15 @@
+Title: upper()
+Reference: string upper(string $text)
+
+----
+
+Makes all characters uppercase in `$text`:
+
+~~~~
+[xml]
+<!-- result: "FOO" -->
+{upper('Foo')}
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, operating on them all and returning the modified container.

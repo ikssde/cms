@@ -1,0 +1,16 @@
+Title: getLists()
+ShortTitle: Opl_Debug_Console::getLists()
+VersionSince: 2.0.3
+
+Reference: array Opl_Debug_Console::getLists( )
+Status: static public
+Returns: The array of lists registered in OPT
+SeeAlso:
+ - api.opl-debug-console.get-tables
+
+----
+
+Returns the lists currently maintained by the debug console. The returned value is an assotiative array of pairs `unique list ID => options`. Each list options consist of a pair of elements:
+
+- `title` - the list title
+- `values` - the assotiative array of pairs `title` => `value`

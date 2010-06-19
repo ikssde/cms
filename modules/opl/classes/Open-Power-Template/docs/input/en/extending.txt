@@ -1,0 +1,8 @@
+Title: Extending OPT
+SeeAlso:
+ - guide
+ - api
+
+----
+
+This chapter shows, how to extend OPT with new features.

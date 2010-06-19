@@ -1,0 +1,11 @@
+Title: insertData()
+ShortTitle: Opt_Xml_Cdata::insertData()
+Reference: void insertData(int $offset, string $text)
+Status: public
+SeeAlso:
+ - api.opt-xml-cdata.append-data
+ - api.opt-xml-cdata.replace-data
+
+---
+
+Inserts the text `$text` to the node, starting from the `$offset` position. The starting position is 0.

@@ -1,0 +1,2 @@
+> [warning]
+> This page describes a feature strictly related to PHP language. We **do not** recommend to use it in your projects unless **absolutely** necessary, as it reduces the portability and links the templates with a concrete script implementation.

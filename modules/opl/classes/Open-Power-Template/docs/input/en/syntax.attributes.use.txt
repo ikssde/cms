@@ -1,0 +1,51 @@
+Title: opt:use
+SeeAlso:
+ - syntax.instructions.insert
+
+----
+
+This attribute works similarly to [opt:insert][syntax.instructions.insert] tag - it pastes the content of the snippet as the tag content. The original content is kept, if the snippet does not exist.
+
+~~~~
+[xml]
+<opt:snippet name="newBetterParagraph">
+    This is a content of the better paragraph!
+</opt:snippet>
+
+<p opt:use="newBetterParagraph">This is the default content</p>
+~~~~
+
+Similarly to `opt:insert`, the original content may still appear, if the snippet contains `opt:parent`. This feature can be used to pack the existing content in the new tags. In the example below, we pack the text in the paragraph in an URL:
+
+~~~~
+[xml]
+<opt:snippet name="url">
+	<a parse:href="$url"><opt:parent /></a>
+</opt:snippet>
+
+<p opt:use="url">The text to be changed into URL.</p>
+~~~~
+
+Section integration
+===================
+
+`opt:use` allows to define the generic section content. When pasted to the section tags, the snippet is automatically connected to the new section:
+
+~~~~
+[xml]
+<opt:snippet name="element">
+    <li>{$element.name}</li>
+</opt:snippet>
+
+<p>Categories:</p>
+<ol>
+    <opt:section name="categories" opt:use="element" />
+</ol>
+
+<p>Products:</p>
+<ol>
+    <opt:section name="products" opt:use="element"></opt:section>
+</ol>
+~~~~
+
+When the `element` snippet is pasted to the `categories` sections, the variables `$element.foo` become `$categories.foo` etc. If we later paste the same snippet in the `products` section content, the same variables become `$products.foo`. This applies to all kinds of sections.

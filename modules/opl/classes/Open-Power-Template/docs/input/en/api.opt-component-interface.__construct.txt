@@ -1,0 +1,41 @@
+Title: __construct()
+ShortTitle: Opt_Component_Interface::__construct()
+Construct: constructor
+Visibility: public
+Reference: __construct([string $name = ''])
+Arguments:
+ - Name: $name | EType: string | Desc: The component name.
+
+----
+
+The component constructor. For user convenience, it might take an optional argument called `$name` that can be used to initialize one of the component parameters. For example, you can use the following constructor:
+
+~~~~
+[php]
+class myComponent implements Opt_Component_Interface
+{
+	private $_params = array();
+
+	public function __construct($name = '')
+	{
+		if($name != '')
+		{
+			$this->set('name', $name);
+		}
+	} // end __construct();
+
+	// Other code...
+} // end myComponent;
+~~~~
+
+Now, to specify the component name, we can pass it directly in the constructor:
+
+~~~~
+[php]
+// You can write
+$component = new myComponent('someName');
+
+// or
+$component = new myComponent();
+$component->set('name', 'someName');
+~~~~

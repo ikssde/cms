@@ -1,0 +1,9 @@
+Title: Opt_Block_Interface
+Construct: interface
+SeeAlso:
+ - syntax.topics.blocks
+ - api.opt-component-interface
+
+----
+
+This interface allows you to use blocks in your scripts. The general idea is basically the same, like in components, but the offered interface is smaller and simpler.

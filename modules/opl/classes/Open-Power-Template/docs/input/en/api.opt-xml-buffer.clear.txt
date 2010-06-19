@@ -1,0 +1,8 @@
+Title: clear()
+ShortTitle: Opt_Xml_Buffer::clear()
+Reference: void clear(int $buffer)
+Status: public
+
+---
+
+Clears the specified buffer `$buffer`.

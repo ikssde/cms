@@ -1,0 +1,8 @@
+Title: length()
+ShortTitle: Opt_Xml_Cdata::length()
+Reference: int length()
+Status: public
+
+---
+
+Returns the length of the text stored in the CDATA node.

@@ -1,0 +1,13 @@
+Title: setCache()
+ShortTitle: Opt_View::setCache()
+Construct: method
+Reference: void Opt_View([Opt_Caching_Interface $cache = null])
+VersionSince: 2.0-RC1
+Visibility: public
+SeeAlso:
+ - api.opt-view.get-cache
+ - guide.cache
+ 
+----
+
+Registers a new view caching interface, overwriting the global caching settings. The method called without arguments, removes the existing caching interface from the view.

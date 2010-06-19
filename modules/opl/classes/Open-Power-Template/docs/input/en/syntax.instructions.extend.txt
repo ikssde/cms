@@ -1,0 +1,190 @@
+Title: opt:extend
+SeeAlso:
+ - syntax.topics.modularization.inheritance
+
+----
+
+`opt:extend` allows to use the template inheritance in your templates. It must be the root tag of the template, where we define the content. Any other location causes an exception. The instruction may take several attributes:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ file           | Hard string         | Yes       | The template to be extended with the current one
+ escaping       | Option              | No        | Escaping control.
+ dynamic        | Option              | No        | Do we allow dynamic inheritance for this template?
+ *              | Hard string         | No        | Alternative templates to be extended.
+
+The content of `opt:extend` may contain `opt:snippet` instructions only. Any other tags are ignored. The example below shows, how to use `opt:extend` and template inheritance:
+
+##### homepage.tpl:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:extend file="layout.tpl">
+	<opt:snippet name="header">
+		<h1>Our website</h1>
+		<p>Home page</p>
+	</opt:snippet>
+	<opt:snippet name="content">
+		<p>Welcome to our website!</p>	
+	</opt:snippet>
+</opt:extend>
+~~~~
+
+##### layout.tpl:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<html>
+<head>
+    <title>{$title}</title>
+</head>
+<body>
+<div id="header">
+    <opt:insert snippet="header"/>
+</div>
+<div id="content">
+    <opt:insert snippet="content"/>
+</div>
+<div id="footer">
+    <p>&copy; Someone</p>
+</div>
+</body>
+</html>
+~~~~
+
+We can parse it with the following script:
+
+~~~~
+[php]
+<?php
+// OPT initialization here
+$view = new Opt_View('homepage.tpl');
+$view->title = 'Home page - Our Website');
+
+$output->render($view);
+?>
+~~~~
+
+The result:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<html>
+<head>
+    <title>Home page - Our Website</title>
+</head>
+<body>
+<div id="header">
+    <h1>Our website</h1>
+    <p>Home page</p>
+</div>
+<div id="content">
+    <p>Welcome to our website!</p>	
+</div>
+<div id="footer">
+    <p>&copy; Someone</p>
+</div>
+</body>
+</html>
+~~~~
+
+Our script template, `homepage.tpl` extends the `layout.tpl` that defines the basic HTML structure for the output and specifies the places, where to insert the header and the content. `homepage.tpl` fills these places with the proper content. Notice that the PHP script sees only `homepage.tpl` and does not have to know about `layout.tpl`. To get to know more about template inheritance in OPT, please read [this chapter][syntax.topics.modularization.inheritance].
+
+OPT allows multiple inheritance, too.
+
+Escaping control
+================
+
+Using the `escaping` attribute you may control the HTML escaping in the current template expressions. If it is not specified, OPT uses the default OPT settings. The value of this attribute is not a subject of inheritance:
+
+##### template_a.tpl:
+
+~~~~
+[xml]
+<opt:extend file="template_b.tpl" escaping="yes">
+    <opt:snippet name="foo">
+        <p>Enabled escaping: {$htmlContent}</p>
+        <opt:parent />
+    </opt:snippet>
+</opt:extend>
+~~~~
+
+##### template_b.tpl:
+
+~~~~
+[xml]
+<opt:extend file="template_c.tpl" escaping="no">
+    <opt:snippet name="foo">
+        <p>Disabled escaping: {$htmlContent}</p>
+        <opt:parent />
+    </opt:snippet>
+</opt:extend>
+~~~~
+
+##### template_c.tpl:
+
+~~~~
+[xml]
+<opt:root escaping="yes">
+    <opt:insert snippet="foo">
+        <p>Enabled escaping: {$htmlContent}</p>
+    </opt:snippet>
+</opt:extend>
+~~~~
+
+If the `$htmlContent` value is `A string with <strong>HTML</strong>`, these templates will give us the following result:
+
+~~~~
+[xml]
+<p>Enabled escaping: A string with &lt;strong&gt;HTML&lt;/strong&gt;</p>
+<p>Disabled escaping: A string with <strong>HTML</strong></p>
+<p>Enabled escaping: A string with &lt;strong&gt;HTML&lt;/strong&gt;</p>
+~~~~
+
+See [this chapter][syntax.expressions.escaping] to get to know more about HTML escaping.
+
+Inheritance brances
+===================
+
+The template does not have to extend a single file. We are allowed to define multiple *inheritance branches* - alternative groups of files to be extended. Suppose we are developing a website with two versions of the layout: full and simplified. The full layout displays the logos, menus etc. around the content. However, if someone wants to print our website, he probably does not want such stuff. In order not to write all the content templates twice for both of the layouts, we might define the *simple* branch, where the templates extend the simple layout file.
+
+~~~~
+[xml]
+<opt:extend file="standard_layout.tpl" simple="simple_layout.tpl">
+	<opt:snippet name="content">
+		<h1>Message</h1>
+		<p>{$message}</p>
+	</opt:snippet>
+</opt:extend>
+~~~~
+
+Now OPT may decide to use the standard layout (the default choice) or to follow the templates in *simple* branch. In this solution, the script still does not have to remember the name of `simple_layout.tpl` file.
+
+For programmers
+---------------
+
+For each template, you may define any number of branches. To choose one, use the [Opt_View::setBranch()][api.opt-view.set-branch] method from your view object. The **NULL** value means that we want to use the default files. OPT uses the following rules to choose the template to be extended:
+
+* If the branch is not selected, use `file` attribute.
+* If the programmer selected a branch that is not defined in the current template, use `file`.
+* Use the branch attribute.
+
+Dynamic template name
+=====================
+
+OPT processes the template inheritance during the template compilation, and this is the main reason why we are not able to read the template name from a variable, like `<opt:extend file="'template_'~$tplId~.'.tpl'">`. However, the runtime dynamic inheritance is still possible. In the `opt:extend` tag we add the `dynamic` attribute set to "yes". Now the script can select the inherited template file name using [Opt_View::inherit()][api.opt-view.inherit] method. If the script does not provide any template, the default one is used:
+
+~~~~
+[xml]
+<opt:extend file="default_template.tpl" dynamic="yes">
+	....
+</opt:extend>
+~~~~
+
+For programmers
+===============
+
+From the script side, the inheritance chain is compiled as one, big file saved under the name of the top template. Such compilation requires significantly more memory and you must be sure that OPT will get enough resources to complete its tasks. If the script does not allocate too many objects or releases them earlier, the server with 16 MB should not cause problems. The estimated amount of memory required for the compilation process can be found in the debug console.

@@ -1,0 +1,8 @@
+Title: reset()
+ShortTitle: Opt_Compiler_Processor::reset()
+Reference: void reset()
+Status: extendable public
+
+----
+
+This method is executed after the finished compilation. It allows the processor to reset to the initial state so that it could handle another compilation process.

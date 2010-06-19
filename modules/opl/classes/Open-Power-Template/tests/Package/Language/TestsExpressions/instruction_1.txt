@@ -1,0 +1,30 @@
+Check the new expression syntax in the instructions.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="$name" value="$value" />
+</foo>
+<foo>
+<opt:attribute name="str:bar" value="parse:$value" />
+</foo>
+<foo>
+<opt:attribute name="test:##name" value="test:##value" />
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->name = 'bar';
+$view->value = 'joe';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="joe">
+</foo>
+<foo bar="joe">
+</foo>
+<foo bar="joe">
+</foo>

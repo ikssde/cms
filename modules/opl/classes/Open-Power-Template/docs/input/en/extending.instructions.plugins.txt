@@ -1,0 +1,33 @@
+Title: Instruction plugins
+SeeAlso:
+ - extending.plugins
+
+----
+
+Instructions can be packed as plugins, however, they need a more sophisticated format. Open Power Template requires the instruction plugins to:
+
+* The file name must be in the format: `instruction.Foo.php`
+* The class name must be in the format: `Opt_Instruction_Foo`, where `Foo` must be the same, as in the file name.
+
+A sample instruction plugin can be found below:
+
+~~~~
+[php]
+<?php
+// instruction.Plugin.php
+
+class Opt_Instruction_Plugin extends Opt_Compiler_Processor
+{
+	// ...
+} // end Opt_Instruction_Plugin;
+~~~~
+
+Note that you can also register the instruction manually:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_INSTRUCTION, 'Foo');	// Registers "Opt_Instruction_Foo"
+$tpl->register(Opt_Class::OPT_INSTRUCTION, 'Foo', 'Some_Class'); // Registers "Foo" in the "Some_Class" class
+~~~~
+
+In this case, the class name does not have to begin with `Opt_Instruction`. The second line shows, how to register such classes in OPT.

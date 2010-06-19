@@ -1,0 +1,15 @@
+Check the basic opt:omit-tag features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<div opt:omit-tag="false">With a tag</div>
+<div opt:omit-tag="true">Without a tag</div>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<div>With a tag</div>
+Without a tag

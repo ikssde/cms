@@ -1,0 +1,35 @@
+Title: XML Prolog and DTD
+
+----
+
+To keep the compatibility with the XML standard, the OPT compiler must provide support for XML prolog and DTD. The exact behavior is controlled with `prologRequired` directive. The available values are **true** or **false**.
+
+If `prologRequired` is set to **true**, the XML prolog must be set in every template, but it is not sent to the output system. In order to create a prolog or DTD for the browser, we need `opt:prolog` and `opt:dtd` instructions:
+
+~~~~
+[xml]
+<?xml version="1.0" standalone="yes" ?>
+<opt:root>
+<opt:prolog standalone="no"/>
+<opt:dtd template="xhtml-strict"/>
+<html>
+<head>
+</head>
+
+<!-- the template -->
+</html>
+</opt:root> 
+~~~~
+
+If we need some special DTD, we can write it inside `opt:dtd` tag and enclose in CDATA sections:
+
+~~~~
+[xml]
+<![CDATA[<!DOCTYPE hi [
+	<!ELEMENT hi (#PCDATA)>
+]>]]>
+~~~~
+
+OPT sets XML version to "1.0", and the default encoding is taken from the configuration.
+
+If `prologRequired` is set to **false**, OPT does not require prologs in every template. Moreover, when it finds one, it checks its syntax, but also sends it to the output system. In the quirks mode the prolog is treated as an ordinary text.

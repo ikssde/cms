@@ -1,0 +1,13 @@
+Title: _()
+ShortTitle: Opl_Translation_Interface::_()
+Construct: abstract method
+Reference: string Opl_Translation_Interface::_( $group, $id )
+Visibility: public
+Arguments:
+ - Name: $group | EType: string | Desc: The language group name
+ - Name: $id | EType: string | Desc: The message ID
+VersionSince: 2.0.0-dev7
+
+----
+
+Returns the text assigned to the specified `$id` in group `$group`.

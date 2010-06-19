@@ -1,0 +1,18 @@
+Check if the "opt:if" instruction works.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:if test="$ok">
+OK
+</opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+OK
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

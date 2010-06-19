@@ -1,0 +1,9 @@
+Title: Using the data formats
+SeeAlso:
+ - extending.data-formats
+
+----
+
+Your instructions may also use data formats. It is a good practice to use your own functionality name in your code.
+
+The details concerning the data formats in the instructions can be found [here][extending.data-formats].

@@ -1,0 +1,10 @@
+Title: register()
+ShortTitle: Opl_Loader::register()
+Construct: static method
+Reference: void Opl_Loader::register()
+Visibility: public
+VersionSince: 2.0-beta2
+
+----
+
+Registers the autoloader in the PHP stack.

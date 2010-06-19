@@ -1,0 +1,40 @@
+Title: Introduction to plugins
+
+----
+
+Open Power Template provides a plugin architecture that allows you to install new extensions easily. To initialize the plugins, you need two extra directories pointed by the directives:
+
+* `pluginDir` - a single directory or a list of directories with plugins.
+* `pluginDataDir` - a directory, where OPT will save some data that speed up plugin loading. This can be the same directory, as `compileDir`, if you do not wish to multiply the directories with the write access.
+
+For example:
+
+~~~~
+[php]
+$tpl->sourceDir = './templates/';
+$tpl->compileDir = './templates_c/';
+$tpl->pluginDataDir = './templates_c/';
+$tpl->pluginDir = './plugins/';
+$tpl->setup();
+~~~~
+
+The `setup()` method will load the plugins automatically. Alternatively, you may load them manually earlier with `Opt_Class::loadPlugins()`.
+
+Writing plugins
+===============
+
+The plugins are normal PHP files. They have an access to the contents of your `Opt_Class` object, so they can request registering various items in OPT. A single plugin can add several new items to your library. The only types of content that require a strict structure are instructions and data formats. Writing plugins for them is described later. Below, you can find a sample plugin file:
+
+~~~~
+[php]
+<?php
+
+function myFunction()
+{
+	return 'Hi universe!';
+} // end myFunction();
+
+$this->register(Opt_Class::PHP_FUNCTION, 'myFunction', 'myFunction');
+~~~~
+
+The file name does not matter in this case. Simple, isn't it? Now you can save the file in your plugin directory.

@@ -1,0 +1,169 @@
+Title: PHP
+
+----
+
+Many template engines, mostly in the popular frameworks, use PHP as a template language. This article shows, how to switch from PHP-based templates to OPT, what are the differences and why you should do that.
+
+In the presentation layer written in pure PHP, the most characteristic issues are:
+
+1. Many functions and classes that generate HTML code snippets and return them as their results. They are usually called *helpers*, because they help writing clean templates.
+2. PHP control structures, such as *if* or *foreach* are very common. Every relationship between them must be programmed manually by the template designer.
+3. Complex output flow between nested templates. It is common to parse one template, store its result in a variable and display it later in the other template.
+4. Sometimes the presentation layer reads the data directly from the script structures, or even generates them.
+
+Imperative vs declarative programming
+=====================================
+
+PHP is an imperative language. It means that you specify all the operations it must perform step-by-step using functions and control structures. The control you have is very good, if you are going to optimize something or write a complex algorithm, but it has one important disadvantage. When you look at such code for the first time, you see that it does something and how it is done, but without extra explanations it is often hard to say, *what* this "it" is. Take a look at the example. You can say *get up, find the window, if it is too far away from you, move there. Then push it up, catch the handle and turn it right* or simply *close that window, please*. The first sentence is too long, too complex and someone may not guess, what we want from him to be done. There is one more problem: what if you have to turn the handle to the left or if the window has a completely different closing mechanism?
+
+OPT encourages you to concentrate on the final effect, not the ways to implement it. You should build your template from ready-to-use blocks that implement a small and commonly used algorithm and that can co-operate one with another. However, in order to use them properly, you should forget for a while about functions, PHP loops, and finally - about reinventing the wheel with them. Let's assume we want to display a list of books with their authors. Using PHP, we would write something like this:
+
+~~~~
+[php]
+<?php if(is_array($this->books)): ?>
+<?php foreach($this->books as $book): ?>
+<div class="book">
+    <h2><?php echo htmlspecialchars($book['title']); ?></h2>
+    <p>Authors:</p>
+    <ul>
+        <?php foreach($book['authors'] as $author): ?>
+        <li><?php echo $author['name'].' '.$author['surname']; ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+~~~~
+
+There some issues in this code that OPT considers wrong:
+
+1. Too many code for elementary tasks, such as displaying the title.
+2. The code is format-dependent. The `$this->books` must be an array, and the authors must be saved as the book element *authors*.
+3. We have to tell PHP that the nested loop is connected with the top one.
+4. Take a deeper look, in the nested we forgot about checking if we can iterate through `$book['authors']`.
+5. Put more and more PHP and you will notice that the HTML below will be invisible around all those `<?php` and `?>`.
+
+Now the OPT way:
+
+~~~~
+[xml]
+<div class="book" opt:section="books">
+    <h2>{$books.title}</h2>
+    <p>Authors:</p>
+    <ul>
+    <opt:section name="authors">
+        <li>{$authors.name} {$authors.surname}</li>
+    </opt:section>
+    </ul>
+</div>
+~~~~
+
+The OPT template is much easier to write and maintain. The sections are much more smarter than PHP `foreach` - they know do not throw warnings if there are no data to display, they know, that authors and books are connected with one-to-many relationship, and finally, you do not have to know, whether the list of books is an array or an object or how the relationship is really implemented on the script side. The same code can be used again without any modifications in other template or in different script. Moreover, OPT knows that the variables must be escaped.
+
+The sections are the most commonly used tools in OPT and they provide even more features for you. Suppose you want to display the authors in the descending order. In PHP, it would depend on the data format - you must know the proper functions, store the output in temporary variables, etc. whereas in OPT all you have to do is to tell that you want to change the order:
+
+~~~~
+[xml]
+<ul>
+<opt:section name="authors" order="desc">
+    <li>{$authors.name} {$authors.surname}</li>
+</opt:section>
+</ul>
+~~~~
+
+We know that declarative programming is different from the solutions you have already got used to. However, once you learn more about the declarative instructions in OPT, you will notice that things were never so simple. When we are going to create a new website, we usually begin with the presentation layer which is completed within 30 minutes and usually does not require any further modifications after the script is written. The templates for the administration panel can be used in different projects without changes, even if they are powered by different frameworks. It saves our time and allows us to focus on the project.
+
+Error handling
+==============
+
+OPT warns you on much more dangerous problems than PHP and reports them as exceptions. This gives you the possibility to provide a custom error handler that suits your needs and is not a security violation for your website. The common problems that OPT informs about are:
+
+1. The tags closed in the incorrect order.
+2. Missing attribute value delimiters.
+3. Missing XML prolog.
+4. Calling the resources that are not allowed to be used in templates.
+5. Expression syntax errors, like missing parentheses in `(($a + $b) * $c`. OPT provides a complex expression parser that captures even such complex mistakes, as method incrementation: `++$object::method()::field::method()`.
+6. Trying to build an invalid XML output from valid XML templates.
+
+Typical issues solved by OPT
+============================
+
+Here we would like to show you, what problems can be solved using declarative programming in OPT:
+
+1. List processing - [sections][syntax.topics.sections].
+2. Data separation on lists - [opt:separator][syntax.instructions.separator].
+3. Displaying hierarchical data (trees) - sections ([opt:tree][syntax.instructions.tree])
+4. Displaying the data in columns - sections ([opt:grid][syntax.instructions.grid])
+5. Displaying the pagination links - sections ([opt:selector][syntax.instructions.selector])
+6. Dynamic forms - [components][syntax.topics.components]
+7. Modular templates - `opt:include` and the template inheritance. See: [Template modularization][syntax.topics.modularization].
+8. Code reusing - [opt:snippet][syntax.instructions.snippet]
+9. HTML escaping and XSS filtering - [HTML escaping][syntax.expressions.escaping]
+10. Data format independence - [data formats][guide.data-formats]
+11. Simple runtime tasks - [blocks][syntax.topics.blocks]
+12. Internationalization - [I18n in OPT][guide.i18n]
+
+OPT from the script-side
+========================
+
+The advantage of PHP-based view layer is usually a good programmer API, especially when we talk about framework. OPT comes with a framework-style API out-of-the-box. You do not have to write massive wrappers that handle the configuration and attempt to put the template engine into a framework structure. OPT's objective architecture provides the following terms:
+
++ *Main object* - the object of `Opt_Class` class that manages the configuration and the basic, common services.
++ *Views* - the objects of `Opt_View` class, they contain the data associated to the template.
++ *Output systems* - the objects of classes implementing `Opt_Output_Interface`, decide where to send the rendered output.
+
+Below, you can find a sample code that makes use of these features to create a flexible structure of the view layer:
+
+~~~~
+[xml]
+<html>
+<head>
+    <title>{$title}</title>
+</head>
+<body>
+<opt:section name="content">
+    <opt:include from="content"><p>Sorry, the specified template has not been found.</p></opt:include>
+</opt:section>
+</body>
+</html>
+~~~~
+
+And now the PHP code:
+
+~~~~
+[php]
+$tpl = new Opt_Class;
+// some configuration here.
+
+$contentContainer = array();
+
+// Let's create some views...
+$view = new Opt_View('template1.tpl');
+$view->customVar = 'some value';
+
+$contentContainer[] = array('view' => $view);
+
+$view = new Opt_View('template2.tpl');
+$view->anotherVar = 'some value';
+
+$contentContainer[] = array('view' => $view);
+
+// Let's create the main view:
+
+$mainView = new Opt_View('main.tpl');
+$mainView->content = $contentContainer;
+$mainView->title = 'Some title';
+
+// Rendering the views:
+$output = new Opt_Output_Http;
+$output->render($mainView);
+~~~~
+
+Simple, isn't it?
+
+Conclusion
+==========
+
+As you can see, a good template engine does not have to introduce new limitations, but may also remove some limitations of PHP. In the past, PHP actually was intended to be a template language, but it is a history now. The language is equipped with richer and richer OOP, the new objective extensions are introduced and the programmers find it as a better and better tool to write massive frameworks and enterprise solutions. At the same time, nothing is done to make writing the templates actually easier.
+
+We know that many programmers do not like template engines because they introduce in fact even more limitations than PHP, as they usually offer just a subset of PHP enclosed in curly brackets. However, this is not the Open Power Template way. And to enjoy OPT, you must not think about it as *yet another imperative language for templates*...

@@ -1,0 +1,10 @@
+Title: regexReplace()
+Reference: string regexReplace(string $text, string $replacedPattern, string $replacement)
+SeeAlso:
+ - syntax.functions.replace
+SeeAlsoExternal:
+ - http://docs.php.net/manual/en/pcre.pattern.php PCRE patterns in PHP manual
+
+----
+
+Replaces all the occurrences of `$replacedPattern` in `$text` with `$replacement`, using Perl-compatible regular expressions. 

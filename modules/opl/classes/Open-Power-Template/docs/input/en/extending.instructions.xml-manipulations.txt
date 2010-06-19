@@ -1,0 +1,164 @@
+Title: XML manipulations
+
+----
+
+The instruction processors operate on an XML tree. Its organization is quite similar to the Document Object Model and if you have worked with them, you should feel familiar with OPT. However, there are some significant differences and OPT-specific solutions implemented. This chapter shows some aspects of working with OPT-XML trees.
+
+Node types
+==========
+
+The XML tree may contain the nodes of the following types:
+
+1. `Opt_Xml_Element` - represents the XML tags. May contain subnodes.
+2. `Opt_Xml_Text` - contrary to DOM, this class is just a container for the text nodes: `Opt_Xml_Cdata` and `Opt_Xml_Expression`.
+3. `Opt_Xml_Cdata` - the character data node, contains the text values.
+4. `Opt_Xml_Expression` - represents the OPT expressions in curly brackets mixed with the static text.
+5. `Opt_Xml_Root` - the root node of the tree.
+6. `Opt_Xml_Comment` - represents XML comments.
+7. `Opt_Xml_Attribute` - represents an XML attribute. Unlike other node types, these nodes are managed separately by `Opt_Xml_Element`.
+8. `Opt_Xml_Dtd` - represents a DTD. Unlike other node types, these nodes are managed separately by `Opt_Xml_Root`.
+9. `Opt_Xml_Prolog` - represents an XML prolog. Unlike other node types, these nodes are managed separately by `Opt_Xml_Root`.
+
+Retrieving the nodes
+====================
+
+The children of a node can be retrieved with a simple **foreach**:
+
+~~~~
+[php]
+foreach($node as $subnode)
+{
+	// do something with $subnode here
+}
+~~~~
+
+The `Opt_Xml_Scannable` class that is a base for `Opt_Xml_Element`, `Opt_Xml_Root` and `Opt_Xml_Text`, provides also several methods to retrieve certain nodes of a specified type:
+
+~~~~
+[php]
+$list = $node->getElementsByTagName('foo', true);
+$list = $node->getElementsByTagNameNS('opt', 'foo', true);
+$list = $node->getElementsExt('opt', 'foo');
+~~~~
+
+The first method searches for the `foo` node with an empty namespace. The second argument informs, that this must be a recursive search: we visit all the descendants of the node, not only the direct children. The second method is a generalization of `getElementsByTagName()` - it allows also searching for a certain namespace. You may use an asterisk to ignore a certain argument:
+
+~~~~
+[php]
+// search for all the descendants in "opt" namespace
+$list = $node->getElementsByTagNameNS('opt', '*', true);
+
+// the same, as getElementsByTagName()
+$list = $node->getElementsByTagNameNS('*', 'foo', true);
+~~~~
+
+The last method is OPT-specific. It visits all the descendants, but once it finds a matching node, it ignores its descendants. Take a look at the example:
+
+~~~~
+[xml]
+<opt:foo>
+    <div>
+        <opt:bar>
+ 
+            <opt:foo>
+                <div>
+                    <opt:bar>Hello world!</opt:bar>
+                </div>
+            </opt:foo>
+ 
+        </opt:bar>
+    </div>
+</opt:foo>
+~~~~
+
+And the PHP code:
+
+~~~~
+[php]
+$barNodes = $node->getElementsByTagNameNS('opt', 'bar');
+~~~~
+
+The code returns only the first occurrence of `opt:bar` and does not reach the deeper node. This is a very important feature of this method, especially in the instruction context. Suppose that your instruction consists of several tags and moreover it may be nested one in another. The outer instruction must not find and operate on the inner instruction tags and it can be achieved with `getElementsExt()`.
+
+If you need yet another way of visiting the nodes, take a look at the following PHP code template that you might extend to suit your needs:
+
+~~~~
+[php]
+$queue = new SplQueue;
+$queue->enqueue($node);
+while($queue->count() > 0)
+{
+	$item = $queue->dequeue();
+	
+	// do something here
+	
+	foreach($item as $subitem)
+	{
+		$queue->enqueue($subitem);
+	}
+}
+~~~~
+
+> [error]
+> Remember, **never** use the true recursion with XML trees!
+
+Node comparison
+===============
+
+To compare the two nodes, use the `===` operator:
+
+~~~~
+[php]
+if($node1 === $node2)
+{
+	// some action here...
+}
+~~~~
+
+The **==** operator causes the object properties to be compared, which slows down the compiler and produces recursive calls.
+
+Inserting and appending the nodes
+=================================
+
+The instructions may insert or replace the nodes within the XML tree. The node types that are allowed to contain children, extend the `Opt_Xml_Scannable` class that provides the common node management methods. You may use the following methods to insert new nodes into a tree and they are used similarly to their DOM equivalents:
+
++ `appendChild()` - appends the node to the end of the children list.
++ `insertBefore()` - inserts the node before the specified node.
++ `replaceChild()` - replaces the node with the new node.
+
+The new node is provided always as the first argument. The second one identifies the reference node which may be specified either with an order number or the node object.
+
+Removing the nodes
+==================
+
+To remove the children from a node, you may use the following methods:
+
++ `removeChild()` - removes the specified node from the children list.
++ `removeChildren()` - clears the children list.
++ `moveChildren()` - moves the children to another node. 
+
+Note that the physical removal of a node takes place only once you remove the last reference to it.
+
+> [warning]
+> The PHP garbage collector does not detect reference cycles in PHP 5.2 and earlier. As a result, the node objects that contain some children, **are not deleted** even if you remove all the external references to them. In order to prepare a node to be deleted, you must call the `dispose()` method that prepares the node and its contents to be collected:
+> 
+>     [php]
+>     $node->dispose();
+>     unset($node);
+
+Sorting the nodes
+=================
+
+As the PHP code snippets are inserted into the XML node code buffers, sometimes it is necessary to guarantee the correct node order in the children list. OPT provides a special method that sorts the nodes on the children list, using the user-specified criteria:
+
+~~~~
+[php]
+$node->sort(array(
+	'opt:foo',
+	'opt:bar',
+	'opt:joe',
+	'*'
+));
+~~~~
+
+The array passed as an argument specifies the element names in the requested order. The array must contain the `*` element which identifies all the other nodes that may appear on the children list.

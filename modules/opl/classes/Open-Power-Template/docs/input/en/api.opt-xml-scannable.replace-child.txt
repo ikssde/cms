@@ -1,0 +1,17 @@
+Title: replaceChild()
+ShortTitle: Opt_Xml_Scannable::replaceChild()
+Construct: method
+Reference: bool replaceChild(Opt_Xml_Scannable $newNode, mixed $refNode [, $dispose = false ])
+Visibility: public
+Arguments:
+ - Name: $newNode | Type: api.opt-xml-scannable | Desc: The new node to insert
+ - Name: $refNode | EType: mixed | Desc: The node to be replaced
+ - Name: $dispose | EType: boolean | Desc: Dispose the old node?
+Returns: True on success
+
+---
+
+Replaces the child node `$refNode` with the `$newNode`. `$refNode` may be specified either by the order number or by the object. The method returns **true**, if the replacement is successful. The third, optional argument, `$dispose` controls disposing the memory of the old node. If the value is set to **true**, the old node is destroyed after replacing.
+
+> [information]
+> `$dispose` argument is available since OPT **2.0.1**.

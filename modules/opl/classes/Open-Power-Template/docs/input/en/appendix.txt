@@ -1,0 +1,5 @@
+Title: Appendix
+
+----
+
+This chapter contains some extra information about the project.

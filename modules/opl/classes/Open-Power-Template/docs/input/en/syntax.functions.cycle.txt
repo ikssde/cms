@@ -1,0 +1,17 @@
+Title: cycle()
+Reference: mixed cycle(array $array | ... )
+VersionSince: 2.0.1
+
+----
+
+Returns the next value in the specified cycle. If the internal counter reaches the end of items, it returns to the beginning. The list of values to display in cycle can be provided as a list of arguments or as an array.
+
+~~~~
+[xml]
+<opt:section name="items">
+<tr parse:class="cycle('brighter', 'darker')">
+    <td>{$item.name}</td>
+    <td>{$item.value}</td>
+</tr>
+</opt:section>
+~~~~

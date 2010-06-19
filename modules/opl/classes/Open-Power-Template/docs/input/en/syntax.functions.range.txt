@@ -1,0 +1,18 @@
+Title: range()
+Reference: string range(integer $start [, integer $end])
+
+----
+
+Returns a string `$start - $end` or if both of the arguments are the same number - returns only this number. If `$end` is not specified, the function takes the current year as its value. Sample uses:
+
+~~~~
+[xml]
+<!-- returns "50 - 60" -->
+{range(50, 60)}
+
+<!-- returns "50" -->
+{range(50,50)}
+
+<!-- displays "Copyright 2007-2009 Foo" -->
+<p>Copyright {range(2007)} Foo</p>
+~~~~

@@ -1,0 +1,10 @@
+Title: isIdentifier()
+ShortTitle: Opt_Compiler_Class::isIdentifier()
+Reference: bool isIdentifier(string $id)
+
+---
+
+Returns **true**, if the specified `$id` is a valid identifier:
+
+1. The first character is a letter or underscore.
+2. The next characters are letters, digits or underscore.

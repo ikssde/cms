@@ -1,0 +1,15 @@
+Title: Opl_ErrorHandler class
+ShortTitle: Opl_ErrorHandler
+Construct: class
+EExtendedBy:
+ - Opt_ErrorHandler
+
+----
+
+The class provides a generic interface for exception handling. This includes:
+
+1. Displaying the message
+2. Providing some debug information, if necessary
+3. Providing context information for specified exception types.
+
+By overwriting the class, you can create a support for exceptions in other libraries, or changing the default error layout.

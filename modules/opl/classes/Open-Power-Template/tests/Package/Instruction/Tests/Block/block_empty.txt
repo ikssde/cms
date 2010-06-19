@@ -1,0 +1,18 @@
+What happens if the block port is empty? We should get nothing.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+FOO
+<opt:block from="$missing">
+BAR
+</opt:block>
+FOO
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+FOO

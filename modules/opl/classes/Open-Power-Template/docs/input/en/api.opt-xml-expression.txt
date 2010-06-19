@@ -1,0 +1,8 @@
+Title: Opt_Xml_Expression class
+ShortTitle: Opt_Xml_Expression
+Construct: class
+Extends: api.opt-xml-node
+
+----
+
+This class represents the OPT expressions enclosed in the curly brackets within the text nodes. The nodes of this type may be children of [Opt_Xml_Text][api.opt-xml-text] only.

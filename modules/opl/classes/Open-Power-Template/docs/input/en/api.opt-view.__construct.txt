@@ -1,0 +1,18 @@
+Title: __construct()
+ShortTitle: Opt_View::__construct()
+Reference: __construct([string $template])
+Construct: constructor
+SeeAlso:
+ - api.opt-view.set-template
+
+---
+
+This the view constructor. We may assign the template file to it during the initialization or do it later:
+
+~~~~
+[php]
+$view1 = new Opt_View('foo.tpl');
+
+$view2 = new Opt_View;
+$view2->setTemplate('bar.tpl');
+~~~~

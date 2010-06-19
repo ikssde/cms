@@ -1,0 +1,8 @@
+Title: printFlags()
+ShortTitle: Opl_Debug::printFlags()
+Reference: void Opl_Debug::printFlags( Integer $value, Boolean $console = false )
+Status: static public
+
+----
+
+This is a helper method to work with bitwise flags. It displays the numbers of bits that are set to **1** in the integer `$value`. The optional argument `$console` allows to prepare an output for the system console instead of packing it into HTML.

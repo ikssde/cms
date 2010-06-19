@@ -1,0 +1,106 @@
+Title: Compiler modes
+
+----
+
+The template syntax is quite flexible and depends on various compiler settings and modes. We set them so that they fully suit our needs.
+
+**XML mode**
+:	This is the default work mode. The compiler processes the input file as a valid XML document with prolog. The attribute syntax is strictly checked, as well as tag closing order, including the static ones, that are a part of the output document. 
+
+**HTML mode**
+:	The compiler allows to be less restrictive, when it comes to some syntax elements. Although this mode is still too strict in some areas, when it comes to HTML compatibility (for example, the tags must be closed in the correct order), but in fact, this allows to produce nice and clean HTML documents. 
+
+**Quirks mode**
+:	OPT recognizes and processes only its own tags. The rest is parsed as a static text, including ordinary XML/HTML tags. The mode quite resembles the OPT 1.x with XML compatibility mode enabled. Quirks mode does not use so much resources during the compilation, as the two modes above.
+
+For generating website output code, we recommend to use the first or the second mode. Thanks to the (X)HTML code analysis, the instructions may cooperate with ordinary tags much better than in other template engines, PHP or the quirks mode.  
+
+The full list of issues concerning XML can be found below:
+
+1. Document prolog - in the XML mode it is required in all templates, however it it is not sent to the output system. To display an XML prolog in the template result, we must use `opt:prolog` instruction.
+2. DTD - currently OPT does nothing with DTD, but it can be changed in the future versions. In the XML mode, it is recommended to use `opt:dtd` instruction with some predefined DOCTYPE templates.
+3. Root node - in the XML mode, the document may contain only one root node. For sub-templates that generate only a small part of the output, `opt:root` instruction is designed.
+4. CDATA sections - they are sent to the output, but its content is not parsed by OPT. The exact behavior can be controlled by `opt:literal` instruction.
+5. Comments - by default they are ignored by the parser, but there is a possibility to send them to the output.
+6. White spaces - the programmer may decide whether to cut out the unnecessary white spaces.
+7. Unicode - the XML standard allows to use Unicode characters in the tag names. By default, this is disabled in out due to performance issues, but it can be turned on.
+8. Namespaces - it the namespace is registered in OPT, the elements assigned to it are processed by the parser. The rest is sent to the output.
+
+Below, we present two simple templates of a tiny website written in the XML mode:
+
+~~~~
+[xml]
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<opt:root>
+<opt:prolog />
+<opt:dtd template="xhtml10transitional" />
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>{$title}</title>
+</head>
+<body>
+	<div id="logo">
+		<h1>A small website</h1>
+	</div>
+	<div id="navigation">
+		<ul>
+			<li opt:section="navigation"><a parse:href="$navigation.url">{$navigation.tytul}</a></li>
+		</ul>
+	</div>
+
+	<div id="menu">
+		<h1>Menu</h1>
+		<ul>
+			<li opt:section="menu">
+				<opt:attribute name="class" if="$menu.important">important</opt:attribute>
+				<a parse:href="$menu.url">{$menu.tytul}</a>
+			</li>
+		</ul>
+	</div>
+	<div id="content">
+		<opt:section name="content">
+			<opt:include from="content"/>
+		</opt:section>
+	</div>
+	<div id="footer">
+		<p>Copyright ABC 2007</p>
+	</div>
+</body>
+</html>
+</opt:root>
+~~~~
+
+In XML mode, only one template can be sent do the browser directly and this is why the example below contains the entire HTML code of a website. However, we still can use smaller templates for website parts. This is done with `opt:include` and `opt:section` provides a loop, so we can load more sub-templates. They may contain forms, lists, galleries etc. and they will appear inside `<div id="content">` tag.
+
+The XML prolog that we can see in the template, will not be sent to the browser. It means that we must use `opt:prolog` in order to provide there a valid XML document. It sets the correct XML version and the encoding, taking the necessary information from the library configuration.
+
+Because our template is an XML document, we cannot put the data everywhere we want to. In the tag content, we must use curly brackets and to make the tag attribute value dynamic, we must change its namespace into `parse`. Otherwise, the value will be treated as a static text. In order to generate an optional attribute that appears only from time to time, we use `opt:attribute` tag with the additional condition in `opt:if` attribute that defines, when to show this attribute.
+
+This is a sample sub-template:
+
+~~~~
+[xml]
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<opt:root>
+	<h1>Title</h1>
+	<p>This is a page content.</p>
+</opt:root>
+~~~~
+
+We must put there the XML prolog, too, and add a root node. OPT helps us here with `opt:root`. With this instruction, you can also set some template-specific settings. If such style does not suit you, all you have to do is to change some configuration directives to make the compiler less restrictive. 
+
+~~~~
+[xml]
+<h1>Title</h1>
+<p>This is a page content.</p>
+~~~~
+
+The template above can also be accepted by the compiler.
+
+For programmers
+===============
+
+In the script-side, there are only two real modes: XML and quirks. The HTML mode is in fact a set of additional settings that can be turned on or off, depending on our needs. To mark that we mean both XML and HTML modes, we will use the "XML/HTML" name in the next chapters of this documentation.
+
+In the quirks mode, the output document can be generated from separate templates parsed one by another. In XML/HTML, we can parse only one template directly, but it can include sub-templates. This assures the compiler that the sum of valid XML templates will also give a valid output with the tags enclosed in the correct order. The output is buffered, and in case of error, the default error handler deletes the current content and displays the message instead. The errors are handled as exceptions, so it is not hard to change the default behavior.

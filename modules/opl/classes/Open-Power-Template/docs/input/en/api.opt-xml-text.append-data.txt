@@ -1,0 +1,9 @@
+Title: appendData()
+ShortTitle: Opt_Xml_Text::appendData()
+Construct: method
+Reference: void appendData(string $text)
+Visibility: public
+
+---
+
+Appends the `$text` to the last [Opt_Xml_Cdata][api.opt-xml-cdata] child. If the last child is [Opt_Xml_Expression][api.opt-xml-expression], the method creates the new `Opt_Xml_Cdata` node.

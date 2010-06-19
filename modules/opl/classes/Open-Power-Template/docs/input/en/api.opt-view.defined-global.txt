@@ -1,0 +1,19 @@
+Title: definedGlobal()
+ShortTitle: Opt_View::definedGlobal()
+Construct: static method
+Reference: boolean definedGlobal( string $name )
+Visibility: public
+SeeAlso:
+ - api.opt-view.defined
+
+----
+
+Returns **true**, if there already exists a global template variable `$name`:
+
+~~~~
+[php]
+if(!Opt_View::defined('foo'))
+{
+    Opt_View::assignGlobal('foo', $someValue);
+}
+~~~~

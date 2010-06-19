@@ -1,0 +1,26 @@
+Title: truncate()
+Reference: string truncate(string $text, integer $length [, string $ending [, boolean $breakWords ]])
+
+----
+
+Truncates the text `$text` to the specified `$length`. Optionally, you might define the `$ending` that is added to the `$text`, if it has been truncated. The last argument allows to control if the function might break words (**true**, default value) or not (**false**). Below you can see a sample results for the text `This is a very long text that needs to be truncated`:
+
+~~~~
+[xml]
+{@text is 'This is a very long text that needs to be truncated'}
+
+<!-- result: "This is a very lo" -->
+{truncate(@text, 17)}
+
+<!-- result: "This is a very lo..." -->
+{truncate(@text, 17, '...')}
+
+<!-- result: "This is a very long text that needs to be truncated" -->
+{truncate(@text, 500, '...')}
+
+<!-- result: "This is a very..." -->
+{truncate(@text, 17, '...', false)}
+~~~~
+
+> [information]
+> This function can operate also on a container of strings, truncating them all and returning the modified container.

@@ -1,0 +1,34 @@
+Title: Backticks
+SeeAlso:
+ - guide.i18n
+
+----
+
+OPT supports a special type of strings written in the backticks: `` ` ``. Their behavior can be programmed by the programmer. In the example above, the backticks are used as a template access to the Access Control List system:
+
+~~~~
+[xml]
+<opt:if test="`/user/control/security`">
+    <p>User IP: {$user.ip}</p>
+</opt:if>
+~~~~
+
+Currently, OPT does not support a concatenation of the backtick strings, but this feature is planned to appear in the future releases.
+
+For programmers
+===============
+
+Backtick string handler is an ordinary function or object method that takes one argument - the backtick string content. It may be registered in the template using a configuration directive `backticks`:
+
+~~~~
+[php]
+function myBacktickHandler($string)
+{
+	return strtoupper($string);
+} // end myBacktickHandler();
+
+$tpl->backticks = 'myBacktickHandler';
+~~~~
+
+> [error]
+> Note that using the backticks without a handler registered causes an exception.

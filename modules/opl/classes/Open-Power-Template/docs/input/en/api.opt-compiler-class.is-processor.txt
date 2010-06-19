@@ -1,0 +1,7 @@
+Title: isProcessor()
+ShortTitle: Opt_Compiler_Class::isProcessor()
+Reference: Opt_Compiler_Processor isProcessor(string $name)
+
+---
+
+Checks, if there is a processor named `$name` and returns it. If the processor does not exist, the method returns **null**.

@@ -1,0 +1,15 @@
+Title: mapLibrary()
+ShortTitle: Opl_Loader::mapLibrary()
+Construct: static method
+Reference: void Opl_Loader::mapLibrary( string $libraryName, string $directory )
+Visibility: public
+Arguments: 
+ - Name: $libraryName | EType: string | Desc: The library name
+ - Name: $directory | EType: string | Desc: The directory with the library files.
+VersionSince: 2.0-beta2
+SeeAlso:
+ - api.opl-loader.add-library
+
+----
+
+The method is an alias to [addLibrary()][api.opl-loader.add-library] method, limited to specifying the alternative library directory.

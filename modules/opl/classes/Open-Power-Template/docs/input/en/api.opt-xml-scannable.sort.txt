@@ -1,0 +1,32 @@
+Title: sort()
+ShortTitle: Opt_Xml_Scannable::sort()
+Reference: void sort(Array $prototypes)
+Status: public
+
+---
+
+Changes the order of child nodes to follow the specified rules. It takes an array of tag names in the requested order. It must also include the element `*` to mark the location of the undefined nodes. An example:
+
+~~~~
+[php]
+$node->sort(Array(
+	'opt:foo',
+	'opt:bar',
+	'*'
+));
+~~~~
+
+After the execution of the call above, in the first place, we will have `opt:foo` tags, later `opt:bar` and at last, the remaining tags. `sort()` is widely used in complex instructions to provide the correct order of important sub-tags. For example, `opt:if` uses the following code to make sure that `opt:elseif` and `opt:else` are located at the end of child list:
+
+~~~~
+[php]
+$node->sort(array('*' => 0, 'opt:elseif' => 1, 'opt:else' => 2));
+~~~~
+
+> [warning]
+> If the element `*` is not specified in `$prototypes`, the method generates `Opt_InvalidAttributes_Exception`.
+
+<!-- # -->
+
+> [information]
+> The method uses a stable sorting algorithm. It means that it keeps the order of *equal* nodes.

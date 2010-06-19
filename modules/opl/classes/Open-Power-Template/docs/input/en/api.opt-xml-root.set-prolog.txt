@@ -1,0 +1,10 @@
+Title: setProlog()
+ShortTitle: Opt_Xml_Root::setProlog()
+Reference: void setProlog(Opt_Xml_Prolog $prolog)
+Status: public
+SeeAlso:
+ - api.opt-xml-root.get-prolog
+
+---
+
+Sets the XML prolog of the XML tree represented by the root node.

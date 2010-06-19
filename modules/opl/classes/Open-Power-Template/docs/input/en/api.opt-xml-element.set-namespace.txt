@@ -1,0 +1,8 @@
+Title: setNamespace()
+ShortTitle: Opt_Xml_Element::setNamespace()
+Reference: void setNamespace(string $namespace)
+Status: public
+
+---
+
+Sets the new namespace to the current tag.

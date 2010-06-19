@@ -1,0 +1,26 @@
+Title: setContentType()
+ShortTitle: Opt_Output_Http::setContentType()
+Construct: method
+Reference: void setContentType( [ mixed $contentType [, string $charset ]] )
+Visibility: public
+Arguments:
+ - Name: $contentType | EType: mixed | Desc: The requested content type defined either in the string form or with the class constants
+ - Name: $charset | EType: string | Desc: The content encoding
+
+----
+
+Generates the `Content-type` header. If any of the arguments is not specified or its value is **null**, it is taken from the OPT configuration. The `$contentType` can be either the name of the MIME type or the `Opt_Output_Http` class constant that identifies a particular type:
+
+1. `Opt_Output_Http::HTML`
+2. `Opt_Output_Http::XHTML`
+3. `Opt_Output_Http::FORCED_XHTML`
+4. `Opt_Output_Http::WML`
+5. `Opt_Output_Http::XML`
+6. `Opt_Output_Http::TXT`
+
+If the OPC library is present, the `contentNegotiation` configuration directive is allowed. In this case the method uses the `Opc_Visit` class to verify if the browser supports the specified MIME type.
+
+> [error]
+> Do not turn on `contentNegotiation` unless you have Open Power Classes installed!
+
+The difference between `Opt_Output_Http::XHTML` and `Opt_Output_Http::FORCED_XHTML` is visible only if the content negotiation is active. `Opt_Output_Http::FORCED_XHTML` generates the XHTML content type always, if browser supports it, while in `Opt_Output_Http::XHTML` it must also have a higher priority than `text/html`.

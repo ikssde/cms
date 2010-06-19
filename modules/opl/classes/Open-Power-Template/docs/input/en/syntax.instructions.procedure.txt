@@ -1,0 +1,8 @@
+Title: opt:procedure
+SeeAlso:
+ - syntax.instructions.use
+ - syntax.instructions.snippet
+
+----
+
+Not documented yet.

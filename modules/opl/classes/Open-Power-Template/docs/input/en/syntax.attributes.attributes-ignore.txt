@@ -1,0 +1,44 @@
+Title: opt:attributes-ignore
+VersionSince: 2.0.1
+SeeAlso:
+ - syntax.attributes.attributes-build
+
+----
+
+The attribute is used to specify the list of ignored attributes for [opt:attributes-build][syntax.attributes.attributes-build].
+
+~~~~
+[xml]
+<div opt:attributes-build="$attributeList" opt:attributes-ignore="$ignoreList">
+    ...
+</div>
+~~~~
+
+The ignored attribute list can be provided either as a container of names or a string in the format:
+
+~~~~
+name1, name2, name3
+~~~~
+
+The following script generating the data for the code above will produce the following result:
+
+~~~~
+[php]
+$view->attributeList = array(
+    'attr1' => 'value1',
+    'attr2' => 'value2',
+    'attr3' => 'value3'
+);
+$view->ignoreList = array(
+    'attr2'
+);
+~~~~
+
+Result:
+
+~~~~
+[xml]
+<div attr1="value1" attr3="value3">
+    ....
+</div>
+~~~~

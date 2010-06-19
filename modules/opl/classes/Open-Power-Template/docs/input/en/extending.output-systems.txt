@@ -1,0 +1,94 @@
+Title: New output systems
+SeeAlso:
+ - api.opt-output-interface
+
+----
+
+Output systems decide, what to do with the output document produced from a view. By default, OPT provides two output systems:
+
+1. HTTP - sends the document to the browser.
+2. Return - returns the document code back to the script.
+
+Output systems are very easy to write. They are represented as classes implementing `Opt_Output_Interface`. The interface provides two methods:
+
++ `getName()` which should return the output system name.
++ `render()` which renders the view and sends the result somewhere.
+
+Below, you can find an implementation of `Opt_Output_Return` used in OPT:
+
+~~~~
+[php]
+class Opt_Output_Return implements Opt_Output_Interface
+{
+	/**
+	 * Returns the output name.
+	 *
+	 * @return String
+	 */
+	public function getName()
+	{
+		return 'Return';
+	} // end getName();
+
+	/**
+	 * Executes the specified view and return the results back
+	 * to the script.
+	 *
+	 * @param Opt_View $view The rendered view
+	 * @return String
+	 */
+	public function render(Opt_View $view)
+	{
+		ob_start();
+		$view->_parse($this);
+		return ob_get_clean();
+	} // end render();
+} // end Opt_Output_Return;
+~~~~
+
+The `getName()` method simply returns the output system name. The `render()` method takes the view object as an argument. In order to parse the view, we call the internal `_parse()` method, passing a reference to the output system itself. This method takes also an optional second argument: `$exception = true` which controls the error handling. If the argument is set to **false**, the missing template is not reported as an exception. In order to capture the result, we use `ob_start()` and `ob_get_clean()` PHP functions.
+
+Tips and tricks
+===============
+
+Obtaining the `Opt_Class` object
+--------------------------------
+
+The `Opt_Class` object can be obtained from the Open Power Libs registry:
+
+~~~~
+[php]
+$tpl = Opl_Registry::get('opt');
+~~~~
+
+This entry is always initialized, if the main object is created.
+
+Template modes
+--------------
+
+The templates in OPT can work in three (technically two) modes:
+
+1. XML mode
+2. HTML mode
+3. Quirks mode
+
+If your output system needs to know the mode of the executed view, you can obtain it directly from the view object:
+
+~~~~
+[php]
+public function render(Opt_View $view)
+{
+	$mode = $view->getMode();
+	// ...
+} // end render();
+~~~~
+
+The mode is represented by `Opt_Class` constants `XML_MODE` and `QUIRKS_MODE`. 
+
+> [warning]
+> Some output systems may find this information necessary. For example, sending two different XML templates to the browser would lead to produce a response with invalid XML document. If your output systems is vulnerable to this problem, it should throw the `Opt_OutputOverloaded_Exception` after the second attempt to parse an XML view. See the `Output/Http.php` implementation for details.
+
+Caching engines
+---------------
+
+The output system **should not** deal with caching. To see, how to implement a caching engine for OPT, see [Guide: Caching][guide.cache].

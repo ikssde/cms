@@ -1,0 +1,8 @@
+Title: addList()
+ShortTitle: Opl_Debug_Console::addList()
+Reference: void Opl_Debug_Console::addList( String $id, String $title)
+Status: static public
+
+----
+
+Creates a new list of "key => value" pairs in the debug console with the specified `$title`. `$id` should be an unique key that allows to refer to this list.

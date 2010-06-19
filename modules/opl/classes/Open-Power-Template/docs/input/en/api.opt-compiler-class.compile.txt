@@ -1,0 +1,17 @@
+Title: compile()
+ShortTitle: Opt_Compiler_Class::compile()
+Reference: void compile(string $code, string $filename, string $compiledFilename, int $mode)
+
+---
+
+Compiles the specified template code `$code` taken from `$filename` file and saves it under `$compiledFilename` on the hard disk. The `$mode` parameter tells, which compiler mode to use:
+
+1. XML
+2. Quirks
+
+They are identified by suitable constants in `Opt_Class`. 
+
+The method compiles also the whole template inheritance chain, if necessary. The compiled inherited templates are included in the main template code and are not saved separately.
+
+> [warning]
+> The method cannot be called recursively within the same compiler object. OPT throws an exception then.

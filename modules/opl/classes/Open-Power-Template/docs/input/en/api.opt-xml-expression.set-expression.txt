@@ -1,0 +1,8 @@
+Title: setExpression()
+ShortTitle: Opt_Xml_Expression::setExpression()
+Reference: void setExpression(string $expression)
+Status: public
+
+---
+
+Sets the new OPT `$expression`.

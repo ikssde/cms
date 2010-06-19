@@ -1,0 +1,34 @@
+Title: Functions
+
+----
+
+Another important syntax element are functions. A function produces some result and to achieve this, it may take one or more arguments. A simple example is `upper()`. If we pass a text to it, the function will return the same text, but with all the lower case letters changed into upper case. The result can be used then in other places, for example as an argument of other function. Note that operators are in fact kinds of functions, because they also take arguments and produce some result.
+
+The function call syntax is very similar, like in many other programming languages and in mathematics. First, we write the function name, and in the brackets we specify the arguments separated with a colon. Some correct examples can be found below:
+~~~~
+[xml]
+a_function()
+
+a_function($argument)
+
+a_function(5)
+
+a_function($argument1, $argument2)
+
+a_function($a + $b, $c + $d)
+
+a_function($argument1, other_function($argument1))
+
+$a is a_function($argument)
+~~~~
+
+> [steps]
+>  1. A function that takes no arguments.
+>  2. A function with one argument, whose value is taken from `$argument` variable.
+>  3. A function with one argument, whose value is constant.
+>  4. A function with two arguments.
+>  5. A function with two arguments that are smaller expressions.
+>  6. A function with two arguments, where the second one is a result of another function.
+>  7. A function result that is saved in a variable.
+
+OPT provides a rich set of default functions, and the new ones can be registered by the programmer. They are described later.

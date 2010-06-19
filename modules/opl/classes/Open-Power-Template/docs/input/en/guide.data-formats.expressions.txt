@@ -1,0 +1,38 @@
+Title: Formats and expressions
+
+----
+
+A lot of OPT functions can operate on whole containers, executing the base function on all of their elements. For example, we can capitalize a single string: `capitalize('string')` or a container of strings: `capitalize($containerOfStrings)`.
+
+Formats and functions
+=====================
+
+In case of the following code:
+
+~~~~
+{@container = someFunction($otherContainer)}
+~~~~
+
+The result container should always be an array - the `$otherContainer` elements are repacked to the generic format, so that the compiler could generate a proper code for them.
+
+Formats and assignment operators
+================================
+
+In the following code:
+
+~~~~
+{@bar is $foo.bar}
+~~~~
+
+Nothing is repacked. The compiler detects that we want to take a sub-container into another variable and will automatically set the correct format for the new variable.
+
+Formats and other expressions
+=============================
+
+In the complicated expressions, like `$foo.bar + $foo.joe` the variables behave according to their formats. However, some results may have no sense:
+
+~~~~
+{$joe is $foo~$bar}
+~~~~
+
+If `$foo` and `$bar` are containers, the final result may be strange or even produce PHP warnings or fatal errors. If you are worried about the template security, you should take a look at the configuration directives that allow to control the syntax features.

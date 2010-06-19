@@ -1,0 +1,16 @@
+Title: Installation
+
+----
+
+OPT can be installed in the same way, as the other OPL libraries, however here we are going to describe this process briefly. You can choose one of two types of install: as a set of files and as PHAR archive (*PHP Archive*).
+
+Requirements
+============
+
+OPT requires at least PHP 5.2 (we recommend PHP 5.3, because it contains some extra classes that must be emulated on earlier versions). The necessary modules are:
+
+1. PCRE
+2. SPL
+3. PHAR (only for PHAR version)
+
+All of them are enabled by default since PHP 5.3.

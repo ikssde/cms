@@ -1,0 +1,13 @@
+Title: setParent()
+ShortTitle: Opt_Xml_Node::setParent()
+Reference: void setParent(Opt_Xml_Node $node)
+Status: public
+SeeAlso:
+ - api.opt-xml-node.get-parent
+
+---
+
+Sets the new parent of the current node.
+
+> [important]
+> Unsually, you do not have to call this method on your own. The methods in `Opt_Xml_Scannable` that change the tree structure, automatically set the correct parent.

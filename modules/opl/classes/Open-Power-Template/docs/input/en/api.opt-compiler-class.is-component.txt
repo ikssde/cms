@@ -1,0 +1,7 @@
+Title: isComponent()
+ShortTitle: Opt_Compiler_Class::isComponent()
+Reference: bool isComponent(string $name)
+
+---
+
+Returns **true**, if there is a component registered under the specified XML tag `$name`.

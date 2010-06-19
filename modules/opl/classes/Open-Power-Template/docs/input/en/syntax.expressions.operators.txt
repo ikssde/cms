@@ -1,0 +1,52 @@
+Title: Operators
+
+----
+
+Smaller expressions can create bigger structures thanks to operators. An operator takes the values of the expressions on both left and right side and produces some other result. An example is `$a + $b` that returns a sum of `$a` and `$b`. If we use it in templates, we would print a sum of these variables:
+
+~~~~
+[xml]
+<p>{$a + $b}</p>
+~~~~
+
+There is also a small set of single argument operators that operate on only one value.
+
+In OPT, some operators have two forms: symbolic and text. They work in the same way. In case of text operators, the compiler can recognize them from the context. If we write `eq` in a place, where operators are not allowed, it will be treated as a string.
+
+Operator list:
+
+ Symbolic   | Text       | Example     | Description
+------------|------------|-------------|:-----------------------------------------------------------
+ ==         | eq         | $a == $b    | true, if `$a` is equal `$b`
+ !=         | neq        | $a != $b    | true, if `$a` is not equal `$b`
+ ===        | eqt        | $a === $b   | true, if `$a` is equal `$b` and both of them are of the same type
+ !==        | neqt       | $a !== $b   | true, if `$a` is not equal `$b` or both of them are of different types
+            | gt         | $a > $b     | true, if `$a` is greater than `$b`
+            | lt         | $a < $b     | true, if `$a` is lower than `$b`
+            | gte, ge    | $a >= $b    | true, if `$a` is greater or equal `$b`
+            | lte, le    | $a <= $b    | true, if `$a` is lower or equal `$b`
+            | and        | $a and $b   | true, if `$a` and `$b` are true
+            | or         | $a or $b    | true, if `$a` or `$b` or both of them are true
+            | xor        | $a xor $b   | true, if `$a` or `$b` is true, but not both of them at the same time
+ !          | not        | ! $a        | true, if `$a` is false
+ +          | add        | $a + $b     | sum of `$a` and `$b`
+ -          | sub        | $a - $b     | difference of `$a` and `$b`
+ *          | mul        | $a * $b     | product of `$a` and `$b`
+ /          | div        | $a / $b     | quotient of `$a` and `$b`
+ %          | mod        | $a % $b     | remainder of `$a` divided by `$b`
+ ++         |            | $a++, ++$a  | returns `$a`, and then increases by 1, or firstly increases by 1, and then returns.
+ --         |            | $a--, --$a  | returns `$a`, and then decreases by 1, or firstly decreases by 1, and then returns.
+ ~          |            | $a ~ $b     | concatenates two values as strings
+ =          | is, are    | @a is $b    | assigns the value of the right-side expression to the variable on the left
+
+A very important thing is the operator precedence. It defines, which operators are processed in the first place, if they are used one by another, like: `$a + $b * $c`. Multiplication is more important, so the parser will start from `$b * $c` and then the value of `$a` will be added to the result. The operator precedence is the same, as in PHP and it is illustrated below:
+
+1. `++`, `--`
+2. `!`
+3. `mul`, `div`, `mod`
+4. `add`, `sub`, `~`
+5. `lt`, `lte`, `gt`, `gte`
+6. `eq`, `neq`, `eqt`, `neqt`
+7. `and`, `or`, `xor`
+
+To change the precendence manually, we use brackets: `($a + $b) * $c`.

@@ -1,0 +1,18 @@
+Title: getTables()
+ShortTitle: Opl_Debug_Console::getTables()
+VersionSince: 2.0.3
+
+Reference: array Opl_Debug_Console::getTables( )
+Status: static public
+Returns: The array of tables registered in OPT
+SeeAlso:
+ - api.opl-debug-console.get-lists
+
+----
+
+Returns the tables currently maintained by the debug console. The returned value is an assotiative array of pairs `unique table ID => options`. Each list options consist of four elements:
+
+- `title` - the table title
+- `columns` - the column titles and optionally their sizes
+- `values` - a list of table rows. A table row is an array of column values
+- `information` - optional extra table information

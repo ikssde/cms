@@ -1,0 +1,17 @@
+Title: addTable()
+ShortTitle: Opl_Debug_Console::addTable()
+Reference: void Opl_Debug_Console::addTable( String $id, String $title, Array $columns )
+Status: static public
+
+----
+
+Creates a new table in the debug console entitled `$title`. The `$id` should be an unique key that allows to refer to this table later. `$columns` must contain a list of table column titles. You may prepend them with the width, for example `50%:Column name`. An example:
+
+~~~~
+[php]
+Opl_Debug_Console::addTable('table', 'My debugging table', array(
+	'30:#',
+	'*:Column 1',
+	'25%:Column 2'
+));
+~~~~

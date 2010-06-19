@@ -1,0 +1,17 @@
+Tests the single nodes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<bar></bar>
+<joe />
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<bar></bar>
+<joe />
+</foo>

@@ -1,0 +1,13 @@
+Title: Opt_Xml_Prolog class
+ShortTitle: Opt_Xml_Prolog
+Construct: class
+
+----
+
+The class represents the XML prolog. It is not a part of the XML tree itself, but can be assigned to the `Opt_Xml_Root` objects using the `setProlog()` method. The class provides a simple interface that allows to manage the three XML prolog attributes:
+
+1. `version`
+2. `encoding`
+3. `standalone`
+
+The values of the attributes can be either static or dynamic.

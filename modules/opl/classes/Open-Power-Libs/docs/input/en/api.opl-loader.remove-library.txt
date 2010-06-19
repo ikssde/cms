@@ -1,0 +1,14 @@
+Title: removeLibrary()
+ShortTitle: Opl_Loader::removeLibrary()
+Construct: static method
+Reference: void removeLibrary(string $library);
+Visibility: public
+Arguments:
+ - Name: $library | EType: string | Desc: The library to remove.
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opl-loader.add-library
+
+----
+
+Removes the library-specific settings from the autoloader.

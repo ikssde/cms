@@ -1,0 +1,134 @@
+Title: Processor overview
+
+----
+
+The code snippet below shows the general structure of an instruction processor:
+
+~~~~
+[php]
+<?php
+
+class Opt_Instruction_MyInstruction extends Opt_Compiler_Processor
+{
+	protected $_name = 'processorname';
+	
+	public function configure()
+	{
+		$this->_addInstructions(array('opt:myInstruction1', 'opt:myInstruction2'));
+		$this->_addAttributes(array('opt:myAttribute1', 'opt:myAttribute2'));
+	} // end configure();
+	
+	public function reset()
+	{
+		// some code ...
+	} // end reset();
+
+	public function processNode(Opt_Xml_Node $node)
+	{
+		// some code...
+	} // end processNode();
+	
+	public function processAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+	{
+		// some code...
+	} // end processNode();
+	
+	public function processSystemVar($system)
+	{
+		// some code...
+	} // end processSystemVar();
+} // end Opt_Instruction_MyInstruction;
+~~~~
+
+The most important method of the processor is `configure()`. Using `_addInstructions()` and `_addAttributes()` we define, what XML tags and attributes should be redirected to this processor. The `reset()` method is called once the compilation is finished. We may use it to clear the processor state before the next compilation.
+
+The rest of method processes everything possible. The processor operates on a template XML tree represented by various types of nodes and inserts the PHP code snippets to them. They will appear in the output compiled template after the linking. Basically, we may handle all the instructions or attributes in one method: `processNode()` or `processAttribute()`. However, we may also use the default implementations which redirect the execution to different protected methods, using the tag/attribute name. For example, `opt:example` tag will be redirected to `_processExample()`. It is up to you what way you are going to choose.
+
+> [information]
+> The instruction processor class name does not have to begin with `Opt_Instruction` since OPT 2.0.1.
+
+Processing the node children
+============================
+
+If the specified tag name is assigned to one of the processor, Open Power Template compiler **does not** visit the children of such tag by default. The processor must decide what to do with them. It may process them with DOM-like API or redirect them to the processing manually:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+	// Visit also the children
+	$this->_process($node);
+} // end processNode();
+~~~~
+
+This method is recommended, if the specified node may contain the HTML code again and we would like to make it visible in the output. We may consider a complex instruction:
+
+~~~~
+[xml]
+<opt:instruction>
+	<opt:tag1>HTML goes here</opt:tag1>
+	<opt:tag2>HTML goes here</opt:tag2>
+</opt:instruction>
+~~~~
+
+We do not permit the HTML directly in `opt:instruction`, so we do not send this node to the processing, but rather use the DOM-like API to manipulate the data:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+	// do not perform recursive search
+	$tags1 = $node->getElementsByTagNameNS('opt', 'tag1', false);
+	$tags2 = $node->getElementsByTagNameNS('opt', 'tag2', false);
+	
+	if(sizeof($tags1) != 1)
+	{
+		throw new Opt_InstructionTooManyItems_Exception('opt:tag1', 'One');
+	}
+	if(sizeof($tags2) != 1)
+	{
+		throw new Opt_InstructionTooManyItems_Exception('opt:tag2', 'One');
+	}
+	// Send the contents of the subnodes to further processing
+	$this->_process($tags1[0]);
+	$this->_process($tags2[0]);
+} // end processNode();
+~~~~
+
+Postprocessing
+==============
+
+The `processNode()` method is executed **before** entering the child nodes. Sometimes, we may also want to perform some operations after visiting the children. The postprocessing is activated on demand for a particular node:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+	$node->set('postprocess', true);
+	$this->_process($node);
+} // end processNode();
+
+public function postprocessNode(Opt_Xml_Node $node)
+{
+	// do some extra stuff here...
+} // end processNode();
+~~~~
+
+Working with attributes
+=======================
+
+Working with instruction attributes is very similar to working with nodes. However, we get both the reference to the attribute and the node the attribute is assigned to. In this case, we do not have to send the children of the node to the processing manually. The postprocessing is activated for a particular attribute:
+
+~~~~
+[php]
+public function processAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+{
+	doSomeStuff($attr->getValue());
+	$attr->set('postprocess', true);
+} // end processNode();
+
+public function postprocessAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attr)
+{
+	doSomeStuff($attr->getValue());
+} // end processNode();
+~~~~

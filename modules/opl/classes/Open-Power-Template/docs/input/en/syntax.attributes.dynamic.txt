@@ -1,0 +1,15 @@
+Title: opt:dynamic
+VersionSince: 2.0.1
+SeeAlso:
+ - syntax.instructions.dynamic
+
+----
+
+This is a variant of [opt:dynamic][syntax.instructions.dynamic] instruction that uses attributes instead of tags to represent itself. The dynamic content is enabled, if the attribute value is set to *yes*:
+
+~~~~
+[xml]
+<div opt:dynamic="yes">
+	<p>Some dynamic content: {$variable}</p>
+</div>
+~~~~

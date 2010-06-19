@@ -1,0 +1,17 @@
+Title: Custom escaping functions
+SeeAlso:
+ - syntax.expressions.escaping
+
+----
+
+Currently OPT sanitizes the script data placed in the templates with simple `htmlspecialchars()` function. However, we are aware of the fact it is not perfect. This part of the library will be extended in the future, but currently OPT provides the ability to use a custom function here. In order to to that, just register a new OPT function called `escape`:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'escape', 'myFilter');
+~~~~
+
+The registered function must take exactly one argument - the text to be sanitized.
+
+> [error]
+> In case of this function, it is not allowed to use argument order manipulators like `#2,1,3#`.

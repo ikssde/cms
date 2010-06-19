@@ -1,0 +1,93 @@
+Title: Node and compiler variables
+
+----
+
+It is possible to store some values in any XML node. This feature is known as node variables and can be used for many purposes:
+
+1. Saving information for other instruction processors.
+2. Saving information for other part of the same instruction processors.
+3. Informing the compiler, how to process the node.
+
+The nodes are equipped with the methods `get()` and `set()`:
+
+~~~~
+[php]
+$node->set('name', 'value');
+
+echo $node->get('name');
+~~~~
+
+> [information]
+> Accessing to the nonexistent variable causes the `get()` method to return **NULL**.
+
+The same methods are available in the `Opt_Compiler_Class` object.
+
+Available node variables
+------------------------
+
+The following node state variables are recognized by the template compiler:
+
+cdata
+:	Type: Boolean
+:	Only in `Opt_Xml_Cdata` nodes.
+:	If this variable is set to **true**, the content of the node is enclosed within `<![CDATA[` and `]]>`.
+
+commented
+:	Type: Boolean
+:	If this variable is set to **true**, the entire node and its contents are enclosed within `<!--` and `-->`. The compiler correctly handles nested nodes with this flag enabled and does not produce nested XML comments.
+
+extend
+:	Type: String
+:	Only in `Opt_Xml_Root` node.
+:	The information for the compiler to extend the current template with the filename stored in this variable. Used to create the template inheritance.
+
+hidden
+:	Type: boolean
+:	If the node is hidden, it is skipped in the last compilation stage, linking the output file. Its contents do not appear in the final result. Initially, all the nodes are **hidden**; they are automatically converted to visible nodes during the processing, but you may do your own manipulations here.
+
+noEntitize
+:	Type: boolean
+:	Only in `Opt_Xml_Cdata` nodes.
+:	Causes the XML entities not to be parsed by the compiler.
+
+postprocess
+:	Type: boolean
+:	Informs the instruction processor handler, that the instruction processor must return to this node in the postprocess stage, after processing the node children. This flag can be applied only to the node that has been passed as an argument to the `processNode()` or `processAttribute()` method.
+
+single
+:	Type: boolean
+:	Only in `Opt_Xml_Element` nodes.
+:	Informs that this is a single XML element: `<single />`. The node is rendered as single if it has no children and this variable is set to **true**.
+
+snippet
+:	Type: String
+:	Only in `Opt_Xml_Root` node.
+:	The information for the compiler to extend the current template with the contents of the specified snippet. Used to create the template inheritance.
+
+Furthermore, the following conventions are used:
+
+`call:*`
+:	The variable names beginning with `call:` are reserved for the instruction processors that want to store some state for a different instruction processor that could deal with the specified node.
+
+`priv:*`
+:	The variable names beginning with `priv:` are reserved for the instruction processor variables and **should not** be accessed or modified by other instruction processors and the compiler.
+
+Compiler variables
+------------------
+
+The following variables are available in the template compiler.
+
+branch
+:	The template inheritance branch.
+
+currentTemplate
+:	Contains the currently parsed template name, including the templates loaded by the template inheritance.
+
+escape
+:	The current escaping state (enabled or disabled).
+
+mode
+:	The compilation mode (XML or quirks)
+
+template
+:	Contains the currently parsed top-level template name.

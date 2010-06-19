@@ -1,0 +1,52 @@
+Title: HTML escaping
+
+----
+
+The variable values placed in the HTML code may break our output structure or add strange tags to the result. Here is an example:
+
+~~~~
+[xml]
+<p parse:style="$foo">Text</p>
+~~~~
+
+If for some reason the value of `$foo` was `<div>bar</div>`, the result would be:
+
+~~~~
+[xml]
+<p style="<div>bar</div>">Text</p>
+~~~~
+
+However, in OPT it is not. The parser provides advanced escaping control that changes the dangerous characters into HTML entities so that they would not break the output code.
+
+Attribute-level control
+=======================
+
+OPT assumes that on the attribute level, all the expressions placed as attribute values, must be escaped. Going back to our example, the result will be:
+~~~~
+[xml]
+<p style="&lt;div&gt;bar&lt;/div&gt;">Text</p>
+~~~~
+
+Text-level control
+===========================
+
+On the level of expressions in curly brackets, the escaping is controlled in three ways:
+
+1. In the OPT configuration, using the `escape` directive.
+2. In the current template - in `opt:root` or `opt:extend` instructions the attribute `escape` with the values *yes* or *no*.
+3. In the current expression with the modifiers **e:** and **u:**
+
+This is an example:
+
+~~~~
+[xml]
+<opt:root escape="no">
+	<p>This expression will not be escaped: {$variable}</p>
+	<p>This expression will be escaped: {e:$variable}</p>
+</opt:root>
+~~~~
+
+The modifier **e:** at the beginning of the expression turns on the escaping, if it is disabled, and **u:** disables it.
+
+> [important]
+> OPT is smart enough not to escape the same expression twice, if we turned it on both in the configuration and in the expression itself.

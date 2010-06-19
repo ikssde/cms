@@ -1,0 +1,23 @@
+Title: countWords()
+Reference: mixed countWords(string $text [, $format [,$charlist ]])
+
+----
+
+Depending on the `$format` value (default is 0), the function:
+
+* 0 - returns the number of words in `$text`.
+* 1 - returns an array containing all the words in `$text`.
+* 2 - returns an associative array, where the key is the position in the text and the value is the word itself.
+
+`$charlist` may contain the list of characters that are considered as a word.
+
+The simplest use:
+
+~~~~
+[xml]
+<h1>{$article.title}</h1>
+
+{$article.body}
+
+<p>Words: {countWords($article.body)}</p>
+~~~~

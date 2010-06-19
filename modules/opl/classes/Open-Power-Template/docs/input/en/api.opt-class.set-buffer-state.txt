@@ -1,0 +1,37 @@
+Title: setBufferState()
+ShortTitle: Opt_Class::setBufferState()
+Construct: method
+Reference: void setBufferState( string $name , boolean $state )
+VersionSince: 2.0.1
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The buffer name
+ - Name: $state | EType: boolean | Desc: The new buffer state
+SeeAlso:
+ - api.opt-class.get-buffer-state
+ - extending.caching-systems
+
+----
+
+Open Power Template supports advisory notifications on the output buffer state. They can help deciding, whether to open a new output buffer or using an existing one. Advisory output buffer states are a kind of semaphores. `setBufferState()` increments the value, if `$state` is **true** and decrements for **false**. The minimum semaphore value is 0. If it reaches this value, `setBufferState('buffer', false)` has no effect.
+
+~~~~
+[php]
+ob_start();
+$tpl->setBufferState('buffer', true);
+
+// ...
+
+if(!$tpl->getBufferState('buffer'))
+{
+	ob_start();
+	$tpl->setBufferState('buffer', true);
+}
+
+// ...
+
+ob_end_flush();
+$tpl->setBufferState('buffer', false);
+~~~~
+
+Advisory output buffer states are mostly used in OPT caching systems.

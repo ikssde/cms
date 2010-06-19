@@ -1,0 +1,7 @@
+Title: isNamespace()
+ShortTitle: Opt_Compiler_Class::isNamespace()
+Reference: bool isNamespace(string $namespace)
+
+---
+
+Returns **true**, if the `$namespace` is parsed by the compiler.

@@ -1,0 +1,12 @@
+Title: sendHeaders()
+ShortTitle: Opt_Output_Http::sendHeaders()
+Construct: method
+Reference: boolean sendHeaders()
+Visibility: public
+
+----
+
+Sends the buffered HTTP headers to the browser and returns **true** in case of success. The method recognizes correctly the header names `HTTP/1.0` and `HTTP/1.1` formatting them according to the HTTP protocol semantics.
+
+> [information]
+> The programmer does not have to call this method manually.

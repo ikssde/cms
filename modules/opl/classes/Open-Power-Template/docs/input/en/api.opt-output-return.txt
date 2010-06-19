@@ -1,0 +1,19 @@
+Title: Opt_Output_Return class
+ShortTitle: Opt_Output_Return
+VersionSince: 2.0-dev7
+Implements:
+ - api.opt-output-interface
+Construct: class
+
+----
+
+With this output system, the OPT output is returned by the `render()` method back to the script, so it can be processed in some other way.
+
+~~~~
+[php]
+$out = new Opt_Output_Return();
+$outputData = $out->render($view);
+~~~~
+
+> [information]
+> This output system is less restrictive than `Opt_Output_Http` when it comes to the XML template limitations. Basically, here you can execute the `render()` method several times, for different views.

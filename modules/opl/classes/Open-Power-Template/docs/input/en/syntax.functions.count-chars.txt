@@ -1,0 +1,6 @@
+Title: countChars()
+Reference: integer countChars(string $text)
+
+----
+
+Returns the number of characters in the string `$text`.

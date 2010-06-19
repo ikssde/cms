@@ -1,0 +1,10 @@
+Title: hasDtd()
+ShortTitle: Opt_Xml_Root::hasDtd()
+Reference: bool hasDtd()
+Status: public
+SeeAlso:
+ - api.opt-xml-root.set-dtd
+
+---
+
+Returns **true**, if there is a Document Type Definition assigned to the root node.

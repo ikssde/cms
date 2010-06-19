@@ -1,0 +1,15 @@
+Title: setCheckFileExists()
+ShortTitle: Opl_Loader::setCheckFileExists()
+Construct: static method
+Reference: void Opl_Loader::setCheckFileExists( boolean $status )
+Visibility: public
+Arguments:
+ - Name: $status | EType: boolean | The new status.
+VersionSince: 2.0-RC1
+
+----
+
+Specifies, whether the autoloader should check the file existence in the filesystem (**true**) or not (**false**).
+
+> [warning]
+> Due to the performance reasons, we recommend to keep this setting disabled, especially in the production environment.

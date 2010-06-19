@@ -1,0 +1,10 @@
+Title: setDtd()
+ShortTitle: Opt_Xml_Root::setDtd()
+Reference: void setDtd(Opt_Xml_Dtd $dtd)
+Status: public
+SeeAlso:
+ - api.opt-xml-root.get-dtd
+
+---
+
+Sets the XML prolog of the XML tree represented by the root node.

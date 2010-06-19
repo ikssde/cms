@@ -1,0 +1,11 @@
+Title: getAttribute()
+ShortTitle: Opt_Xml_Element::getAttribute()
+Reference: Opt_Xml_Attribute getAttribute(string $attribute)
+Status: public
+SeeAlso:
+ - api.opt-xml-element.add-attribute
+ - api.opt-xml-element.get-attributes
+
+---
+
+Returns the attribute object with the specified name associated to this tag or **null**, if it has not been found.

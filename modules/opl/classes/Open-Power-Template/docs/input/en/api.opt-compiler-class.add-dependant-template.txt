@@ -1,0 +1,9 @@
+Title: addDependantTemplate()
+ShortTitle: Opt_Compiler_Class::addDependantTemplate()
+Reference: void addDependantTemplate(string $filename)
+SeeAlso:
+ - api.opt-compiler-class.import-dependencies
+
+----
+
+Adds the template file name to the dependency list used with the template inheritance. The templates on the list must be checked for the modifications each time the template is executed. If the `$template` already exists on the list, the method throws `Opt_InheritanceRecursion_Exception`.

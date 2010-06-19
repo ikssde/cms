@@ -1,0 +1,39 @@
+Title: $system special variable
+
+----
+
+The instruction processors are allowed to extend the `$system` special variable. OPT redirects the `$system.PROCESSORNAME` calls to the specified processor. The processor name can be found in the `$_name` protected class field:
+
+~~~~
+[php]
+class Opt_Instruction_MyInstruction extends Opt_Compiler_Processor
+{
+	protected $_name = 'PROCESSORNAME';
+	
+	// ...
+	
+} // end Opt_Instruction_MyInstruction;
+~~~~
+
+The method that handles the special variable is called `processSystemVar()` and takes an array as the only argument. The array is simply the special variable call (i.e. `$system.PROCESSORNAME.something`) exploded with a dot:
+
+~~~~
+[php]
+public function processSystemVar($system)
+{
+	// Determine the action using the third element of the call.
+	switch($system[2])
+	{
+		case 'foo':
+			return doSomething($system[3]);
+		case 'bar':
+			return doSomethingElse($system[3]);
+	}
+	return '';
+}
+~~~~
+
+The method must return a valid PHP expression code that the special variable will be replaced with.
+
+> [information]
+> The expression does not have to provide the write-access, as saving the values to the `$system` special variable is disabled.

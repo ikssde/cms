@@ -1,0 +1,75 @@
+Title: Tips and tricks
+
+----
+
+This chapter describes various tips and tricks related to writing the instruction processors.
+
+Conversions
+-----------
+
+By default, various parts of the compiler work on the original data extracted from the template. However, sometimes it is useful to replace it transparently to something else. The compiler provides the conversion system to manage and perform various conversions on the fly, using the set of simple rules.
+
+An example of a place where the conversions take place are the sections and snippets:
+
+~~~~
+[xml]
+<opt:snippet name="foo">
+<p>{$foo.name}</p>
+</opt:snippet>
+
+<opt:section name="user" opt:use="foo"></opt:section>
+~~~~
+
+Here, the snippet variable, `$foo.name` is transparently converted into `$user.name` as the section processor begins to process the inserted content.
+
+The methods to manage conversions are available in the compiler object (`Opt_Compiler_Class`):
+
+1. `setConversion($pattern, $replacement)` - creates a new conversion rule.
+2. `unsetConversion($pattern)` - removes the conversion rule.
+3. `convert($item)` - attempts to convert the passed item using the current rules. If none of the rules is present, it returns the original name.
+
+Some conversions recognized by the compiler:
+
+`##simplevar_VARIABLENAME`
+:	Allows to convert the variable name `$variable` to some other name. This feature is used in the example above. The section processor reads the snippet name and registers the conversion:
+	
+	    [php]
+	    $this->_compiler->setConversion('##simplevar_foo', 'user');
+	
+	Once the section content has been processed, the conversion is removed.
+
+`##var_VARIABLENAME`
+:	Allows to convert the template variables `@variable` to something else. The general rule is very similar to the previous case.
+
+The instruction processors may also create their own conversion points. The available points are described in the chapters concerning certain instructions.
+
+Useful compiler methods
+-----------------------
+
+The template compiler provides a number of public methods that let us perform various checks and operations. For example, to locate a different instruction processor, you may use `isProcessor()` and `processor()` methods. Read the appropriate API documentation [chapter][api.opt-compiler-class] to get to know more about them.
+
+Modifying the template prolog and DTD
+-------------------------------------
+
+The XML prolog and DTD are not kept directly in the XML node. They are managed by the root node (see: [Opt_Xml_Root][api.opt-xml-root]). To create a new prolog or DTD, you must create an object of `Opt_Xml_Prolog` or `Opt_Xml_Dtd` and add it to the root node:
+
+~~~~
+[php]
+$prolog = new Opt_Xml_Prolog;
+
+// ...
+
+$root->setProlog($prolog);
+~~~~
+
+Removing the CDATA sections
+---------------------------
+
+Sometimes we must remove all the CDATA sections from a particular part of the XML document. As we know from the chapter about node variables, it is controlled by the `cdata` node variable. Fortunately, we do not have to locate the `Opt_Xml_Cdata` nodes manually, as one of the processors provides a method for this:
+
+~~~~
+[php]
+$this->_compiler->processor('literal')->disableCDATA($node);
+~~~~
+
+It removes the CDATA sections from the specified node content. If the second, optional argument is set to **true**, the method also sets the `noEntitize` node variable to **true**.

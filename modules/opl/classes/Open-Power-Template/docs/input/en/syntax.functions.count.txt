@@ -1,0 +1,6 @@
+Title: count()
+Reference: integer count(container $container)
+
+----
+
+Returns the number of elements in the `$container`.

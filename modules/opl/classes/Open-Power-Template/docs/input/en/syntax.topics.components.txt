@@ -1,0 +1,379 @@
+Title: Components
+SeeAlso:
+ - syntax.topics.blocks
+ - syntax.instructions.component
+
+----
+
+The OPT instructions have one disadvantage that is quite significant in some tasks. They are processed during the compilation, performing some manipulations to the output code. However, sometimes we might need to let the script control, what to show. In the previous chapter we have met blocks, simple PHP objects that can be run transparently in ports, predefined places in a template. Now it is time for components. You can think of them like blocks with extended functionality. In fact the way they work and their design is very similar to them, so if you have not read about blocks yet, please refer to the previous chapter, because here we assume that you are familiar with them.
+
+Component overview
+==================
+
+Like in blocks, components are PHP objects that share the same interface that allows them to communicate with the templates. They can be deployed in the templates in the places called *component ports*. The port may either deploy an object passed and initialized by the script, or create such object on its own.
+
+The primary goal for components is to support form management. We can find here many features useful in building dynamic, easy-to-write and easy-to-use forms:
+
+* Component parameters.
+* Displaying the object.
+* Events.
+* Runtime modifications of the HTML tag attribute lists.
+* Extended support for snippets.
+
+Component structure
+========================
+
+We are going to show the component API features using an example. The sample component is going to display the `<input>` form field and provide some extra logic, like:
+
+* Data validation error reporting.
+* Modifying the layout of the field neighborhood in case of an error.
+* Specifying the component parameters, like name or field description.
+
+Let's begin with a component port. Like blocks, you can register component classes as XML tags, so we are going to register our component class as `opt:myInput`. In order to deploy it statically, we do:
+
+~~~~
+[xml]
+<opt:myInput datasource="$fieldData">
+    <div opt:component-attributes="main">
+        <p>{$sys.component.title} <span opt:if="$sys.component.description">{$sys.component.description}</span></p>
+        <opt:display />
+
+        <opt:onEvent name="error">
+            <p class="error">{$sys.component.errorMessage}</p>
+        </opt:onEvent>
+    </div>
+</opt:myInput>
+~~~~
+
+The component is active within the `opt:myInput` tags that define its neighborhood. In our case, we specify here the detailed layout of a form field, including the error reporting, field description and layout manipulations.
+
+1. Notice that the `<div>` tag is equipped with the `opt:component-attributes` attribute. Thus, it allows the component to add dynamically extra attributes. In our case, the component is going to set the proper CSS class, depending on the field state (valid, invalid, etc.).
+2. Using the `$sys.component` we can read various component attributes. Here, we use them to specify the field title, description and ID, assuming that the script provides them in the `$fieldData` container declared as a data source.
+3. The tag `<opt:display>` defines a place, where the exact field should appear. We are allowed to add here some extra attributes. They will be passed to the component.
+4. `<opt:onEvent>` tag captures various component events. In our case, the component generates only one event: *error*. It tells the template engine that the error message should appear under the field.
+
+Now we are ready to write a component PHP class that makes use of all those features. It must implement the `Opt_Component_Interface` which requires several methods. Our component is not going to have any advanced logic. It will simply read all the necessary information from the data source, but remember that you have the whole power of PHP here. Your components can be a part of the form validation engine, so that you would not have to initialize them with lots of data.
+
+~~~~
+[php]
+<?php
+class myInputComponent implements Opt_Component_Interface
+{
+    private $view;
+    private $name = '';
+    private $valid = true;
+    private $params = array();
+
+    public function __construct($name = '')
+    {
+        $this->name = $name;
+    } // end __construct();
+
+    public function setView(Opt_View $view)
+    {
+        $this->view = $view;
+    } // end setOptInstance();
+~~~~
+
+For user convenience, we allow to specify the name in the class constructor. Later, we have to implement `setView()` method. It is called by the template to pass the view object to the component. Using it, we can also recognize, when the object is being deployed in the template.
+
+Now we must implement the component parameter support:
+
+~~~~
+[php]
+    public function setDatasource($data)
+    {
+        foreach($data as $name => $value)
+        {
+            $this->set($name, $value);
+        }
+    } // end setDatasource();
+
+    public function set($name, $value)
+    {
+        switch($name)
+        {
+            case 'name':
+                $this->name = $value;
+                break;
+            case 'valid':
+                $this->valid = $value;
+                break;
+            default:
+                $this->params[$name] = $value;
+        }
+    } // end set();
+
+    public function get($name)
+    {
+        if($name == 'name')
+        {
+            return $this->name;
+        }
+        if(isset($this->params['_'.$name]))
+        {
+            return $this->params['_'.$name];
+        }
+        return $this->params[$name];
+    } // end get();
+
+    public function defined($name)
+    {
+        return isset($this->params[$name]);
+    } // end defined();
+~~~~
+
+The `set()` and `get()` methods are used to manage single parameters, whereas `setDatasource()` is programmed to treat the specified data source as a set of parameters for the components. Of course, you might modify the meaning of the "datasource" term to suit your needs.
+
+~~~~
+[php]
+    public function manageAttributes($nodeName, $attributeList)
+    {
+        if($nodeName == 'div#default' && !$this->valid)
+        {
+            $attributeList['class'] = 'error';
+        }
+        return $attributeList;
+    } // end manageAttributes();
+~~~~
+
+Using the `manageAttributes()` method, the component can manipulate the attribute lists of all the tags equipped with `opt:component-attributes` attribute. The value of this attribute is added to the tag name and concatenated with `#` symbol. Here, we want to add/modify the `class` attribute in case of error.
+
+The code that displays the component must be placed in the `display()` methods, where the template can also pass some attributes:
+
+~~~~
+[php]
+    public function display($attributes = array())
+    {
+        $attributes['type'] = 'text';
+        $attributes['name'] = $this->name;
+        $attributes['id'] = $this->name.'_id';
+        
+        if(!$this->valid)
+        {
+            $attributes['value'] = htmlspecialchars($_POST[$this->name]);
+        }
+        elseif(isset($this->params['value']))
+        {
+            $attributes['value'] = htmlspecialchars($this->params['value']);
+        }
+        
+        echo '<input';
+        foreach($attributes as $name=>$value)
+        {
+            echo ' '.$name.'="'.$value.'"';
+        }
+        echo '/>';
+    } // end display();
+~~~~
+
+In the example implementation, we can see, what the components can do. In our case, if the component flag `valid` is set to **false**, the field value is read directly from the POST data, so neither the script nor the template has to deal with it.
+
+The last thing is event processing. In the template port we may define one or more `opt:onEvent` tags. The port asks the deployed component, whether the specified event occurred and if the component answer is positive, the code associated to the event is displayed. In addition, the component may perform some extra actions, such as initializing new template variables. Our component is going to support only one event: **error**. It will be fired, if the flag `valid` is set to **false**. The component will pass the error message to the template then.
+
+~~~~
+[php]
+    public function processEvent($event)
+    {
+        if($event == 'error')
+        {
+            if(!$this->valid)
+            {
+                $this->_view->errorMessage = (isset($this->params['errorMessage']) ? $this->params['errorMessage'] : 'No error message specified');
+                return true;	// Fire the event!
+            }
+        }
+        return false;
+    } // end processEvent();
+} // end myInputComponent;
+~~~~
+
+Our component is ready. However, currently it can be deployed only in the default `opt:component` port. If you want to make this component deployed statically, you have to register the component class in OPT:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_COMPONENT, 'opt:myInput', 'myInputComponent');
+~~~~
+
+You do not have to choose the `opt` namespace, but also use your own. In this case, please remember that the new namespace must be registered, too!
+
+Component port overview
+=======================
+
+Here we are going to take a deeper look at the component port features.
+
+Ports
+-----
+
+We have two types of ports:
+
+~~~~
+[xml]
+<!-- custom port -->
+<opt:component from="$variable">
+    ...
+</opt:component>
+
+<!-- static port -->
+<opt:someComponent>
+    ...
+</opt:someComponent>
+~~~~
+
+The first port loads the components from the template variable (or any other expression) specified in the `from` attribute, so you can pass different components, whenever you want, depending on your needs. On the other hand, the static port automatically creates the component object and deploys it there.
+
+> [warning]
+> If your component requires extra manual configuration, remember that you have to configure it in the template, when you deploy it statically.
+
+A nice trick about custom ports is that the components can be loaded from the section. This is the easiest way to create a form generator - you create different components that represent the form fields such as inputs, selects, text areas etc. and put their objects in the section:
+
+~~~~
+[xml]
+<opt:section name="dynamicForm">
+    <opt:component from="$dynamicForm.component">
+        ....
+    </opt:component>
+</opt:section>
+~~~~
+
+The content of the port represents the component layout. In case of HTML forms, this definition includes some container like `<div>` or table row, field title and description, as well as the place, where the errors should be displayed. Within the port, you have the full access to the component parameters and other stuff. However, specifying the layout for each component used in the presentation layer can be a frustrating, especially if you need to change something later. Fortunately, the components co-operate with snippets ([opt:snippet][syntax.instructions.snippet]). You may define the component layout in one place and use it later everywhere:
+
+~~~~
+[xml]
+<opt:snippet name="componentLayout">
+    <div opt:component-attributes="default">
+        <p><label parse:for="$system.component.id">{$system.component.title}</label></p>
+
+        <opt:display />
+
+        <opt:onEvent name="error">
+            <p>An error occurred: {$errorMessage}</p>
+        </opt:onEvent>
+    </div>
+</opt:snippet>
+
+<!-- now we can build a nice HTML form: -->
+<form method="post" action="#">
+
+<forms:input template="componentLayout" />
+<forms:textarea template="componentLayout" />
+<forms:combo template="componentLayout" />
+
+<input type="submit" value="Send" />
+</form>
+~~~~
+
+Note that the components load the snippets with the `template` attribute, not `opt:use`. The reason is explained below.
+
+Parameters
+----------
+
+The component API provides the support for the component parameters. They can be accessed using the special block `$system.component.parameterName`, and created either by the script or by the template. In the templates, you can set the parameter to the component with the `opt:set` tag placed directly in the port tag:
+
+~~~~
+[xml]
+<opt:component from="$component">
+    <opt:set str:name="title" str:value="Some title" />
+</opt:component>
+~~~~
+
+> [information]
+> The custom port tag attributes are also interpreted as component parameters.
+
+Let's get back to the form example from the previous chapter. The reason why we are using the `template` attribute instead of `opt:use` in the ports is related to the component parameters. As you should know, `opt:use` removes the tag body, if it finds the specified snippet. However, in case of components we would not like to remove `opt:set` tags and `template` remembers about them:
+
+~~~~
+[xml]
+<!-- this code will work -->
+<forms:input str:name="name" template="componentLayout">
+	<opt:set str:name="title" str:value="Your name" />
+	<opt:set str:name="description" str:value="Please enter your name" />
+</forms:input>
+
+<!-- this code will not -->
+<forms:input str:name="name" opt:use="componentLayout">
+	<opt:set str:name="title" str:value="Your name" />
+	<opt:set str:name="description" str:value="Please enter your name" />
+</forms:input>
+~~~~
+
+Data source
+-----------
+
+The bigger data sets can be loaded from the *data sources*. You may specify a data source for the component with the `datasource` attribute:
+
+~~~~
+[xml]
+<opt:component datasource="$list">
+    ...
+</opt:component>
+~~~~
+
+> [important]
+> The exact meaning of *data source* depends on the components you are going to use.
+
+Displaying the component
+------------------------
+
+The port represents the overall component layout, but the component itself must be displayed somewhere, too. To mark the place to show a component, use the `opt:display` tag:
+
+~~~~
+[xml]
+<forms:input>
+    <div opt:component-attributes="default">
+        <p><label parse:for="$system.component.id">{$system.component.title}</label></p>
+
+        <!-- show the INPUT field here -->
+        <opt:display />
+
+        <opt:onEvent name="error">
+            <p>An error occurred: {$errorMessage}</p>
+        </opt:onEvent>
+    </div>
+</forms:input>
+~~~~
+
+Note that `opt:display` can accept optional attributes that are passed to the component. This can be used to configure the look of the component:
+
+~~~~
+[xml]
+<opt:display str:class="someCSSClass" />
+~~~~
+
+Events
+------
+
+The component may generate also various events which can be captured by the component port. If an event occurs, we can display some extra content. A common use is error handling:
+
+~~~~
+[xml]
+<opt:onEvent name="error">
+    <p>An error occurred: {$errorMessage}</p>
+</opt:onEvent>
+~~~~
+
+The name specifies the name of the event we want to capture. Note that you can capture events that the component object does not support. In this case it **should** not fire them, however please note that the exact component implementations may not follow this suggestion.
+
+Attribute management
+--------------------
+
+The components can also manipulate the attributes of various HTML tags. In order to allow such manipulations for the specified tag, you have to add the `opt:component-attributes` to it and define an identifier. A common use is to configure the CSS class of the field container, like `<div>`:
+
+~~~~
+[xml]
+<forms:input>
+	<div class="defaultCSSClass" opt:component-attributes="default">
+		...
+	</div>
+</forms:input>
+~~~~
+
+Now the component can easily change the CSS class associated to `<div>`. Please note that you may set the `com` namespace to more than one tag within one port.
+
+> [information]
+> Open Power Template 2.0 provides also the second system of attribute management. The same effect can be achieved, if we move the `<div>` tag to the special `com` namespace, for example `com:div`. However, in this case we are not able to give the tag an unique identifier, so the `manageAttributes()` method cannot distinguish two `<div>`-s within the same component. The `opt:component-attributes` attribute has been introduced in OPT 2.0.2 and we recommend to use it since then.
+
+Conclusion
+==========
+
+Components are a very powerful tool designed especially for the form processing. If you do not need the functionality they offer, please use [blocks][syntax.topics.blocks].

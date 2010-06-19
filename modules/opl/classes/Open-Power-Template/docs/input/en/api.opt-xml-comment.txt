@@ -1,0 +1,15 @@
+Title: Opt_Xml_Comment class
+ShortTitle: Opt_Xml_Comment
+Construct: class
+Extends: api.opt-xml-cdata
+
+----
+
+The class represents the XML comments and provides an API to manipulate their contents. The class extends `Opt_Xml_Cdata`, so we can use the same manipulation methods, as in case of ordinary character data nodes.
+
+Note that every XML node may become a comment by setting the node flag `commented` to true. Their contents, including the node itself, will be enclosed within `<!--` and `-->` tags:
+
+~~~~
+[php]
+$node->set('commented', true);
+~~~~

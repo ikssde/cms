@@ -1,0 +1,8 @@
+Title: date()
+Reference: string date(string $format [, integer $timestamp ])
+SeeAlsoExternal:
+ - http://docs.php.net/manual/en/function.date.php date() in PHP manual
+
+----
+
+Returns the current date in the specified `$format`. If `$timestamp` is specified, returns the date pointed by that timestamp. The detailed format description can be found in [PHP manual](http://docs.php.net/manual/en/function.date.php).

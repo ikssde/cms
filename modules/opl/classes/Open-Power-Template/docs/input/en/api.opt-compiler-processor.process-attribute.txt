@@ -1,0 +1,15 @@
+Title: processAttribute()
+ShortTitle: Opt_Compiler_Processor::processAttribute()
+Construct: optional method
+Reference: void processAttribute(Opt_Xml_Node $node, Opt_Xml_Attribute $attribute)
+Visibility: public
+Arguments:
+ - Name: $node | Type: api.opt-xml-node | Desc: The node with the attribute to process.
+ - Name: $attribute | Type: api.opt-xml-attribute | Desc: The attribute to process.
+SeeAlso:
+ - api.opt-compiler-processor.postprocess-attribute
+ - api.opt-compiler-processor.process-node
+
+---
+
+This method captures all the XML attributes registered by the processor and allows to parse them much like [Opt_Compiler_Processor::processNode()][api.opt-compiler-processor.process-node] does with XML tags. The taken arguments are the registered `$attribute` and the XML `$node` which the attribute is assigned to.

@@ -1,0 +1,78 @@
+Title: opt:show
+FeatureInformation: sections
+SeeAlso:
+ - syntax.topics.sections
+ - syntax.instructions.section
+ - syntax.instructions.tree
+ - syntax.instructions.grid
+ - syntax.instructions.selector
+
+----
+
+`opt:show` allows to define the section neighborhood layout. It has an important property - if the section does not get any elements, the neighborhood is not visible in the browser, too. In the example, we hide the `<ol>` tags, when there are no elements to display:
+
+~~~~
+[xml]
+<opt:show name="list">
+<ol>
+    <opt:section>
+    <li>{$list.name}</li>
+    </opt:section>
+</ol>
+</opt:show>
+~~~~
+
+When using `opt:show`, you have to remember about two issues:
+
+1. _All_ the section attributes are defined in `opt:show`, and the section tag (`opt:section`, `opt:tree`, etc.) remains empty in order to be connected with `opt:show`. The section tags with attributes are possible within `opt:show`, but they will become independent sections.
+2. `opt:show` *does not start section*. We can neither access the section element variables etc. within this tag nor make it parent for any other nested section.
+
+An example to the first issue:
+
+~~~~
+[xml]
+<opt:show name="section1">
+	<opt:section name="section2">
+
+	</opt:section>
+
+	<opt:section>
+
+	</opt:section>
+</opt:show>
+~~~~
+
+The first `opt:section` contains some attributes, so it is not connected to `opt:show`. Even if it is empty, the content of `opt:show` is displayed and vice versa. However, the second one has no attributes and it will be cooperating with our instruction. Moreover, `section1` will not become a parent of `section2`, because in fact, it is not started yet. The relationship would be established, if the code looked like that:
+
+~~~~
+[xml]
+<opt:show name="section1">
+	<opt:section>
+		<opt:section name="section2">
+
+		</opt:section>
+	</opt:section>
+</opt:show>
+~~~~
+
+Empty list messages
+===================
+
+We may define the optional content to be displayed if the list is empty. We use `opt:showelse` tag then:
+
+~~~~
+[xml]
+<opt:show name="list">
+<ol>
+	<opt:section>
+	<li>{$list.name}</li>
+	</opt:section>
+</ol>
+<opt:showelse>
+	<p>We are sorry, the list is empty.</p>
+</opt:showelse>
+</opt:show>
+~~~~
+
+> [error]
+> When using `opt:showelse`, the section tags **must not** contain their internal tags that perform the same thing (like `opt:sectionelse`).

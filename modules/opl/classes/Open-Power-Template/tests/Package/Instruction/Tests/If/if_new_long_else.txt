@@ -1,0 +1,50 @@
+What happens, if "else" is the only remaining stuff after
+a long-if group?
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "OK" -->
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:if>
+	<opt:condition test="$ok">Condition 1</opt:condition>
+	<div>Foo</div>
+	<opt:condition test="$fail">Condition 2</opt:condition>
+	<div>Bar</div>
+        <opt:else>Else</opt:else>
+</opt:if>
+---
+<opt:if>
+	<opt:condition test="$fail">Condition 1</opt:condition>
+	<div>Foo</div>
+	<opt:condition test="$ok">Condition 2</opt:condition>
+	<div>Bar</div>
+        <opt:else>Else</opt:else>
+</opt:if>
+---
+<opt:if>
+	<opt:condition test="$fail">Condition 1</opt:condition>
+	<div>Foo</div>
+	<opt:condition test="$fail">Condition 2</opt:condition>
+	<div>Bar</div>
+        <opt:else>Else</opt:else>
+</opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Condition 1
+<div>Foo</div>
+<div>Bar</div>
+---
+<div>Foo</div>
+Condition 2
+<div>Bar</div>
+---
+<div>Foo</div>
+<div>Bar</div>
+Else
+>>>>data.php
+$view->assign('ok', true);
+$view->assign('fail', false);

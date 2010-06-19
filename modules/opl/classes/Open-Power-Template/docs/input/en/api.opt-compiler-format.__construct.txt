@@ -1,0 +1,10 @@
+Title: __construct()
+ShortTitle: Opt_Compiler_Format::__construct()
+Reference: __construct(Opt_Class $tpl, Opt_Compiler_Class $compiler [, string $name = ''])
+Status: constructor
+SeeAlso:
+ - api.opt-compiler-class.create-format
+
+---
+
+Initializes the format object. The method is called automatically by [Opt_Compiler_Class::createFormat()][api.opt-compiler-class.create-format].

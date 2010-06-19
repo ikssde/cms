@@ -1,0 +1,29 @@
+Title: assignGroup()
+ShortTitle: Opt_View::assignGroup()
+Construct: method
+Reference: void assignGroup( array $variables )
+Visibility: public
+SeeAlso:
+ - api.opt-view.assign-group-global
+
+----
+
+Uses an associative array `$variables` to create many local template variables:
+
+~~~~
+[php]
+$view->assignGlobal( array(
+	'foo' => 'foo',
+	'bar' => 'bar',
+	'joe' => 'joe'
+));
+~~~~
+
+The template:
+
+~~~~
+[xml]
+<p>{$foo}</p>
+<p>{$bar}</p>
+<p>{$joe}</p>
+~~~~

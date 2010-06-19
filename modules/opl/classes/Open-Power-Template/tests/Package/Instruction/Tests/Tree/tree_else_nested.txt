@@ -1,0 +1,28 @@
+opt:else should not be nested.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:tree name="tree">
+FOE
+<opt:body>
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+</opt:body>
+EOF
+<div>
+<opt:else>NO DATA</opt:else>
+</div>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+Opt_Instruction_Exception

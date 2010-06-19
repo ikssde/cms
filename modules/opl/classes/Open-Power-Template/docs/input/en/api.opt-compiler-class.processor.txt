@@ -1,0 +1,7 @@
+Title: processor()
+ShortTitle: Opt_Compiler_Class::processor()
+Reference: Opt_Compiler_Processor processor(string $name)
+
+---
+
+Returns the processor object with the specified `$name`. If the processor does not exist, the `Opt_ObjectNotExists_Exception` is thrown.

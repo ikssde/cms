@@ -1,0 +1,8 @@
+Title: getLastChild()
+ShortTitle: Opt_Xml_Scannable::getLastChild()
+Reference: Opt_Xml_Node getLastChild()
+Status: public
+
+---
+
+Returns the last child of the current node or **NULL**, if the node does not have children.

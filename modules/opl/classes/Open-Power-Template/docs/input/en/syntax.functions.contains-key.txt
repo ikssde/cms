@@ -1,0 +1,10 @@
+Title: containsKey()
+VersionSince: 2.0-RC2
+Reference: boolean containsKey(container $container, mixed $key)
+
+----
+
+Returns **true**, if the container `$container` contains the specified key.
+
+> [help]
+> A note for PHP programmers: the function can be applied to objects, if they implement `ArrayAccess` interface.

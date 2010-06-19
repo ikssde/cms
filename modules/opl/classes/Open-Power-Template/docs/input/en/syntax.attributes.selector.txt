@@ -1,0 +1,38 @@
+Title: opt:selector
+SeeAlso:
+ - syntax.instructions.selector
+ - syntax.attributes.section
+ - syntax.topics.sections
+
+----
+
+> [help]
+> This chapter describes one of section instructions. We recommend to read [Sections][syntax.topics.sections] first to get to know more about them.
+
+This attribute applied to any tag changes it into a [selector][syntax.instructions.selector] with the specified name. It allows to reduce the following code:
+
+~~~~
+[xml]
+<ol>
+    <li opt:selector="list">
+        <opt:foo>Layout 1: {$list.variable}</opt:foo>
+        <opt:bar>Layout 2: {$list.variable}</opt:bar>
+        <opt:joe>Layout 3: {$list.variable}</opt:joe>
+    </li>
+</ol>
+~~~~
+
+Instead:
+
+~~~~
+[xml]
+<ol>
+    <opt:selector name="list">
+        <opt:foo><li>Layout 1: {$list.variable}</li></opt:foo>
+        <opt:bar><li>Layout 2: {$list.variable}</li></opt:bar>
+        <opt:joe><li>Layout 3: {$list.variable}</li></opt:joe>
+    </opt:selector>
+</ol>
+~~~~
+
+The attribute has similar features, as [opt:section][syntax.attributes.section].

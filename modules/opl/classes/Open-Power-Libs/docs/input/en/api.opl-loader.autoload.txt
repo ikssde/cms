@@ -1,0 +1,20 @@
+Title: autoload()
+ShortTitle: Opl_Loader::autoload()
+Construct: static method
+Reference: bool Opl_Loader::autoload( string $className )
+Visibility: public
+Arguments:
+ - Name: $className | EType: string | Desc: The class to load.
+Returns: False, if the class cannot be found with this autoloader.
+VersionSince: 2.0.0-dev7
+SeeAlso:
+ - api.opl-loader.load
+
+----
+
+The class autoloading method. It has to be registered as an autoloader in order to use OPL properly:
+
+~~~~
+[php]
+Opl_Loader::register();
+~~~~

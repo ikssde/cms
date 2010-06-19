@@ -1,0 +1,12 @@
+Title: addAttribute()
+ShortTitle: Opt_Xml_Element::addAttribute()
+Reference: bool addAttribute(Opt_Xml_Attribute $attribute)
+Status: public
+SeeAlso:
+ - api.opt-xml-element.get-attribute
+ - api.opt-xml-element.get-attributes
+ - api.opt-xml-element.remove-attribute
+
+---
+
+Adds the new XML attribute `$attribute` to the tag. If the tag already contains an attribute with the specified name, the method returns **false**.

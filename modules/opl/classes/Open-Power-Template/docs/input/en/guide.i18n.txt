@@ -1,0 +1,99 @@
+Title: Internationalization
+SeeAlso:
+ - syntax.expressions.variables
+
+----
+
+OPT provides several features that make the internationalization easy.
+
+Translation interface
+=====================
+
+Open Power Libs core contains the interface `Opl_Translation_Interface` that allows you to write a class that serves text with the specified identifier and assigned to a specified group. OPT template syntax provides a port for this interface using the language variables `$group@identifier`:
+
+~~~~
+[xml]
+<p>{$news@title}: {$news.title}</p>
+<p>{$news@author}: {$news.author}</p>
+~~~~
+
+In order to make it work, you have to register an object of a class that implements that interface. A sample implementation can be found below:
+
+~~~~
+[php]
+<?php
+
+class translationInterface implements Opl_Translation_Interface
+{
+    private $_original = array(
+        'foo' => array('bar' => 'Value 1', 'joe' => 'Value 2'),
+        'goo' => array('bar' => 'Modificable value: %s'),
+    );
+
+    private $_modified = array();
+
+    public function _($group, $id)
+    {
+        if(isset($this->_modified[$group][$id]))
+        {
+            return $this->_modified[$group][$id];
+        }
+        if(isset($this->_original[$group][$id]))
+        {
+            return $this->_original[$group][$id];
+        }
+        return '';
+    } // end _();
+    public function assign($group, $id)
+    {
+        $args = func_get_args();
+        unset($args[0]);
+        unset($args[1]);
+        if(isset($this->_original[$group][$id]))
+        {
+            if(!isset($this->_modified[$group]))
+            {
+                $this->_modified[$group] = array();
+            }
+            $this->_modified[$group][$id] = vsprintf($this->_original[$group][$id], $args);
+        }
+    } // end assign();
+} // end translationInterface;
+
+$tpl->setTranslationInterface(new translationInterface());
+
+// You can create the views and parse the templates now
+~~~~
+
+There are two ways of registering the translation interface in OPT. The first one is to use the [Opt_Class::setTranslationInterface()][api.opt-class.set-translation-interface] method:
+
+~~~~
+[php]
+$tpl->setTranslationInterface($tf);
+~~~~
+
+The second one is to register the object directly in `Opl_Registry` object, so that the other libraries can also get it. However, this must be done **before** you call [Opt_Class::setup()][api.opt-class.setup].
+
+~~~~
+[php]
+Opl_Registry::set('opl_translate', new translationInterface());
+
+...
+
+// Now the translation interface is imported into OPT from the global OPL registry
+$tpl->setup();
+~~~~
+
+Another interesting feature of the translation interface is that you can assign values to the text from the template side using the `assign()` function:
+
+~~~~
+[xml]
+{assign($foo@bar, $variable)}
+
+<!-- now the $foo@bar should contain some text with a value from the script -->
+{$foo@bar}
+~~~~
+
+It is up to you, how you implement this feature in your script. In our case, we used PHP `vsprintf()` function so that we can use formatting codes like `%s` or `%d` to indicate the places in the text, where to put some values.
+
+The translation interface has one disadvantage - you cannot specify the default interface messages directly in the template, so you must be sure they are defined in some external file and load them somehow.

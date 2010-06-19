@@ -1,0 +1,21 @@
+Title: New instructions
+
+----
+
+Instructions are undoubtedly the most demanding, but also the most powerful way to extend Open Power Template. Most of the library functionality is stored in instructions. In this chapter, we will take a closer look at their architecture and ways to create new ones. However, please note that this requires a bit of knowledge abot the template compiler and how it works.
+
+How the instructions are handled?
+=================================
+
+The instructions are parsed with the *instruction processors*. From the technical point of view, it is hard to say, what the instruction really is. In fact, a single processor can handle multiple instructions, a single instruction can be handled by multiple processors, a single instruction may consist of several XML tags and a single XML tag in the `opt:` namespace can be supported by different instructions. In this chapter, we are going to talk about the instruction processors and how you will split the provided features into instructions - it is up to you.
+
+The instruction parsing is very easy. The processor registers the XML tags and attributes it recognizes (they must lie in one of the namespaces registered in OPT, for example `opt:`) and since then, the compiler redirects all the occurrences of these items to this processor. Now we must generate a suitable PHP code for them.
+
+What the instruction processors could do?
+=========================================
+
+Note that the tags and attributes in the special namespaces do not appear in the output. The only signs of their occurrence are the results they produce:
+
+* PHP code generation for the template.
+* Manipulating the XML tree structure.
+* Manipulating the compiler settings which could affect other processors.

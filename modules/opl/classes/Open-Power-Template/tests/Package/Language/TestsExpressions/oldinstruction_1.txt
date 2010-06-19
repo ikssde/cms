@@ -1,0 +1,31 @@
+Check the legacy expression syntax in the instructions.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="$name" value="$value" />
+</foo>
+<foo>
+<opt:attribute str:name="bar" parse:value="$value" />
+</foo>
+<foo>
+<opt:attribute test:name="##name" test:value="##value" />
+</foo>
+</opt:root>
+
+>>>>data.php
+$this->tpl->backwardCompatibility = true;
+$view->name = 'bar';
+$view->value = 'joe';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="joe">
+</foo>
+<foo bar="joe">
+</foo>
+<foo bar="joe">
+</foo>

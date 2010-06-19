@@ -1,0 +1,5 @@
+Title: Design and concepts
+
+----
+
+This chapter provides the information about the library design.

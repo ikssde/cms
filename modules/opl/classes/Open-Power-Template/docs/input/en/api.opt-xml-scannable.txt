@@ -1,0 +1,17 @@
+Title: Opt_Xml_Scannable class
+ShortTitle: Opt_Xml_Scannable
+Construct: class
+Extends: api.opt-xml-node
+EImplements:
+ - Iterator
+ExtendedBy:
+ - api.opt-xml-element
+ - api.opt-xml-root
+ - api.opt-xml-text
+
+----
+
+This abstract class provides complete XML node manipulation API. Each node that is able to contain children, must extend it. The programming interface is based on DOM, so everyone familiar with this API should have no problems with using it.
+
+> [warning]
+> The class allows to disable adding particular node types as children. In this case the methods may generate `Opt_InvalidNodeType_Exception`.

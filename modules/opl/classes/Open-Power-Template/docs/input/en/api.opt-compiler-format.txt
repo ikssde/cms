@@ -1,0 +1,13 @@
+Title: Opt_Compiler_Format class
+ShortTitle: Opt_Compiler_Format
+Construct: class
+EExtendedBy:
+ - Opt_Format_Array
+ - Opt_Format_SingleArray
+ - Opt_Format_Objective
+ - Opt_Format_StaticGenerator
+ - Opt_Format_RuntimeGenerator
+
+----
+
+The class provides an interface to create new data formats for the compiler.

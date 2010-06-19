@@ -1,0 +1,8 @@
+Title: writeErr()
+ShortTitle: Opl_Loader::writeErr()
+Reference: void Opl_Loader::writeErr( String $value )
+Status: static public
+
+----
+
+Prints the specified value in the standard error output. It automatically adds the newline characters to the value.

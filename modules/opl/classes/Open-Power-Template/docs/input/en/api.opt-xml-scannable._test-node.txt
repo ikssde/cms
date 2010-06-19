@@ -1,0 +1,8 @@
+Title: _testNode()
+ShortTitle: Opt_Xml_Scannable::_testNode()
+Reference: bool _testNode(Opt_Xml_Node $node)
+Status: protected
+
+---
+
+This internal method should be overloaded in the descendant classes. It returns **true**, if the specified `$node` may be a child of the current node type. The default implementation always returns **true**.

@@ -1,0 +1,11 @@
+Title: Entities
+SeeAlso:
+ - syntax.functions.entity
+
+----
+
+Because OPT contains an XML parser, the entities used in the templates are parsed on the server-side. Only the five special XML characters are converted back to the entities before sending the document to the server: `amp`, `quot`, `lt`, `gt`, `apos`. This is usually a good thing. Especially, if you are using UTF-8, you do not have to worry about how the entities are handled, because the browser accepts both the entity strings and the direct character codes.
+
+OPT supports the Unicode entities like `&#184;` and `&#0xB8`. The special HTML entities like `&nbsp;` or `&Acute;` are parsed only if the configuration option `htmlEntities` is set to **true**. If the parser encounters an unknown entity, it generates an exception. You can register your own entities in the parser. The default entities added by OPT are `&lb;` for `{` and `&rb;` for `}`.
+
+If you need to display an entity in the output document, you may use the function `entity()`.

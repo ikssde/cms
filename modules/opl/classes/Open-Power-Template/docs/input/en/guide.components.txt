@@ -1,0 +1,320 @@
+Title: Components and forms
+SeeAlso:
+ - syntax.topics.components
+ - extending.components
+
+----
+
+The components have been designed to help you building HTML forms. They provide a robust interface both on the script and template side to deal with this task. The basic ideas concerning components can be found in [Syntax / Components][syntax.topics.components] chapter and the guide to writing your own component classes - in [Extending / Components][extending.components]. Here we are going to show some practical techniques.
+
+Component overview
+==================
+
+The components offer you the following features:
+
+ - Displaying a particular form element.
+ - Managing the form element neighborhood look. This includes the field title, descriptions, error display fields etc.
+ - Managing the layout of the element.
+ - Generating various events, for example displaying the errors.
+ - Being created directly in the template.
+ - Being created by the script and deployed in the custom ports in the template.
+
+We assume that you have already read the documents mentioned above and have the basic knowledge, how they really work and how they look like.
+
+A basic form
+============
+
+Below, we present a sample HTML form that asks the user for its name, surname and the age. We assume that we have the following components available:
+
+1. `inputComponent` - `form:input`
+2. `textareaComponent` - `form:textarea`
+3. `selectComponent` - `form:select`
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root>
+	<form method="post" action="script.php">
+		<form:input name="name">
+			<div opt:component-attributes="default">
+				<label parse:for="$system.component.name">Name:</label>
+				<opt:display />
+
+				<opt:onEvent name="error">
+					<p class="error">Error: {$system.component.error}</p>
+				</opt:onEvent>
+			</div>
+		</form:input>
+
+		<form:input name="surname">
+			<div opt:component-attributes="default">
+				<label parse:for="$system.component.name">Surname:</label>
+				<opt:display />
+
+				<opt:onEvent name="error">
+					<p class="error">Error: {$system.component.error}</p>
+				</opt:onEvent>
+			</div>
+		</form:input>
+
+		<form:select name="age" datasource="$availableAges">
+			<div opt:component-attributes="default">
+				<label parse:for="$system.component.name">Your age:</label>
+				<opt:display />
+
+				<opt:onEvent name="error">
+					<p class="error">Error: {$system.component.error}</p>
+				</opt:onEvent>
+			</div>
+		</form:select>
+	</form>
+</opt:root>
+~~~~
+
+We may run it with the following code:
+
+~~~~
+[php]
+// The configuration
+$tpl = new Opt_Class;
+
+// ...
+
+$tpl->register(Opt_Class::OPT_NAMESPACE, 'form');
+$tpl->register(Opt_Class::OPT_COMPONENT, 'form:input', 'inputComponent');
+$tpl->register(Opt_Class::OPT_COMPONENT, 'form:textarea', 'textareaComponent');
+$tpl->register(Opt_Class::OPT_COMPONENT, 'form:select', 'selectComponent');
+$tpl->setup();
+
+// The script
+
+$view = new Opt_View('my_form.tpl');
+$view->availableAges = array(0 =>
+	'Under 10',
+	'10 - 18',
+	'19 - 25',
+	'25 - 35',
+	'35 - 50',
+	'50 - 65',
+	'Above 65'
+);
+
+// The composition of the output document, executing etc. here
+~~~~
+
+As you can see, the component classes can be registered in OPT and receive their own XML tags. As we have chosen the `form` namespace for them, we must register the namespace, too, so that OPT knows that it must parse it. The rest depends on the component source code - they may be smart enough to import most of the necessary settings, including the validation result, from the form processing library, using the name provided as the `name` attribute.
+
+However, we see that the template is quite long and these are just three form fields! Fortunately, thanks to snippets, we may write only one, universal field structure and use it across all our forms. Let's create the `snippets.tpl` file:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root>
+	<opt:snippet name="formField">
+		<div opt:component-attributes="default">
+			<label parse:for="$system.component.name">{$system.component.title}: </label>
+			<opt:display />
+			<opt:onEvent name="error">
+				<p class="error">Error: {$system.component.error}</p>
+			</opt:onEvent>
+		</div>
+	</opt:snippet>
+</opt:root>
+~~~~
+
+Then, we insert the snippet to the component ports:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root include="snippets.tpl">
+	<form method="post" action="script.php">
+		<form:input name="name" template="formField">
+			<opt:set str:name="title" str:value="Name" />
+		</form:input>
+
+		<form:input name="surname" template="formField">
+			<opt:set str:name="title" str:value="Surname" />
+		</form:input>
+
+		<form:select name="age" datasource="$availableAges" template="formField">
+			<opt:set str:name="title" str:value="Your age" />
+		</form:select>
+	</form>
+</opt:root>
+~~~~
+
+The code in the snippet is automatically merged with the ports. If we wish to modify the overall look of the form fields, we just modify the `snippets.tpl` file. Please note that we have not modified any line of the PHP code. With Open Power Template, the script does not have to deal with the view issue, like in many PHP frameworks. The template engine gives you all the necessary tools to build even very complex forms.
+
+Dynamic forms
+=============
+
+The components do not have to be statically deployed all the time. As the component logic is a PHP object, our form processor may generate such objects for each field in the form and put them into a section:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root include="snippets.tpl">
+	<form method="post" action="script.php">
+		<opt:section name="fields">
+			<opt:component from="$fields.component" template="formField" />
+		</opt:section>
+	</form>
+</opt:root>
+~~~~
+
+The PHP script manages the components chosen to represent the form elements, but the template still has the control over the field layout thanks to the snippet. More advanced solution may allow to assign the fields to various containers, so that we could have different sections for each of the container and different layouts:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root include="snippets.tpl">
+	<form method="post" action="script.php">
+		<opt:section name="container1">
+			<opt:component from="$container1.component" template="formField_TypeA" />
+		</opt:section>
+		<opt:section name="container2">
+			<opt:component from="$container2.component" template="formField_TypeB" />
+		</opt:section>
+	</form>
+</opt:root>
+~~~~
+
+If we have a field that needs a custom treatment, we may still define it manually:
+
+~~~~
+[xml]
+<?xml version="1.0" ?>
+<opt:root include="snippets.tpl">
+	<form method="post" action="script.php">
+		<opt:section name="container1">
+			<opt:component from="$container1.component" template="formField_TypeA" />
+		</opt:section>
+		
+		<form:textarea name="content">
+			<div class="content" opt:component-attributes="default">
+				<div class="wysiwyg">
+					<!-- some WYSIWYG buttons here -->
+				</div>
+				<opt:display />
+				
+				<opt:onEvent name="error">
+					<p class="error">Error: {$system.component.error}</p>
+				</opt:onEvent>
+				<opt:onEvent name="anotherEvent">
+					<!-- some code here -->
+				</opt:onEvent>
+			</div>
+		</form:textarea>
+		
+		<opt:section name="container2">
+			<opt:component from="$container2.component" template="formField_TypeB" />
+		</opt:section>
+	</form>
+</opt:root>
+~~~~
+
+Complex form technical issues
+=============================
+
+In the last example, one of the components used in the form was statically deployed. The static deployment means that the component object is created on the template-side. Our components should be prepared for that. Usually, we would also export the whole form object or its data to the template, and such component could find and load them automatically in `setView()` method:
+
+~~~~
+[php]
+class inputComponent implements Opt_Component_Interface
+{
+	private $_initialized = false;
+	private $_name = '';
+	
+	public function __construct($name = '')
+	{
+		if(is_string($name))
+		{
+			// Created explicitely by the user or by the template engine
+			$this->_initialized = false;
+			$this->_name = $name;
+		}
+		elseif(is_array($name))
+		{
+			// Passing an array is a signal that the component has been created
+			// By the form processor factory:
+			$this->initialize($name);
+		}
+		
+	} // end __construct();
+
+	public function setView(Opt_View $view)
+	{
+		if(!$this->_initialized && !$view->defined('form'))
+		{
+			throw new Exception('The component is not initialized!'); // sure, why not exceptions?
+		}
+		
+		// Feed the component with the data obtained from the
+		// form processor obtained from the view object just
+		// before the deployment. This is the last chance.
+		if(!$this->_initialized)
+		{
+			$form = $view->get('form');
+			$this->initialize($form->getFieldData($this->_name));
+		}
+	} // end setView();
+
+	/**
+	 * This method is not included in the Opt_Component_Interface.
+	 * Our form processor could use it to feed the component with the
+	 * necessary data.
+	 */
+	public function initialize(Array $array)
+	{
+		// some code here...
+	} // end initialize();
+} // end inputComponent;
+~~~~
+
+There is also another technique available, but it involves creating new instructions. Even more advanced form processors could have their own abstraction layer created over the `<form>` tag, for example `<opt:form>` that automatically integrates with the PHP form object created by the script and generates the necessary attributes. In this situation, the `<opt:form>` instruction processor is also allowed to modify the default compiler behavior of the static component deployment.
+
+> [information]
+> The component processor registers several possible conversions for the component deployment code. Instead of creating a new component object, the static deployment tag: `<form:input>` etc. **can** refer to the form processor factory object. The template code is not affected, but becomes even more flexible.
+
+So, as we have the instruction processor (see [Extending / Instructions][extending.instructions] to get to know, how to write them), we may add some extra code to it that will call the form processor factory method instead of creating a new object:
+
+~~~~
+[php]
+class Opt_Instruction_Form extends Opt_Compiler_Processor
+{
+
+	public function processNode(Opt_Xml_Node $node)
+	{
+		// the rest of the instruction processing code goes here
+		// ...
+		
+		// replace the standard deployment with our code:
+		$this->_compiler->setConversion('##component', '$_form->componentFactory(\'%CLASS%\', \'%TAG%\', %ATTRIBUTES%)');
+		$node->set('postprocess', true);
+		$this->_process($node);
+	} // end processNode(); 
+	
+	public function postprocessNode(Opt_Xml_Node $node)
+	{
+		// Do not forget to remove the conversion outside the opt:form tag!
+		$this->_compiler->unsetConversion('##component');
+	} // end postprocessNode();
+} // end Opt_Instruction_Form;
+~~~~
+
+As the compiler generates the PHP code, our conversion pattern contains the new PHP code that should get us the component. Of course, the `componentFactory()` method must be implemented in the form processor class. The code uses some placeholders defined by the component processor:
+
+1. `%CLASS%` - the component class name.
+2. `%TAG%` - the component tag name.
+3. `%ATTRIBUTES%` - the PHP code of the associative array that contains custom component port attributes.
+
+They can help the factory method to identify, what component object should be returned.
+
+> [help]
+> The conversion can be also applied for a single component class only. Moreover, the same trick works for blocks, too.
+
+Conclusion
+==========
+
+As you can see, the components give us new opportunities of the form layout management. The code is very simple, portable and scalable: it can handle both the simplest and the most complex form structures without bigger problems. Compare it to the various solutions found in popular PHP frameworks, where we were in trouble unless we followed the path determined by the developers. Furthermore, the modularization techniques use the basic OPT features, such as snippets (note: template inheritance uses them, too! Think about combining the forms and the template inheritance!). This is another advantage over pure PHP-based solutions.

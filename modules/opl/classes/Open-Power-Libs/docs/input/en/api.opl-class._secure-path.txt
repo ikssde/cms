@@ -1,0 +1,23 @@
+Title: _securePath()
+ShortTitle: Opl_Class::_securePath()
+Construct: method
+Reference: void Opl_Class::_securePath( string &$path )
+Visibility: public
+Status: internal
+Arguments:
+ - Name: $path | EType: &string | Desc: The path to secure.
+VersionSince: 2.0.0-dev8
+
+----
+
+A help method to sanitize the file paths by adding the slash to the end, if the user has not provided it:
+
+~~~~
+[php]
+$path = 'this/is/some/path';
+$this->_securePath($path);
+echo $path; // shows "this/is/secure/path/"
+~~~~
+
+> [information]
+> As of OPL 2.0.2 the method visibility is changed from *protected* to *public* in order to simplify the further migration to OPL 2.1. This is an internal method, so the change should not affect existing scripts.

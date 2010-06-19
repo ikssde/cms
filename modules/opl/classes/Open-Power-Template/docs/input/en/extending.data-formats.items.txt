@@ -1,0 +1,40 @@
+Title: Container items
+
+----
+
+The data formats allow you to control the access to the container subitems, for example `$container.subitem`. They are programmed similarly to ordinary variables.
+
+> [information]
+> The snippets described above are also used in sections: `$sectionName.sectionItem`.
+
+Configuration
+=============
+
+The variable access snippets are located in the `item` group, so you must add it to `$_supports` field in your data format. Furthermore, you need to set up the property `variable:assign`. It is a boolean value that controls whether your data format supports assignments of a new value to the variables. Another property is `item:useReference` that should be set to **true** if the item value can be accessed via reference, similarly to `variable:useReference`.
+
+Reading the values
+==================
+
+Similarly to variables, reading the value is performed with the `item:main` snippet. It should return a *piece of expression* that reads the value. The item name is provided in the `item` format variable. OPT concatenates the pieces coming from all the items creating a container call, so the snippet must form a valid PHP even then:
+
+~~~~
+[php]
+	case 'item:main':
+		return '->readItem(\''.$this->_getVar('item').'\')';
+~~~~
+
+Note that the snippet begins with an object call `->`. Let's take a look at a sample container call: `$container.item`. The first part, `$container` is processed with `variable:main` snippet, giving us something like that `$this->_data['container']` in the default data format. Then, `.item` is processed with our data format and `item:main` snippet that gives `->readItem('item')`. The final code is `$this->_data['container']->readItem('item')`. 
+
+> [information]
+> It is up to programmer to validate the variable before choosing the data format.
+
+Modifying the variable values
+=============================
+
+It is performed with `item:assign` snippet similarly to `variable:item`:
+
+~~~~
+[php]
+	case 'item:assign':
+		return '->saveItem(\''.$this->_getVar('item').'\', '.$this->_getVar('value').')';
+~~~~

@@ -1,0 +1,8 @@
+Title: __construct()
+ShortTitle: Opt_Xml_Expression::__construct()
+Reference: __construct(string $expression)
+Status: public
+
+---
+
+Initializes the expression node. It takes the OPT expression as an argument.

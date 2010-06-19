@@ -1,0 +1,19 @@
+Title: __set()
+ShortTitle: Opt_View::__set()
+Construct: magic method
+Reference: mixed __set(string $name, mixed $value)
+Visibility: public
+SeeAlso:
+ - api.opt-view.assign
+
+----
+
+This magic method provides an alternative way to create template local variables:
+
+~~~~
+[php]
+$view->variable = 'Some value';
+~~~~
+
+> [help]
+> It is recommended to use the magic method instead of [Opt_View::assign()][api.opt-view.assign] unless we are not going to specify a dynamic variable name.

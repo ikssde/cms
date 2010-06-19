@@ -1,0 +1,10 @@
+Title: getParent()
+ShortTitle: Opt_Xml_Node::getParent()
+Reference: Opt_Xml_Node getParent()
+Status: public
+SeeAlso:
+ - api.opt-xml-node.set-parent
+
+---
+
+Returns the current node parent.

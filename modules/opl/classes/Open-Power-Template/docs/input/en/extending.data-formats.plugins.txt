@@ -1,0 +1,31 @@
+Title: Format plugins
+SeeAlso:
+ - extending.plugins
+
+----
+
+Data formats can be packed as plugins, however, they need a more sophisticated format. Open Power Template requires the format plugins to:
+
+* The file name must be in the format: `format.Foo.php`
+* The class name must be in the format: `Opt_Format_Foo`, where `Foo` must be the same, as in the file name.
+
+A sample instruction plugin can be found below:
+
+~~~~
+[php]
+<?php
+// format.Plugin.php
+
+class Opt_Format_Plugin extends Opt_Compiler_Format
+{
+	// ...
+} // end Opt_Format_Plugin;
+~~~~
+
+Note that you can also register the data format manually:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_FORMAT, 'Foo');	// Registers "Foo" from "Opt_Format_Foo" class
+$tpl->register(Opt_Class::OPT_FORMAT, 'Foo', 'Some_Class'); // Registers "Foo" from "Some_Class" class
+~~~~

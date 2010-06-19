@@ -1,0 +1,118 @@
+Title: opt:attribute
+SeeAlso:
+ - syntax.instructions.tag
+
+----
+
+`opt:attribute` defines a new, dynamic attribute in the parent tag. It does not have a content, but takes two attributes that identify the name and the value of the new attribute:
+
+ Name           | Type                | Required? | Description
+----------------|---------------------|-----------|:-----------------------------------
+ name           | Expression          | Yes       | New attribute name
+ value          | Expression          | Yes       | New attribute value
+ ns             | Expression          | No        | Attribute namespace
+
+Below, you can find an example that allows to define a new attribute for `<div>` whose name is read from the variable:
+
+~~~~
+[xml]
+<div>
+	<opt:attribute name="$attributeName" value="$attributeValue"/>
+	Content
+</div>
+~~~~
+
+The instruction cooperates with OPT instruction attributes. If we wish to read the attribute list from a section, we can use the following solution:
+
+~~~~
+[xml]
+<div>
+	<opt:attribute name="$attributes.name" value="$attributes.value" opt:section="attributes"/>
+	Content
+</div>
+~~~~
+
+> [error]
+> `opt:attribute` cannot add attributes to other OPT instructions, except for `opt:tag`.
+
+If the attribute already exists in the tag or has been defined with the previous instance of `opt:attribute`, the instruction throws an exception.
+
+Conditional attributes
+----------------------
+
+`opt:attribute` can also cooperate with [opt:if][syntax.attributes.if] attribute to add an attribute to the parent tag conditionally.
+
+~~~~
+[xml]
+<div>
+	<opt:attribute name="class" value="highlight" opt:if="$highlightDiv"/>
+	Content
+</div>
+~~~~
+
+Handling namespaces
+-------------------
+
+The optional attribute `ns` can be used to set the attribute namespace. The value may be loaded from a variable or specified manually, for example:
+
+~~~~
+[xml]
+<foo>
+    <opt:attribute str:ns="xml" name="$attrName" value="$attrValue" />
+</foo>
+
+<foo>
+    <opt:attribute ns="$ns" str:name="foo" value="$attrValue" />
+</foo>
+~~~~
+
+> [help]
+> The `ns` attribute accepts empty values. The namespace part is not generated then.
+
+Conditional attribute values
+----------------------------
+
+Since OPT 2.0.2 it is possible to create elegant conditional value selector:
+
+~~~~
+[xml]
+<opt:attribute str:name="foo">
+	<opt:value test="$condition1">Value 1</opt:value>
+	<opt:value test="$condition2">Value 2</opt:value>
+	<opt:value test="$condition3">Value 3</opt:value>
+	<opt:value>Default value</opt:value>
+</opt:attribute>
+~~~~
+
+OPT will check, which condition is passed and select the appropriate value for the attribute. If we do not specify the `test` attribute in `opt:value`, it becomes the default attribute value. The default attribute value can be also defined with `value` attribute in the main tag:
+
+~~~~
+[xml]
+<opt:attribute str:name="foo" str:value="Default value">
+	<opt:value test="$condition1">Value 1</opt:value>
+	<opt:value test="$condition2">Value 2</opt:value>
+	<opt:value test="$condition3">Value 3</opt:value>
+</opt:attribute>
+~~~~
+
+> [error]
+> There must not be either two `opt:value` tags without the `test` attribute or a `opt:value` without `test` attribute and `value attribute in the instruction at the same time.
+
+As you can see, the value is defined as a tag value, not as an attribute. Contrary to other instruction, OPT forces here some limitations. `opt:value` must not contain any other tag, including the instruction. The following construct is forbidden:
+
+~~~~
+[xml]
+<opt:value test="$condition">Text <foo> ... </foo> text</opt:value>
+~~~~
+
+Note that you can still use ordinary OPT expressions:
+
+~~~~
+[xml]
+<opt:value test="$condition">Text {$expression} text</opt:value>
+~~~~
+
+The value list can be loaded from a [snippet][syntax.instructions.snippet] with [opt:use][syntax.attributes.use] attribute.
+
+> [information]
+> If there is no default value and the instruction cannot select any other value (none of the conditions is true), the entire attribute is not displayed.

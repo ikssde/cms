@@ -1,0 +1,31 @@
+This test checks the multiple components (potential bug #62)
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<opt:component from="$c1">
+<p><span title="parse:$system.component.title">{$system.component.title}</span></p>
+</opt:component>
+<opt:component from="$c2">
+<p><span title="parse:$system.component.title">{$system.component.title}</span></p>
+</opt:component>
+</opt:root>
+
+>>>>data.php
+
+ob_start();
+$view->c1 = new Extra_Mock_Component;
+$view->c1->title = 'FOO';
+
+$view->c2 = new Extra_Mock_Component;
+$view->c2->title = 'BAR';
+ob_get_clean();
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+<p><span title="PARAM title RETURNEDFOO">PARAM title RETURNEDFOO</span></p>
+VIEW PASSED
+<p><span title="PARAM title RETURNEDBAR">PARAM title RETURNEDBAR</span></p>

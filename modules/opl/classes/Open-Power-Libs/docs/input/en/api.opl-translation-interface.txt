@@ -1,0 +1,6 @@
+Title: Opl_Translation_Interface
+Construct: interface
+
+----
+
+This is an interface for the translation services in OPL. It allows to read the interface texts using simple and short keys. The programmer should implement language-specific features on his own.

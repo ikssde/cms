@@ -1,0 +1,23 @@
+Title: number()
+Reference: string number(number $num [, integer $decimals [, string $decimalSeparator [, string $thousandSeparator]]])
+
+----
+
+Formats the number `$num` in order to look nice in the text. The optional attributes specify the used format:
+
+1. `$decimals` - the number of decimals to display
+2. `$decimalSeparator` - the separator of the integer and decimal part.
+3. `$thousandSeparator` - the thousand separator
+
+Sample use:
+
+~~~~
+[xml]
+<!-- print: "1,234.56" -->
+{number(1234.567, 2, '.', ',')}
+~~~~
+
+If the formatting arguments are not defined, the function reads the format from OPT configuration.
+
+> [information]
+> This function can operate also on a container of strings, operating on them all and returning the modified container.

@@ -1,0 +1,10 @@
+Title: hasProlog()
+ShortTitle: Opt_Xml_Root::hasProlog()
+Reference: bool hasProlog()
+Status: public
+SeeAlso:
+ - api.opt-xml-root.set-prolog
+
+---
+
+Returns **true**, if there is a prolog assigned to the root node.

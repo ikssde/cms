@@ -1,0 +1,30 @@
+Title: postprocessNode()
+ShortTitle: Opt_Compiler_Processor::postprocessNode()
+Construct: optional method
+Reference: void postprocessNode(Opt_Xml_Node $node)
+Visibility: public
+Arguments:
+ - Name: $node | Type: api.opt-xml-node | Desc: The node to process.
+SeeAlso:
+ - api.opt-compiler-processor.process-node
+
+---
+
+Processes the registered instruction tags after their children have already been parsed, too. You must extend this method, if you want to write your own implementation.
+
+> [warning]
+> The compiler calls this method *if and only if* we set the XML node value `postprocess` to **true**.
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+    // The node must be postprocessed after the children nodes are parsed.
+    $node->set('postprocess', true);
+} // end processNode();
+
+public function postprocessNode(Opt_Xml_Node $node)
+{
+    echo 'Hello world!';
+} // end postprocessNode();
+~~~~

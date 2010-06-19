@@ -1,0 +1,23 @@
+Title: compileExpression()
+ShortTitle: Opt_Compiler_Class::compileExpression()
+Reference: array compileExpression(string &$expression [, $allowAssignment = false [, $escaping = self::ESCAPE_ON]])
+
+---
+It compiles given OPT expression `$expression` to correct PHP expression. Additional parameters:
+
+1. `$allowAssignment` - if on, it is allowed to use an assignment operator in expression.
+2. `$escaping` - if on, the expression is sent to [Opt_Compiler_Class::escape()][api.opt-compiler-class.escape].
+
+The returned value is an array consisting of the compiled expression and extra information concerning it:
+
+`$array[0]`
+:	(string) The compiled expression
+
+`$array[1]`
+:	(boolean) Whether the assignment operator is used.
+
+`$array[2]`
+:	(boolean) Whether the expression is actually a single variable
+
+`$array[3]`
+:	(string) If the escaping is enabled, here we have the unescaped expression

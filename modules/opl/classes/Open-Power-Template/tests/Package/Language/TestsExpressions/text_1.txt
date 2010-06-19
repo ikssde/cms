@@ -1,0 +1,22 @@
+Check if selecting the expression engines for curly bracket expressions work.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+{$foo}
+{parse:$foo}
+{str:foo}
+{test:##foo}
+</opt:root>
+
+>>>>data.php
+$view->foo = 'bar';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+bar
+bar
+foo
+bar

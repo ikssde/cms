@@ -1,0 +1,23 @@
+This test checks displaying the component (with attributes).
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+
+<opt:component from="$component">
+<opt:display foo="str:bar"/>
+</opt:component>
+
+</opt:root>
+
+>>>>data.php
+
+$view->component = new Extra_Mock_Component;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+COMPONENT DISPLAYED WITH:
+foo: bar

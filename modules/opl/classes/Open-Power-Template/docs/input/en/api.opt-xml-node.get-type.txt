@@ -1,0 +1,14 @@
+Title: getType()
+ShortTitle: Opt_Xml_Node::getType()
+Reference: string getType()
+Status: public
+
+---
+
+Returns the name of the current node type. The available values are:
+
+1. `Opt_Xml_Cdata`
+2. `Opt_Xml_Text`
+3. `Opt_Xml_Element`
+4. `Opt_Xml_Expression`
+5. `Opt_Xml_Root`

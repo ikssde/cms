@@ -1,0 +1,12 @@
+Title: Opt_Xml_Node class
+ShortTitle: Opt_Xml_Node
+Construct: abstract class
+Extends: api.opt-xml-buffer
+ExtendedBy:
+ - api.opt-xml-scannable
+ - api.opt-xml-cdata
+ - api.opt-xml-expression
+
+----
+
+`Opt_Xml_Node` contains the basic API for all the nodes that may create the XML tree in OPT. It provides the support for parent nodes and checking the node type, however it is not responsible for managing the child nodes.

@@ -1,0 +1,12 @@
+Title: parseEntities()
+ShortTitle: Opt_Compiler_Class::parseEntities()
+Reference: string parseEntities(string $text)
+SeeAlso:
+ - api.opt-compiler-class.parse-short-entities
+
+---
+
+Parses the HTML entities in the `$text` and returns the modified version.
+
+> [information]
+> The method parses OPT entities `&lb;` and `&rb;` as well.

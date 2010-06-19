@@ -1,0 +1,21 @@
+Title: onClose()
+ShortTitle: Opt_Block_Interface::onClose()
+Construct: abstract method
+Reference: void onClose()
+Visibility: public
+SeeAlso:
+ - api.opt-block-interface.on-open
+
+----
+
+Represents the action that must be performed for a block port closing tag:
+
+~~~~
+[xml]
+<opt:block from="$var"> 
+    ...
+</opt:block> <!-- here -->
+~~~~
+
+> [information]
+> The method is executed even if the `onOpen()` method ordered not to display the content.

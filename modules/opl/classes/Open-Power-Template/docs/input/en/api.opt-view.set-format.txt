@@ -1,0 +1,12 @@
+Title: setFormat()
+ShortTitle: Opt_View::setFormat()
+Construct: method
+Reference: void setFormat( string $variable, string $format )
+Visibility: public
+SeeAlso:
+ - api.opt-view.set-format-global
+ - guide.data-formats
+
+----
+
+Sets the format to the local template variable `$variable`. To get to know more about data formats in OPT, see a chapter about [data formats][guide.data-formats].

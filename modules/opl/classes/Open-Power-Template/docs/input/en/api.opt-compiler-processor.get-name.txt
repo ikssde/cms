@@ -1,0 +1,9 @@
+Title: getName()
+ShortTitle: Opt_Compiler_Processor::getName()
+Construct: final method
+Reference: string getName()
+Returns: The processor name
+
+---
+
+Returns the name of the processor saved in the protected field `$_name`.

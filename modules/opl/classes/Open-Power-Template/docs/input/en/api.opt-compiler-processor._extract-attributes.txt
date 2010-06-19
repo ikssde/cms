@@ -1,0 +1,80 @@
+Title: _extractAttributes()
+ShortTitle: Opt_Compiler_Processor::_extractAttributes()
+Reference: array _extractAttributes(Opt_Xml_Element $tag, Array &$attributes)
+Status: final protected
+SeeAlso:
+ - api.opt-compiler-processor.process-node
+
+---
+
+This method simplifies the instruction tag attribute validation. As the first parameter, we pass the `Opt_Xml_Element` node we want to check, and the second one is a list of acceptable attributes and their definitions. It is passed by reference, because OPT replaces it with an associative array of attribute values. 
+
+`$attributes` is an associative array, where the index means the attribute name, and the value is a three-element array:
+
+1. Is the attribute required or optional: `Opt_Xml_Attribute::REQUIRED` or `Opt_Xml_Attribute::OPTIONAL`.
+2. Attribute type (described below).
+3. The default value for the attribute, if it is optional and the template designer has not specified it.
+
+The available attribute types are divided in two groups. The first one are the attributes that their value must be known at the stage of compilation and it cannot be set with a template variable or the script. In this category, we can find:
+
+1. `Opt_Xml_Attribute::ID` - an identifier
+2. `Opt_Xml_Attribute::HARD_STRING` - a string
+3. `Opt_Xml_Attribute::NUMBER` - a number
+
+In the second group, there are the types that send the attribute value to the expression parser and return a valid PHP expression that may be placed somewhere in the instruction output code. Note that the template designer may always choose one of the types by changing the namespace, so they are only a suggestion, which one is the default one, if the namespace is not defined.
+
+1. `Opt_Xml_Attribute::STRING` - compile the value as a PHP string by default.
+2. `Opt_Xml_Attribute::EXPRESSION` - compile the value as an expression by default.
+3. `Opt_Xml_Attribute::ASSIGN_EXPR` - compile the value as a PHP string by default. The assignment operator is allowed.
+
+An example:
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+    $attr = array(
+        // 'foo' is required
+        'foo' => array(Opt_Xml_Attribute::REQUIRED, Opt_Xml_Attribute::EXPRESSION),
+        // 'bar' is optional and its default value is "bar"
+        'bar' => array(Opt_Xml_Attribute::OPTIONAL, Opt_Xml_Attribute::ID, 'bar')
+    );
+    $this->_extractAttributes($node, $attr);
+
+    // Mark that we do not generate any PHP code for this node.
+    $node->set('nophp', true);
+    
+    // Generate the output code for this tag.
+    $node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, 'The compiled expression is: '.$attr['foo'].'<br/>');
+    if($attr['bar'] != 'bar')
+    {
+        $node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, 'The optional attribute has been set<br/>');
+    }
+} // end processNode();
+~~~~
+
+The method supports also undefined number of attributes. If we specify a special rule called `__UNKNOWN__`, all the attributes that are not declared in the array, are matched against it. The values of those attributes are **returned** by the method as an associative array. If `__UNKNOWN__` is required, the template designer must specify at least one custom attribute.
+
+~~~~
+[php]
+public function processNode(Opt_Xml_Node $node)
+{
+    $attr = array(
+        // Definiujemy atrybut wymagany
+        'foo' => array(Opt_Xml_Attribute::REQUIRED, Opt_Xml_Attribute::EXPRESSION),
+        // Definiujemy atrybut opcjonalny z domyślną wartością "bar"
+        '__UNKNOWN__' => array(Opt_Xml_Attribute::OPTIONAL, Opt_Xml_Attribute::ID)
+    );
+    $other = $this->_extractAttributes($node, $attr);
+    
+    $node->set('nophp', true);
+    
+    $node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, 'The compiled expression is: '.$attr['foo'].'<br/>');
+
+    // Wyświetl nadmiarowe atrybuty
+    foreach($other as $name => $value)
+    {
+        $node->addBefore(Opt_Xml_Buffer::TAG_BEFORE, $name.': '.$value.'<br/>');
+    }
+} // end processNode();
+~~~~

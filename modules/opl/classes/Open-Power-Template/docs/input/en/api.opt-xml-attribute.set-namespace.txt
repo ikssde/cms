@@ -1,0 +1,8 @@
+Title: setNamespace()
+ShortTitle: Opt_Xml_Attribute::setNamespace()
+Reference: void setNamespace(string $namespace)
+Status: public
+
+---
+
+Sets the new XML attribute namespace.

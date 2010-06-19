@@ -1,0 +1,38 @@
+opt:equals and opt:contains can be mixed in one switch at the top level.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<!-- first switch -->
+<opt:switch test="$value1">
+<opt:contains value="bar">Bar</opt:contains>
+<opt:contains value="joe">Joe</opt:contains>
+<opt:contains value="goo">Goo</opt:contains>
+<opt:equals value="bar">Bar</opt:equals>
+<opt:equals value="joe">Joe</opt:equals>
+<opt:equals value="goo">Goo</opt:equals>
+</opt:switch>
+
+<!-- second switch -->
+<opt:switch test="$value2">
+<opt:contains value="bar">Bar</opt:contains>
+<opt:contains value="joe">Joe</opt:contains>
+<opt:contains value="goo">Goo</opt:contains>
+<opt:equals value="bar">Bar</opt:equals>
+<opt:equals value="joe">Joe</opt:equals>
+<opt:equals value="goo">Goo</opt:equals>
+</opt:switch>
+
+</opt:root>
+
+>>>>data.php
+$view->value1 = array('joe', 'bar');
+$view->value2 = 'bar';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Bar
+Joe
+Bar

@@ -1,0 +1,13 @@
+Title: setName()
+ShortTitle: Opt_Xml_Element::setName()
+Reference: void setName(string $name)
+Status: public
+
+---
+
+Sets the new name to the current node. Optionally, we are able to set both tag name and namespace using the XML notation: *namespace:name*. An example:
+
+~~~~
+[php]
+$node->setName('opt:name');
+~~~~

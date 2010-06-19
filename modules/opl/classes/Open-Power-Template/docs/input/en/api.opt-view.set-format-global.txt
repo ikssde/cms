@@ -1,0 +1,26 @@
+Title: setFormatGlobal()
+ShortTitle: Opt_View::setFormatGlobal()
+Construct: static method
+Reference: void setFormatGlobal( string $item, string $format [, boolean $global = true ] )
+Visibility: public
+SeeAlso:
+ - api.opt-view.set-format
+ - guide.data-formats
+
+----
+
+Sets the format to the global template item `$name`. To get to know more about data formats in OPT, see a chapter about [data formats][guide.data-formats].
+
+> [information]
+> `Opt_View::setFormatGlobal()` in fact provides a nice, object-independent wrapper to specify the global variable format without the need of having an `Opt_View` object. The following two lines are equivalent:
+> 
+>     [php]
+>     $view->setFormat('global.variable', 'Objective');
+>     Opt_View::setFormatGlobal('variable', 'Objective');
+
+If the `$global` argument is **false**, the method does not prepend *global.* string to the registered item. It
+can be used to specify the data format of the local variable in all the views, instead of one. Note that a particular
+view can overwrite this format with `setFormat()`.
+
+> [information]
+> The `$global` attribute is available since OPT 2.0.1.

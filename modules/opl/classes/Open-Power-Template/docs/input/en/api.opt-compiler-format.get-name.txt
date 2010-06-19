@@ -1,0 +1,8 @@
+Title: getName()
+ShortTitle: Opt_Compiler_Format::getName()
+Reference: string getName()
+Status: final
+
+---
+
+Returns the format name created from the class name.

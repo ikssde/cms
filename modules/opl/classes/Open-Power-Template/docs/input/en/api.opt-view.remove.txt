@@ -1,0 +1,18 @@
+Title: remove()
+ShortTitle: Opt_View::remove()
+Construct: method
+Reference: boolean remove( string $name )
+Visibility: public
+SeeAlso:
+ - api.opt-view.remove-global
+
+----
+
+Removes the existing local view variable `$name` and returns **true** in case of success.
+
+Alternatively, you may use the following syntax:
+
+~~~~
+[php]
+unset($view->variable);
+~~~~

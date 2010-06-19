@@ -1,0 +1,44 @@
+Title: processEvent()
+ShortTitle: Opt_Component_Interface::processEvent()
+Construct: abstract method
+Visibility: public
+Reference: boolean processEvent($event)
+Arguments:
+ - Name: $event | EType: $string | Desc: The event name
+Returns: The boolean value indicating if the specified event occured or not.
+
+----
+
+`processEvent()` is called to ask the component if the specified `$event` is going to happen. The method must return **true** in order to display the content associated to the specified event, or **false** otherwise. Optionally, it can do some extra stuff. In the example below, we are handling the **error** event. If it happens, the component creates an extra template variable with the error message:
+
+~~~~
+[php]
+public function processEvent($event) 
+{
+	if($event == 'error')
+	{
+		if(!$this->valid)
+		{
+			// An error occurred
+			$this->view->errorMessage = $this->errorMessage;
+			return true;
+		}
+	}
+	return false;
+} // end processEvent();
+~~~~
+
+Now we can use it in the template:
+
+~~~~
+[xml]
+<opt:component from="$component">
+	...
+	<opt:onEvent name="error">
+		<p>An error occurred: {$errorMessage}</p>
+	</opt:onEvent>
+</opt:component>
+~~~~
+
+> [important]
+> For the unsupported events, `processEvent()` should return **false**.

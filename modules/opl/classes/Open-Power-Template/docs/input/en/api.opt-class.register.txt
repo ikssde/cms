@@ -1,0 +1,94 @@
+Title: register()
+ShortTitle: Opt_Class::register()
+Construct: method
+Reference: void register(int $type, mixed $name [, string $value])
+Visibility: public
+Arguments:
+ - Name: $type | EType: int | Desc: The type of the registered item(s).
+ - Name: $name | EType: mixed | Desc: The item name or the list of registered items.
+ - Name: $value | EType: string | Desc: The extra item value used with some types.
+EThrows:
+ - BadMethodCallException
+
+----
+
+Registers a new add-on in OPT identified by `$type`. The next arguments depend on the specified type. The available types are:
+
+1. `Opt_Class::OPT_INSTRUCTION` - new instruction processor with the specified `$name`.
+2. `Opt_Class::OPT_NAMESPACE` - new XML namespace recognized by OPT specified in `$name`.
+3. `Opt_Class::OPT_FORMAT` - new data format specified in `$name`.
+4. `Opt_Class::OPT_COMPONENT` - new component XML tag specified in `$name`. `$value` is the component class name.
+5. `Opt_Class::OPT_BLOCK` - new block XML tag specified in `$name`. `$value` is the block class name.
+6. `Opt_Class::PHP_FUNCTION` - new PHP function allowed to be used in templates. `$name` is the function name visible in templates and `$value - the real PHP function name.
+7. `Opt_Class::PHP_CLASS` - new PHP class allowed to be used in templates. `$name` is the class name visible in templates and `$value` - the real PHP class name.
+
+This method supports also mass registering of items by specifying an array as `$name`. For types from 1 to 3 it looks like this:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_INSTRUCTION, array(
+	'Instruction1' => 'My_Instruction_1', 'Instruction2' => 'My_Instruction_2', 'Instruction3' => 'My_Instruction_3'
+));
+~~~~
+
+For types from 4 to 7 we have to use associative array:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_COMPONENT, array(
+	'my:select' => 'My_Select_Component',
+	'my:text' => 'My_Text_Component',
+	'my:radio' => 'My_Radio_Component'
+));
+~~~~
+
+> [error]
+> This method must be used before [Opt_Class::setup()][api.opt-class.setup] method.
+
+Registering PHP functions and classes
+=====================================
+
+The templates do not support directly PHP namespaces, however the namespace can be specified during the function/class registration:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_CLASS, 'templateClass', 'namespace::myClass');
+~~~~
+
+In the same way we are allowed to register static class methods as functions.
+
+For PHP functions, OPT introduces another interesting feature. Because the argument order in PHP library is quite messy and OPT follows strict rules, the compiler is able to change the order in the compile time, if we specify the additional rules. The order rules are specified before the real PHP function name and are enclosed within `#`:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'regexReplace', '#3,1,2#preg_replace');
+~~~~
+
+It could be read like this:
+
+1. The first argument in templates must be in the third place in the compiled template.
+2. The second argument - in the first one.
+3. The third one - in the second.
+
+We may also specify some optional values:
+
+~~~~
+[php]
+$tpl->register(Opt_Class::PHP_FUNCTION, 'foo', '#3,1,2:null#foo');
+~~~~
+
+In this case, the third argument in templates is optional, but in PHP it is required. We must specify the default value (**null** in this case) for the compiler then by adding `:null` to the position number.
+
+Registering instructions and formats
+====================================
+
+For instructions and processors we register their class names and the identifiers they will appear in the parser. If we specify the identifier only, OPT will construct a class name for them, accordingly `Opt_Instruction_Identifier` and `Opt_Format_Identifier`. Sometimes we may want to give the classes different names, for example due to the autoloading purposes. In this case, we specify the class as the third argument.
+
+~~~~
+[php]
+$tpl->register(Opt_Class::OPT_FORMAT, 'Foo');	// Registers "Foo" from "Opt_Format_Foo" class
+$tpl->register(Opt_Class::OPT_FORMAT, 'Foo', 'Some_Class'); // Registers "Foo" from "Some_Class"
+~~~~
+
+> [warning]
+> When registering a group of instructions or formats with a single call of `register()`, you are obliged to provide assotiative arrays, where the keys are identifiers, and the values - the class names. OPT does not expand the identifiers to the class names in this case.
