@@ -4,7 +4,7 @@
 	 */
 
 	$currentPath = dirname(__FILE__);
-	require_once 'D:/xampp/htdocs/invenzzia/Open-Power-Libs/lib/Opl/Base.php';
+	require_once __DIR__.'classes/Open-Power-Libs/lib/Opl/Base.php';
 	// Opl_Loader::setHandleUnknownLibraries(false);
 	$loader = new Opl_Loader('_');
 	$loader -> addLibrary('Opl', __DIR__.'classes/Open-Power-Libs/lib/');
