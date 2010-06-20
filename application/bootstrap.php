@@ -50,7 +50,7 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-	'base_url'   => '/',
+	'base_url'   => '/cms/',
 	'index_file' => FALSE,
 ));
 
@@ -68,9 +68,11 @@ Kohana::$config->attach(new Kohana_Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
-	'database'       => MODPATH.'database',         // Database
-	'frontend'       => MODPATH.'frontend',         // Frontend
-	'backend'        => MODPATH.'backend',          // Backend
+	'cmscore'		=> MODPATH.'cmscore',	// Core of the CMS
+	'auth'			=> MODPATH.'auth',		// Authorization
+	'database'      => MODPATH.'database',	// Database
+	'frontend'      => MODPATH.'frontend',	// Frontend
+	'backend'       => MODPATH.'backend',	// Backend
 	));
 
 /**
